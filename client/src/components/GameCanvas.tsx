@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useSnakeGame } from "../lib/stores/useSnakeGame";
 import { GRID_SIZE, CANVAS_WIDTH, CANVAS_HEIGHT } from "../lib/gameLogic";
+import { useIsMobile } from "../hooks/use-is-mobile";
 
 const GameCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { snake, food, gameState } = useSnakeGame();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -71,9 +73,11 @@ const GameCanvas = () => {
       ref={canvasRef}
       width={CANVAS_WIDTH}
       height={CANVAS_HEIGHT}
-      className="border-2 border-green-400 bg-black"
+      className={`border-2 border-green-400 bg-black ${isMobile ? 'max-w-full max-h-[60vh]' : ''}`}
       style={{
-        imageRendering: 'pixelated'
+        imageRendering: 'pixelated',
+        width: isMobile ? '100%' : 'auto',
+        height: isMobile ? 'auto' : 'auto'
       }}
     />
   );

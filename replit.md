@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with modern UI components, audio support, and state management using Zustand. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
+This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
 ## User Preferences
 
@@ -35,10 +35,12 @@ The application follows a monorepo structure with clear separation between clien
 - **Development Setup**: Vite integration for hot reload in development
 
 ### Game Implementation
-- **Canvas Rendering**: Custom game canvas with retro styling
+- **Canvas Rendering**: Custom game canvas with retro styling and CRT effects
 - **Game Logic**: Snake movement, collision detection, food generation
 - **Audio System**: Sound effects for game events with mute functionality
-- **Controls**: Keyboard input handling (WASD, Arrow keys, Space)
+- **Controls**: Keyboard input handling (WASD, Arrow keys, Space) + Mobile touch controls
+- **Mobile Optimization**: Responsive canvas sizing, touch controls with D-pad layout
+- **PWA Features**: Service worker, web app manifest, installable on mobile devices
 
 ## Data Flow
 
@@ -70,9 +72,15 @@ The application follows a monorepo structure with clear separation between clien
 - **TypeScript**: Type safety across the entire application
 
 ### UI and Styling
-- **Tailwind CSS**: Utility-first CSS framework
+- **Tailwind CSS**: Utility-first CSS framework with mobile-first responsive design
 - **Radix UI**: Comprehensive component library for accessibility
 - **Lucide React**: Icon library
+
+### Mobile and PWA Features
+- **Service Worker**: Offline functionality and caching
+- **Web App Manifest**: App metadata for installation on mobile devices
+- **Touch Controls**: Custom D-pad style touch controls for mobile gameplay
+- **Responsive Design**: Mobile-optimized canvas sizing and UI scaling
 
 ### Database and ORM
 - **Drizzle ORM**: Type-safe database ORM

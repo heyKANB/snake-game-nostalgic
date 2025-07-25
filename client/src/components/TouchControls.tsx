@@ -55,7 +55,7 @@ const TouchControls = ({
             
             {/* Up */}
             <button
-              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-xl rounded touch-manipulation flex items-center justify-center transition-colors"
+              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-2xl rounded-lg touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
               onTouchStart={(e) => {
                 e.preventDefault();
                 handleDirectionPress('up');
@@ -73,7 +73,7 @@ const TouchControls = ({
             
             {/* Left */}
             <button
-              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-xl rounded touch-manipulation flex items-center justify-center transition-colors"
+              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-2xl rounded-lg touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
               onTouchStart={(e) => {
                 e.preventDefault();
                 handleDirectionPress('left');
@@ -87,11 +87,11 @@ const TouchControls = ({
             </button>
             
             {/* Center (empty) */}
-            <div className="bg-gray-800 rounded opacity-30"></div>
+            <div className="bg-gray-800 rounded-lg opacity-30"></div>
             
             {/* Right */}
             <button
-              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-xl rounded touch-manipulation flex items-center justify-center transition-colors"
+              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-2xl rounded-lg touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
               onTouchStart={(e) => {
                 e.preventDefault();
                 handleDirectionPress('right');
@@ -109,7 +109,7 @@ const TouchControls = ({
             
             {/* Down */}
             <button
-              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-xl rounded touch-manipulation flex items-center justify-center transition-colors"
+              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-2xl rounded-lg touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
               onTouchStart={(e) => {
                 e.preventDefault();
                 handleDirectionPress('down');
@@ -130,7 +130,7 @@ const TouchControls = ({
         {/* Action Button */}
         {(gameState === 'menu' || gameState === 'gameOver') && (
           <button
-            className="bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-mono font-bold px-6 py-4 rounded-lg touch-manipulation transition-colors text-sm"
+            className="bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-mono font-bold px-6 py-4 rounded-lg touch-manipulation transition-all duration-150 active:scale-95 shadow-lg text-base"
             onTouchStart={(e) => {
               e.preventDefault();
               handleActionPress();

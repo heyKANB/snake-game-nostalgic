@@ -1,8 +1,10 @@
 import { useEffect, useCallback } from "react";
 import GameCanvas from "./GameCanvas";
 import GameUI from "./GameUI";
+import TouchControls from "./TouchControls";
 import { useSnakeGame } from "../lib/stores/useSnakeGame";
 import { useAudio } from "../lib/stores/useAudio";
+import { useIsMobile } from "../hooks/use-is-mobile";
 
 const Game = () => {
   const { 
@@ -17,6 +19,7 @@ const Game = () => {
   } = useSnakeGame();
   
   const { playHit, playSuccess } = useAudio();
+  const isMobile = useIsMobile();
 
   // Handle keyboard input
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
@@ -91,6 +94,14 @@ const Game = () => {
           onRestart={resetGame}
         />
       </div>
+      
+      <TouchControls
+        gameState={gameState}
+        direction={direction}
+        onDirectionChange={changeDirection}
+        onStart={startGame}
+        onRestart={resetGame}
+      />
     </div>
   );
 };

@@ -73,9 +73,7 @@ const GameCanvas = () => {
       height={CANVAS_HEIGHT}
       className="border-2 border-green-400 bg-black"
       style={{
-        imageRendering: 'pixelated',
-        imageRendering: '-moz-crisp-edges',
-        imageRendering: 'crisp-edges'
+        imageRendering: 'pixelated'
       }}
     />
   );

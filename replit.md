@@ -5,6 +5,8 @@
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
 **Latest Update (2025-01-26)**: Complete Google AdSense integration added with banner and interstitial ads for monetization. App ID: ca-app-pub-8626828126160251~4239118513
+- Banner Ad Unit: ca-app-pub-8626828126160251/5048803159 (320x50 bottom placement)
+- Interstitial Ad Unit: ca-app-pub-8626828126160251/6485506895 (full-screen game over)
 
 ## User Preferences
 

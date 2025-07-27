@@ -42,7 +42,7 @@ export const InterstitialAd: React.FC = () => {
             className="adsbygoogle"
             style={{ display: 'block', width: '300px', height: '250px' }}
             data-ad-client="ca-app-pub-8626828126160251"
-            data-ad-slot="auto"
+            data-ad-slot="6485506895"
             data-ad-format="rectangle"
           />
         </div>

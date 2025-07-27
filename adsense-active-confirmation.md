@@ -13,8 +13,8 @@
 
 ### ✅ Ad Units Active:
 - **Banner Ad**: 320x50 at bottom of game screen (ID: 5048803159)
-- **Interstitial Ad**: Full-screen after game over (auto placement)
-- **Specific Ad Unit**: Using your custom banner ad unit for optimal performance
+- **Interstitial Ad**: Full-screen after game over (ID: 6485506895)
+- **Custom Ad Units**: Both ads using your specific AdSense units for optimal targeting
 
 ### ✅ Revenue Features:
 - Ads load automatically when game starts

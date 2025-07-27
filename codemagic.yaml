@@ -14,6 +14,8 @@ workflows:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
         APP_STORE_APPLE_ID: 1234567890  # You'll get this from App Store Connect
+      groups:
+        - app_store_credentials  # This group will contain your Apple Developer credentials
       node: v18.17.0
       xcode: latest
       cocoapods: default

@@ -2,8 +2,10 @@ import { useEffect, useCallback } from "react";
 import GameCanvas from "./GameCanvas";
 import GameUI from "./GameUI";
 import TouchControls from "./TouchControls";
+import { BannerAd } from "./AdComponents";
 import { useSnakeGame } from "../lib/stores/useSnakeGame";
 import { useAudio } from "../lib/stores/useAudio";
+import { useAdsStore } from "../lib/stores/useAds";
 import { useIsMobile } from "../hooks/use-is-mobile";
 
 const Game = () => {
@@ -19,6 +21,7 @@ const Game = () => {
   } = useSnakeGame();
   
   const { playHit, playSuccess } = useAudio();
+  const { showInterstitialAd } = useAdsStore();
   const isMobile = useIsMobile();
 
   // Handle keyboard input
@@ -76,6 +79,10 @@ const Game = () => {
         playSuccess();
       } else if (result === 'game_over') {
         playHit();
+        // Show ad after game over
+        setTimeout(() => {
+          showInterstitialAd();
+        }, 1000);
       }
     }, 150); // Game speed
 
@@ -102,6 +109,9 @@ const Game = () => {
         onStart={startGame}
         onRestart={resetGame}
       />
+      
+      {/* Banner Ad at bottom */}
+      <BannerAd />
     </div>
   );
 };

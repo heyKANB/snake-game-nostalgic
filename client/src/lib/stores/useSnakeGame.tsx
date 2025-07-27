@@ -76,6 +76,14 @@ export const useSnakeGame = create<SnakeGameState>()(
           gameState: 'gameOver',
           highScore: newHighScore
         });
+        
+        // Trigger interstitial ad on game over
+        setTimeout(() => {
+          if (typeof window !== 'undefined' && (window as any).useAdsStore) {
+            (window as any).useAdsStore.getState().showInterstitialAd();
+          }
+        }, 500);
+        
         return 'game_over';
       }
 

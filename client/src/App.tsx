@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import Game from "./components/Game";
 import { useAudio } from "./lib/stores/useAudio";
+import { useAdsStore } from "./lib/stores/useAds";
+import { InterstitialAd } from "./components/AdComponents";
 import "@fontsource/inter";
 
 function App() {
   const { setHitSound, setSuccessSound } = useAudio();
+  const { setAdSenseAppId } = useAdsStore();
 
-  // Initialize audio on app start
+  // Initialize audio and ads on app start
   useEffect(() => {
     const initAudio = async () => {
       try {
@@ -24,12 +27,16 @@ function App() {
       }
     };
 
+    // Initialize AdSense - you'll replace PLACEHOLDER with your actual App ID
+    setAdSenseAppId('ca-app-pub-PLACEHOLDER');
+
     initAudio();
-  }, [setHitSound, setSuccessSound]);
+  }, [setHitSound, setSuccessSound, setAdSenseAppId]);
 
   return (
     <div className="w-full h-full bg-black flex items-center justify-center">
       <Game />
+      <InterstitialAd />
     </div>
   );
 }

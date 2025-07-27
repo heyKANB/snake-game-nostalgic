@@ -19,7 +19,7 @@ export const BannerAd: React.FC = () => {
         className="adsbygoogle"
         style={{ display: 'block', width: '320px', height: '50px' }}
         data-ad-client="ca-app-pub-8626828126160251"
-        data-ad-slot="auto"
+        data-ad-slot="5048803159"
         data-ad-format="banner"
         data-full-width-responsive="true"
       />

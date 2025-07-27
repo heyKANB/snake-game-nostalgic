@@ -12,9 +12,9 @@
 - `replit.md` - Project documentation updated
 
 ### ✅ Ad Units Active:
-- **Banner Ad**: 320x50 at bottom of game screen
-- **Interstitial Ad**: Full-screen after game over
-- **Auto Ad Slot**: Using "auto" for optimal placement
+- **Banner Ad**: 320x50 at bottom of game screen (ID: 5048803159)
+- **Interstitial Ad**: Full-screen after game over (auto placement)
+- **Specific Ad Unit**: Using your custom banner ad unit for optimal performance
 
 ### ✅ Revenue Features:
 - Ads load automatically when game starts

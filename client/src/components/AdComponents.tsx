@@ -18,8 +18,8 @@ export const BannerAd: React.FC = () => {
       <ins
         className="adsbygoogle"
         style={{ display: 'block', width: '320px', height: '50px' }}
-        data-ad-client="ca-app-pub-XXXXXXXXXXXXXXXX" // Will be replaced with your actual ID
-        data-ad-slot="1234567890" // You'll get this from AdSense
+        data-ad-client="ca-app-pub-8626828126160251"
+        data-ad-slot="auto"
         data-ad-format="banner"
         data-full-width-responsive="true"
       />
@@ -41,8 +41,8 @@ export const InterstitialAd: React.FC = () => {
           <ins
             className="adsbygoogle"
             style={{ display: 'block', width: '300px', height: '250px' }}
-            data-ad-client="ca-app-pub-XXXXXXXXXXXXXXXX" // Will be replaced with your actual ID
-            data-ad-slot="9876543210" // You'll get this from AdSense
+            data-ad-client="ca-app-pub-8626828126160251"
+            data-ad-slot="auto"
             data-ad-format="rectangle"
           />
         </div>

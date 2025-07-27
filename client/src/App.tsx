@@ -27,8 +27,8 @@ function App() {
       }
     };
 
-    // Initialize AdSense - you'll replace PLACEHOLDER with your actual App ID
-    setAdSenseAppId('ca-app-pub-PLACEHOLDER');
+    // Initialize AdSense with your App ID
+    setAdSenseAppId('ca-app-pub-8626828126160251~4239118513');
 
     initAudio();
   }, [setHitSound, setSuccessSound, setAdSenseAppId]);

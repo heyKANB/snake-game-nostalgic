@@ -9,12 +9,8 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.snakegame.nostalgic
-        # Automatic code signing - Codemagic will handle certificates and profiles
-        automatic_code_signing: true
-        # Alternative manual signing (uncomment if automatic fails)
-        # certificate: $IOS_DISTRIBUTION_CERTIFICATE
-        # certificate_password: $IOS_DISTRIBUTION_CERTIFICATE_PASSWORD
-        # provisioning_profile: $IOS_PROVISIONING_PROFILE
+        # Codemagic automatically manages certificates when App Store Connect integration is configured
+        # No additional fields needed - automatic signing is enabled by default with integration
       vars:
         BUNDLE_ID: "com.snakegame.nostalgic"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
@@ -48,13 +44,10 @@ workflows:
         script: |
           npm run build
           npx cap sync ios
-      - name: Set up automatic code signing
+      - name: Set up code signing settings on Xcode project
         script: |
-          # Enable automatic code signing in Xcode project
-          xcode-project use-profiles --code-signing-style automatic
-          
-          # Alternative: Configure manual code signing if automatic fails
-          # xcode-project use-profiles --code-signing-style manual
+          # Apply automatic code signing with Codemagic-managed certificates
+          xcode-project use-profiles
       - name: Build ipa for distribution
         script: |
           xcode-project build-ipa \

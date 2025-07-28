@@ -16,7 +16,7 @@ This guide explains how to enable automatic code signing in Codemagic for both i
 ios_signing:
   distribution_type: app_store
   bundle_identifier: com.snakegame.nostalgic
-  automatic_code_signing: true
+  # Automatic signing via App Store Connect integration
 ```
 
 ### How It Works
@@ -120,7 +120,7 @@ android_signing:
 2. Install dependencies (npm, CocoaPods)
 3. Build React app (`npm run build`)
 4. Sync Capacitor (`npx cap sync ios`)
-5. **Configure automatic code signing** (`xcode-project use-profiles --code-signing-style automatic`)
+5. **Configure automatic code signing** (`xcode-project use-profiles`)
 6. Build iOS app with Xcode
 7. **Automatic certificate/profile resolution**
 8. Sign IPA file

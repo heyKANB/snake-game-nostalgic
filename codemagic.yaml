@@ -9,6 +9,12 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.snakegame.nostalgic
+        # Automatic code signing - Codemagic will handle certificates and profiles
+        automatic_code_signing: true
+        # Alternative manual signing (uncomment if automatic fails)
+        # certificate: $IOS_DISTRIBUTION_CERTIFICATE
+        # certificate_password: $IOS_DISTRIBUTION_CERTIFICATE_PASSWORD
+        # provisioning_profile: $IOS_PROVISIONING_PROFILE
       vars:
         BUNDLE_ID: "com.snakegame.nostalgic"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
@@ -42,9 +48,13 @@ workflows:
         script: |
           npm run build
           npx cap sync ios
-      - name: Set up code signing settings on Xcode project
+      - name: Set up automatic code signing
         script: |
-          xcode-project use-profiles
+          # Enable automatic code signing in Xcode project
+          xcode-project use-profiles --code-signing-style automatic
+          
+          # Alternative: Configure manual code signing if automatic fails
+          # xcode-project use-profiles --code-signing-style manual
       - name: Build ipa for distribution
         script: |
           xcode-project build-ipa \
@@ -81,7 +91,13 @@ workflows:
     instance_type: linux_x2
     environment:
       android_signing:
-        - keystore_reference
+        # Automatic Android signing with uploaded keystore
+        - keystore_reference  # This references the keystore uploaded to Codemagic
+        # Alternative manual signing variables:
+        # - keystore: $ANDROID_KEYSTORE
+        # - keystore_password: $ANDROID_KEYSTORE_PASSWORD
+        # - key_alias: $ANDROID_KEY_ALIAS
+        # - key_password: $ANDROID_KEY_PASSWORD
       groups:
         - google_play
       vars:

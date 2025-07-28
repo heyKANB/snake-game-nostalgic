@@ -16,7 +16,8 @@ This guide explains how to enable automatic code signing in Codemagic for both i
 ios_signing:
   distribution_type: app_store
   bundle_identifier: com.snakegame.nostalgic
-  # Automatic signing via App Store Connect integration
+  provisioning_profile: "ios provisioning profile"
+  # References the specific profile set up in Codemagic
 ```
 
 ### How It Works

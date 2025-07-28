@@ -71,7 +71,7 @@ If automatic doesn't work, create certificates manually:
 1. Profiles → "+" → "App Store"
 2. Select your App ID (`com.snakegame.nostalgic`)
 3. Select your distribution certificate
-4. Name: "Snake Game App Store Profile"
+4. Name: "ios provisioning profile" (matches Codemagic configuration)
 5. Download profile
 
 ### Upload to Codemagic

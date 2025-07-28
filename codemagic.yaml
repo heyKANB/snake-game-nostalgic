@@ -9,8 +9,8 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.snakegame.nostalgic
+        provisioning_profile: "ios provisioning profile"
         # Codemagic automatically manages certificates when App Store Connect integration is configured
-        # No additional fields needed - automatic signing is enabled by default with integration
       vars:
         BUNDLE_ID: "com.snakegame.nostalgic"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"

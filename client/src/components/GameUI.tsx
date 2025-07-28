@@ -1,5 +1,6 @@
 import { Button } from "./ui/button";
 import { useIsMobile } from "../hooks/use-is-mobile";
+import { useThemeStore } from "../lib/stores/useTheme";
 
 interface GameUIProps {
   gameState: 'menu' | 'playing' | 'gameOver';
@@ -11,17 +12,31 @@ interface GameUIProps {
 
 const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps) => {
   const isMobile = useIsMobile();
+  const { getThemeConfig } = useThemeStore();
+  const theme = getThemeConfig();
   
   if (gameState === 'menu') {
     return (
-      <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-80 text-green-400">
+      <div 
+        className="absolute inset-0 flex flex-col items-center justify-center bg-opacity-80"
+        style={{ 
+          backgroundColor: theme.colors.background + 'CC',
+          color: theme.colors.text 
+        }}
+      >
         <div className="text-center space-y-6 px-4">
-          <h1 className={`font-mono font-bold tracking-wider mb-8 ${isMobile ? 'text-4xl' : 'text-6xl'}`}>
+          <h1 
+            className={`font-mono font-bold tracking-wider mb-8 ${isMobile ? 'text-4xl' : 'text-6xl'}`}
+            style={{ 
+              color: theme.colors.text,
+              textShadow: theme.effects.glow ? `0 0 20px ${theme.colors.text}` : 'none'
+            }}
+          >
             SNAKE
           </h1>
           <div className={`font-mono space-y-2 ${isMobile ? 'text-lg' : 'text-xl'}`}>
             <p>{isMobile ? 'Use touch controls to move' : 'Use ARROW KEYS or WASD to move'}</p>
-            <p>Eat the red food to grow</p>
+            <p style={{ color: theme.colors.food }}>Eat the food to grow</p>
             <p>Don't hit the walls or yourself!</p>
           </div>
           <div className={`font-mono ${isMobile ? 'text-base' : 'text-lg'}`}>
@@ -30,7 +45,13 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps
           {!isMobile && (
             <Button 
               onClick={onStart}
-              className="bg-green-600 hover:bg-green-700 text-white font-mono text-xl px-8 py-3"
+              className="font-mono text-xl px-8 py-3 transition-all duration-200"
+              style={{
+                backgroundColor: theme.colors.snake,
+                color: theme.colors.background,
+                border: `2px solid ${theme.colors.border}`,
+                borderRadius: theme.effects.rounded ? '8px' : '0px'
+              }}
             >
               PRESS SPACE TO START
             </Button>
@@ -42,19 +63,37 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps
 
   if (gameState === 'gameOver') {
     return (
-      <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-90 text-green-400">
+      <div 
+        className="absolute inset-0 flex flex-col items-center justify-center bg-opacity-90"
+        style={{ 
+          backgroundColor: theme.colors.background + 'E6',
+          color: theme.colors.text 
+        }}
+      >
         <div className="text-center space-y-6 px-4">
-          <h1 className={`font-mono font-bold text-red-500 mb-4 ${isMobile ? 'text-3xl' : 'text-5xl'}`}>
+          <h1 
+            className={`font-mono font-bold mb-4 ${isMobile ? 'text-3xl' : 'text-5xl'}`}
+            style={{ 
+              color: theme.colors.food,
+              textShadow: theme.effects.glow ? `0 0 20px ${theme.colors.food}` : 'none'
+            }}
+          >
             GAME OVER
           </h1>
           <div className={`font-mono space-y-2 ${isMobile ? 'text-xl' : 'text-2xl'}`}>
-            <p>Final Score: {score}</p>
-            <p>High Score: {highScore}</p>
+            <p>Final Score: <span style={{ color: theme.colors.accent }}>{score}</span></p>
+            <p>High Score: <span style={{ color: theme.colors.accent }}>{highScore}</span></p>
           </div>
           {!isMobile && (
             <Button 
               onClick={onRestart}
-              className="bg-green-600 hover:bg-green-700 text-white font-mono text-xl px-8 py-3"
+              className="font-mono text-xl px-8 py-3 transition-all duration-200"
+              style={{
+                backgroundColor: theme.colors.snake,
+                color: theme.colors.background,
+                border: `2px solid ${theme.colors.border}`,
+                borderRadius: theme.effects.rounded ? '8px' : '0px'
+              }}
             >
               PRESS SPACE TO RESTART
             </Button>
@@ -66,9 +105,12 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps
 
   // Playing state - show score in corner
   return (
-    <div className="absolute top-4 left-4 text-green-400 font-mono text-xl">
-      <div>Score: {score}</div>
-      <div>High: {highScore}</div>
+    <div 
+      className="absolute top-4 left-4 font-mono text-xl"
+      style={{ color: theme.colors.text }}
+    >
+      <div>Score: <span style={{ color: theme.colors.accent }}>{score}</span></div>
+      <div>High: <span style={{ color: theme.colors.accent }}>{highScore}</span></div>
     </div>
   );
 };

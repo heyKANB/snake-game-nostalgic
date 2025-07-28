@@ -8,6 +8,12 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - Banner Ad Unit: ca-app-pub-8626828126160251/5048803159 (320x50 bottom placement)
 - Interstitial Ad Unit: ca-app-pub-8626828126160251/6485506895 (full-screen game over)
 
+**Theme System Update (2025-01-26)**: Added complete theme/skin selection system with Retro Classic and Modern UI options
+- Dynamic color schemes with real-time switching
+- Visual effects (glow, gradients, rounded corners, scanlines)
+- Persistent user preference storage
+- Mobile-optimized theme selector interface
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -39,7 +45,8 @@ The application follows a monorepo structure with clear separation between clien
 - **Development Setup**: Vite integration for hot reload in development
 
 ### Game Implementation
-- **Canvas Rendering**: Custom game canvas with retro styling and CRT effects
+- **Canvas Rendering**: Custom game canvas with theme-based styling and effects
+- **Theme System**: Retro Classic (green CRT effects) and Modern UI (sleek blue design) options
 - **Game Logic**: Snake movement, collision detection, food generation
 - **Audio System**: Sound effects for game events with mute functionality
 - **Controls**: Keyboard input handling (WASD, Arrow keys, Space) + Mobile touch controls

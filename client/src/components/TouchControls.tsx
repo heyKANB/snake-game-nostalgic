@@ -1,4 +1,5 @@
 import { useIsMobile } from "../hooks/use-is-mobile";
+import { useThemeStore } from "../lib/stores/useTheme";
 import { Direction } from "../lib/gameLogic";
 
 interface TouchControlsProps {
@@ -17,6 +18,8 @@ const TouchControls = ({
   onRestart 
 }: TouchControlsProps) => {
   const isMobile = useIsMobile();
+  const { getThemeConfig } = useThemeStore();
+  const theme = getThemeConfig();
   
   if (!isMobile) return null;
 
@@ -45,7 +48,10 @@ const TouchControls = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 bg-black bg-opacity-80">
+    <div 
+      className="fixed bottom-0 left-0 right-0 p-4 bg-opacity-80"
+      style={{ backgroundColor: theme.colors.background + 'CC' }}
+    >
       <div className="flex items-center justify-between max-w-md mx-auto">
         {/* D-Pad Style Controls */}
         <div className="relative">
@@ -55,7 +61,12 @@ const TouchControls = ({
             
             {/* Up */}
             <button
-              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-2xl rounded-lg touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              style={{
+                backgroundColor: theme.colors.snake,
+                color: theme.colors.background,
+                borderRadius: theme.effects.rounded ? '8px' : '4px'
+              }}
               onTouchStart={(e) => {
                 e.preventDefault();
                 handleDirectionPress('up');
@@ -73,7 +84,12 @@ const TouchControls = ({
             
             {/* Left */}
             <button
-              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-2xl rounded-lg touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              style={{
+                backgroundColor: theme.colors.snake,
+                color: theme.colors.background,
+                borderRadius: theme.effects.rounded ? '8px' : '4px'
+              }}
               onTouchStart={(e) => {
                 e.preventDefault();
                 handleDirectionPress('left');
@@ -87,11 +103,22 @@ const TouchControls = ({
             </button>
             
             {/* Center (empty) */}
-            <div className="bg-gray-800 rounded-lg opacity-30"></div>
+            <div 
+              className="opacity-30"
+              style={{
+                backgroundColor: theme.colors.ui,
+                borderRadius: theme.effects.rounded ? '8px' : '4px'
+              }}
+            ></div>
             
             {/* Right */}
             <button
-              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-2xl rounded-lg touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              style={{
+                backgroundColor: theme.colors.snake,
+                color: theme.colors.background,
+                borderRadius: theme.effects.rounded ? '8px' : '4px'
+              }}
               onTouchStart={(e) => {
                 e.preventDefault();
                 handleDirectionPress('right');
@@ -109,7 +136,12 @@ const TouchControls = ({
             
             {/* Down */}
             <button
-              className="bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold text-2xl rounded-lg touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              style={{
+                backgroundColor: theme.colors.snake,
+                color: theme.colors.background,
+                borderRadius: theme.effects.rounded ? '8px' : '4px'
+              }}
               onTouchStart={(e) => {
                 e.preventDefault();
                 handleDirectionPress('down');
@@ -130,7 +162,12 @@ const TouchControls = ({
         {/* Action Button */}
         {(gameState === 'menu' || gameState === 'gameOver') && (
           <button
-            className="bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-mono font-bold px-6 py-4 rounded-lg touch-manipulation transition-all duration-150 active:scale-95 shadow-lg text-base"
+            className="font-mono font-bold px-6 py-4 touch-manipulation transition-all duration-150 active:scale-95 shadow-lg text-base"
+            style={{
+              backgroundColor: theme.colors.food,
+              color: theme.colors.background,
+              borderRadius: theme.effects.rounded ? '8px' : '4px'
+            }}
             onTouchStart={(e) => {
               e.preventDefault();
               handleActionPress();

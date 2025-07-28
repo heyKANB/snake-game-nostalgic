@@ -60,10 +60,12 @@ The provisioning profiles will be automatically generated when you:
 If automatic doesn't work, create certificates manually:
 
 ### Create Distribution Certificate
-1. Apple Developer → "Certificates, Identifiers & Profiles"
-2. Certificates → "+" → "iOS Distribution"
-3. Upload Certificate Signing Request (CSR)
-4. Download certificate
+1. **First, create CSR on your machine** (see `create-csr-guide.md`)
+2. Apple Developer → "Certificates, Identifiers & Profiles"
+3. Certificates → "+" → "iOS Distribution"
+4. Upload your Certificate Signing Request (CSR) file
+5. Download the generated certificate
+6. Double-click certificate to install in Keychain Access
 
 ### Create Provisioning Profile
 1. Profiles → "+" → "App Store"

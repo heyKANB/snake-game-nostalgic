@@ -15,7 +15,7 @@
 - [ ] App icon (1024x1024px)
 - [ ] App description
 - [ ] Keywords
-- [x] Privacy policy URL - Available at privacy-policy.html
+- [x] Privacy policy URL - Available at `/privacy` route (deployed with app)
 - [ ] Support URL
 
 ### Current Status
@@ -32,9 +32,10 @@
 5. Submit for App Store review
 
 ### Generated Assets
-- **Privacy Policy**: `privacy-policy.html` (ready for web hosting)
+- **Privacy Policy**: Integrated into server at `/privacy` route
 - **Screenshot Generator**: `generate-screenshots.html` (interactive tool)
-- **Privacy Policy URL**: Deploy privacy-policy.html to get public URL
+- **Privacy Policy URL**: Will be `https://your-deployed-app.replit.app/privacy`
+- **Deployment Guide**: `deploy-privacy-guide.md` explains Jekyll issue resolution
 
 ## Build Configuration
 - **Development Team**: Set via Codemagic provisioning

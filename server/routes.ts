@@ -1,5 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -8,6 +10,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // use storage to perform CRUD operations on the storage interface
   // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
+
+  // Privacy policy route (not prefixed with /api since it's a page)
+  app.get('/privacy', (req, res) => {
+    try {
+      const privacyHTML = readFileSync(join(process.cwd(), 'privacy-policy.html'), 'utf8');
+      res.setHeader('Content-Type', 'text/html');
+      res.send(privacyHTML);
+    } catch (error) {
+      res.status(404).send(`
+        <html>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h1>Privacy Policy</h1>
+            <p>Privacy policy temporarily unavailable. Please contact support.</p>
+          </body>
+        </html>
+      `);
+    }
+  });
 
   const httpServer = createServer(app);
 

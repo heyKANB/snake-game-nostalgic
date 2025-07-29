@@ -17,9 +17,9 @@ Your Codemagic builds were completing successfully but not showing up in App Sto
 - `provisioningProfiles` mapping  
 - `destination: upload` for proper App Store routing
 
-### 3. **Bundle ID Mismatch**
-**Issue**: Publishing config didn't explicitly specify bundle ID
-**Fix Applied**: Added `bundle_id: com.snakegame.nostalgic` in publishing section
+### 3. **YAML Validation Error**
+**Issue**: `bundle_id` field not permitted in `app_store_connect` publishing section
+**Fix Applied**: Removed invalid field - bundle ID is automatically detected from environment vars
 
 ### 4. **Insufficient Upload Verification**
 **Issue**: No verification that IPA was properly created for upload

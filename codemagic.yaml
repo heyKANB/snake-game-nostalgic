@@ -166,8 +166,12 @@ workflows:
         script: |
           echo "Setting up code signing..."
           echo "Team ID: TYRA6QN5W5"
+          
+          # Set team ID as environment variable
+          export TEAM_ID="TYRA6QN5W5"
+          
           # Apply automatic code signing with Codemagic-managed certificates
-          xcode-project use-profiles --team-id "TYRA6QN5W5"
+          xcode-project use-profiles
       - name: Build iOS app for App Store
         script: |
           echo "Building iOS app for App Store distribution..."
@@ -179,12 +183,14 @@ workflows:
             exit 1
           fi
           
-          # Build using Codemagic's native command with team ID
+          # Set team ID for build
+          export TEAM_ID="TYRA6QN5W5"
+          
+          # Build using Codemagic's native command
           xcode-project build-ipa \
             --workspace "App.xcworkspace" \
             --scheme "App" \
-            --config "Release" \
-            --team-id "TYRA6QN5W5"
+            --config "Release"
       - name: Verify build completion
         script: |
           echo "✅ iOS build completed using Codemagic's xcode-project build-ipa"

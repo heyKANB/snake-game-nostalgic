@@ -2,6 +2,8 @@
 
 ## App Information
 - **App Name**: Snake Game - Nostalgic
+- **Developer**: Hunter Games by HeyKANB
+- **Contact Email**: kathrynbrown@heykanb.com
 - **Bundle ID**: com.snakegame.nostalgic
 - **Apple ID**: 6749170406
 - **Version**: 1.0.0

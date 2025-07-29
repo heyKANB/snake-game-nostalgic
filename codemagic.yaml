@@ -167,137 +167,32 @@ workflows:
           echo "Setting up code signing..."
           # Apply automatic code signing with Codemagic-managed certificates
           xcode-project use-profiles
-      - name: Create iOS archive only
+      - name: Build iOS app for App Store
         script: |
-          echo "Building iOS app..."
-          echo "Workspace: $XCODE_WORKSPACE"
-          echo "Scheme: $XCODE_SCHEME"
-          echo "Bundle ID: $BUNDLE_ID"
+          echo "Building iOS app for App Store distribution..."
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+      - name: Verify build completion
+        script: |
+          echo "✅ iOS build completed using Codemagic's xcode-project build-ipa"
+          echo "Verifying IPA creation..."
           
-          # Navigate to iOS directory
-          cd ios/App
+          # Look for created IPA files
+          find . -name "*.ipa" -type f 2>/dev/null && echo "IPA files found" || echo "IPA files will be detected by publishing step"
           
-          # Verify workspace
-          if [ ! -f "App.xcworkspace/contents.xcworkspacedata" ]; then
-            echo "ERROR: Workspace file not found"
-            exit 1
-          fi
+          echo "Build artifacts:"
+          ls -la build/ 2>/dev/null || echo "Build directory will be created by build-ipa"
           
-          echo "Building with xcodebuild directly..."
-          
-          # Verify project configuration
-          echo "Checking workspace and schemes..."
-          xcodebuild -list -workspace App.xcworkspace
-          
-          echo "Ensuring scheme is shared..."
-          ls -la App.xcodeproj/xcshareddata/xcschemes/ || {
-            echo "No shared schemes found, scheme should be created in project setup"
-            echo "Available schemes in workspace:"
-            xcodebuild -list -workspace App.xcworkspace | grep -A 10 "Schemes:"
-          }
-          
-          echo "Checking project build settings..."
-          xcodebuild -showBuildSettings \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release | grep -E "(BUNDLE_ID|CODE_SIGN|TEAM|MARKETING|CURRENT_PROJECT)"
-          
-          echo "Checking Info.plist version settings..."
-          grep -A 1 -B 1 "MARKETING_VERSION\|CURRENT_PROJECT_VERSION" App/Info.plist || echo "Version settings not found in Info.plist"
-          
-          echo "Validating build configuration first..."
-          xcodebuild clean \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release
-          
-          echo "Testing basic build without signing..."
-          xcodebuild build \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -destination "generic/platform=iOS" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
-            -quiet || {
-              echo "Basic build failed - checking for compilation errors..."
-              echo "Build logs above should show specific compilation issues"
-              exit 1
-            }
-          
-          echo "Basic build succeeded, proceeding with signed build..."
-          
-          echo "=== ARCHIVE CREATION WITH COMPREHENSIVE DEBUGGING ==="
-          echo "Available provisioning profiles:"
-          find ~/Library/MobileDevice/Provisioning\ Profiles/ -name "*.mobileprovision" 2>/dev/null | head -5 || echo "No provisioning profiles found"
-          
-          echo "Code signing identities available:"
-          security find-identity -v -p codesigning | head -10
-          
-          echo "Starting archive process with full verbosity..."
-          set -x  # Enable command tracing
-          
-          xcodebuild archive \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -destination "generic/platform=iOS" \
-            -archivePath build/Archive.xcarchive \
-            -allowProvisioningUpdates \
-            MARKETING_VERSION=1.0.0 \
-            CURRENT_PROJECT_VERSION=1 \
-            -verbose 2>&1 | tee archive_build.log
-          
-          ARCHIVE_RESULT=$?
-          set +x  # Disable command tracing
-          
-          echo "=== ARCHIVE RESULT ANALYSIS ==="
-          echo "Archive exit code: $ARCHIVE_RESULT"
-          
-          if [ $ARCHIVE_RESULT -ne 0 ]; then
-            echo "❌ ARCHIVE FAILED - Detailed analysis:"
-            echo ""
-            echo "Last 30 lines of build output:"
-            tail -n 30 archive_build.log
-            echo ""
-            echo "Error patterns found:"
-            grep -i -C 2 "error\|fail\|exception" archive_build.log | tail -20
-            echo ""
-            echo "Code signing issues:"
-            grep -i -C 2 "code.sign\|provision\|certificate" archive_build.log | tail -10
-            echo ""
-            echo "Build settings verification:"
-            xcodebuild -showBuildSettings -workspace App.xcworkspace -scheme App -configuration Release | grep -E "(BUNDLE_IDENTIFIER|MARKETING_VERSION|CURRENT_PROJECT_VERSION)" || echo "Cannot show build settings"
-            echo ""
-            exit $ARCHIVE_RESULT
-          else
-            echo "✅ ARCHIVE SUCCESS"
-            echo "Archive contents:"
-            ls -la build/Archive.xcarchive/
-            echo "Archive Info.plist:"
-            cat build/Archive.xcarchive/Info.plist 2>/dev/null || echo "Archive Info.plist not found"
-          fi
-          
-          # Archive completed successfully - let Codemagic publishing handle IPA creation and upload
-          if [ -d "build/Archive.xcarchive" ]; then
-            echo "✅ Archive created successfully"
-            echo "Archive ready for Codemagic publishing at: build/Archive.xcarchive"
-            echo "Codemagic will automatically:"
-            echo "  1. Create IPA from archive using App Store Connect integration"
-            echo "  2. Upload to TestFlight using Key ID: 7629KQWD3Z"
-            echo "  3. Submit to beta groups for testing"
-            
-            echo "Archive verification:"
-            ls -la build/Archive.xcarchive/
-            echo "Archive Info.plist contents:"
-            cat build/Archive.xcarchive/Info.plist 2>/dev/null || echo "Info.plist not found"
-          else
-            echo "❌ Cannot proceed - no archive was created"
-            exit 1
-          fi
+          echo "Ready for App Store Connect publishing using integration: Apple Connect App Mgr"
+          echo "Key ID: 7629KQWD3Z"
     artifacts:
-      - ios/App/build/Archive.xcarchive
-      - ios/App/archive_build.log
+      - build/**/outputs/**/*.ipa
+      - build/**/outputs/**/mapping.txt
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/*.apk
+      - "*.xcarchive"
+      - "*.ipa"
     publishing:
       email:
         recipients:

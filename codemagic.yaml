@@ -156,7 +156,11 @@ workflows:
           
           echo "Project bundle ID settings:"
           cd ios/App
-          grep -r "PRODUCT_BUNDLE_IDENTIFIER" App.xcodeproj/ || echo "Bundle ID not found in project"
+          grep -r "PRODUCT_BUNDLE_IDENTIFIER" App.xcodeproj/ || {
+            echo "Bundle ID not found in project settings, adding to build configuration..."
+            # Ensure bundle ID is set in project
+            sed -i 's/PRODUCT_BUNDLE_IDENTIFIER = [^;]*/PRODUCT_BUNDLE_IDENTIFIER = com.snakegame.nostalgic/' App.xcodeproj/project.pbxproj
+          }
           cd ../..
       - name: Set up code signing settings on Xcode project
         script: |
@@ -223,45 +227,59 @@ workflows:
           
           echo "Basic build succeeded, proceeding with signed build..."
           
-          # Create build directory
-          mkdir -p build
+          echo "=== ARCHIVE CREATION WITH COMPREHENSIVE DEBUGGING ==="
+          echo "Available provisioning profiles:"
+          find ~/Library/MobileDevice/Provisioning\ Profiles/ -name "*.mobileprovision" 2>/dev/null | head -5 || echo "No provisioning profiles found"
           
-          echo "Creating archive with detailed output..."
+          echo "Code signing identities available:"
+          security find-identity -v -p codesigning | head -10
+          
+          echo "Starting archive process with full verbosity..."
+          set -x  # Enable command tracing
+          
           xcodebuild archive \
             -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
             -destination "generic/platform=iOS" \
-            -archivePath build/App.xcarchive \
-            CODE_SIGN_STYLE=Automatic \
+            -archivePath build/Archive.xcarchive \
             -allowProvisioningUpdates \
-            2>&1 | tee archive_build.log
+            MARKETING_VERSION=1.0.0 \
+            CURRENT_PROJECT_VERSION=1 \
+            -verbose 2>&1 | tee archive_build.log
           
-          ARCHIVE_EXIT_CODE=${PIPESTATUS[0]}
-          echo "Archive command exit code: $ARCHIVE_EXIT_CODE"
+          ARCHIVE_RESULT=$?
+          set +x  # Disable command tracing
           
-          echo "Checking archive result (exit code: $ARCHIVE_EXIT_CODE)..."
-          if [ $ARCHIVE_EXIT_CODE -eq 0 ] && [ -d "build/App.xcarchive" ]; then
-            echo "✅ Archive created successfully!"
-            ls -la build/App.xcarchive/
+          echo "=== ARCHIVE RESULT ANALYSIS ==="
+          echo "Archive exit code: $ARCHIVE_RESULT"
+          
+          if [ $ARCHIVE_RESULT -ne 0 ]; then
+            echo "❌ ARCHIVE FAILED - Detailed analysis:"
+            echo ""
+            echo "Last 30 lines of build output:"
+            tail -n 30 archive_build.log
+            echo ""
+            echo "Error patterns found:"
+            grep -i -C 2 "error\|fail\|exception" archive_build.log | tail -20
+            echo ""
+            echo "Code signing issues:"
+            grep -i -C 2 "code.sign\|provision\|certificate" archive_build.log | tail -10
+            echo ""
+            echo "Build settings verification:"
+            xcodebuild -showBuildSettings -workspace App.xcworkspace -scheme App -configuration Release | grep -E "(BUNDLE_IDENTIFIER|MARKETING_VERSION|CURRENT_PROJECT_VERSION)" || echo "Cannot show build settings"
+            echo ""
+            exit $ARCHIVE_RESULT
           else
-            echo "❌ Archive creation failed (exit code: $ARCHIVE_EXIT_CODE)"
-            echo "Build directory contents:"
-            ls -la build/ || echo "Build directory doesn't exist"
-            echo ""
-            echo "=== ARCHIVE BUILD LOG (last 100 lines) ==="
-            tail -100 archive_build.log 2>/dev/null || echo "No build log found"
-            echo ""
-            echo "=== ENVIRONMENT INFO ==="
-            echo "Available SDKs:"
-            xcodebuild -showsdks | head -10
-            echo "Xcode version:"
-            xcodebuild -version
-            echo "Current directory: $(pwd)"
-            echo "Workspace check:"
-            ls -la App.xcworkspace/
-            exit 1
+            echo "✅ ARCHIVE SUCCESS"
+            echo "Archive contents:"
+            ls -la build/Archive.xcarchive/
+            echo "Archive Info.plist:"
+            cat build/Archive.xcarchive/Info.plist 2>/dev/null || echo "Archive Info.plist not found"
           fi
+          
+          # Create build directory
+          mkdir -p build
           
           # Create export options
           cat > ExportOptions.plist << EOF
@@ -281,22 +299,18 @@ workflows:
           </plist>
           EOF
           
-          # Verify archive was created
-          if [ ! -d "build/App.xcarchive" ]; then
-            echo "ERROR: Archive not created at build/App.xcarchive"
-            echo "Listing build directory contents:"
-            ls -la build/ || echo "Build directory does not exist"
+          # Export IPA if archive was successful
+          if [ -d "build/Archive.xcarchive" ]; then
+            echo "Proceeding with IPA export..."
+            xcodebuild -exportArchive \
+              -archivePath build/Archive.xcarchive \
+              -exportPath build/ipa \
+              -exportOptionsPlist ExportOptions.plist \
+              -allowProvisioningUpdates
+          else
+            echo "❌ Cannot export IPA - no archive found"
             exit 1
           fi
-          
-          echo "Archive created successfully, proceeding with export..."
-          
-          # Export IPA
-          xcodebuild -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist ExportOptions.plist \
-            -allowProvisioningUpdates
           
           echo "Build complete. Contents of build directory:"
           ls -la build/

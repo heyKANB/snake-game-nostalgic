@@ -16,6 +16,8 @@ workflows:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
         APP_STORE_APPLE_ID: 1234567890  # You'll get this from App Store Connect
+        TEAM_ID: ""  # Your Apple Developer Team ID (fill this in)
+        CODE_SIGN_IDENTITY: "iPhone Distribution"
       groups:
         - app_store_credentials  # This group will contain your Apple Developer credentials
       node: v18.17.0
@@ -79,12 +81,35 @@ workflows:
       - name: Install CocoaPods dependencies
         script: |
           cd ios/App && pod install
+      - name: Debug iOS Build Configuration
+        script: |
+          echo "=== iOS Build Debug Information ==="
+          echo "Xcode version:"
+          xcodebuild -version
+          
+          echo "Available schemes:"
+          xcodebuild -list -workspace "$XCODE_WORKSPACE"
+          
+          echo "Code signing identities:"
+          security find-identity -v -p codesigning
+          
+          echo "Bundle ID check:"
+          echo "Expected: $BUNDLE_ID"
+          echo "Capacitor config:"
+          grep -A 1 -B 1 "appId" capacitor.config.ts || echo "Config not found"
       - name: Set up code signing settings on Xcode project
         script: |
+          echo "Setting up code signing..."
           # Apply automatic code signing with Codemagic-managed certificates
           xcode-project use-profiles
       - name: Build ipa for distribution
         script: |
+          echo "Building iOS app..."
+          echo "Workspace: $XCODE_WORKSPACE"
+          echo "Scheme: $XCODE_SCHEME"
+          echo "Bundle ID: $BUNDLE_ID"
+          
+          # Simplified build command first
           xcode-project build-ipa \
             --workspace "$XCODE_WORKSPACE" \
             --scheme "$XCODE_SCHEME"

@@ -167,7 +167,7 @@ workflows:
           echo "Setting up code signing..."
           # Apply automatic code signing with Codemagic-managed certificates
           xcode-project use-profiles
-      - name: Build ipa for distribution
+      - name: Create iOS archive only
         script: |
           echo "Building iOS app..."
           echo "Workspace: $XCODE_WORKSPACE"
@@ -278,144 +278,26 @@ workflows:
             cat build/Archive.xcarchive/Info.plist 2>/dev/null || echo "Archive Info.plist not found"
           fi
           
-          # Create build directory
-          mkdir -p build
-          
-          # Create export options for App Store distribution
-          cat > ExportOptions.plist << EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>method</key>
-              <string>app-store-connect</string>
-              <key>destination</key>
-              <string>export</string>
-              <key>uploadBitcode</key>
-              <false/>
-              <key>uploadSymbols</key>
-              <true/>
-              <key>compileBitcode</key>
-              <false/>
-              <key>manageAppVersionAndBuildNumber</key>
-              <false/>
-              <key>signingStyle</key>
-              <string>automatic</string>
-          </dict>
-          </plist>
-          EOF
-          
-          # Export IPA if archive was successful
+          # Archive completed successfully - let Codemagic publishing handle IPA creation and upload
           if [ -d "build/Archive.xcarchive" ]; then
-            echo "Proceeding with IPA export for App Store Connect..."
+            echo "✅ Archive created successfully"
+            echo "Archive ready for Codemagic publishing at: build/Archive.xcarchive"
+            echo "Codemagic will automatically:"
+            echo "  1. Create IPA from archive using App Store Connect integration"
+            echo "  2. Upload to TestFlight using Key ID: 7629KQWD3Z"
+            echo "  3. Submit to beta groups for testing"
             
-            # Create export directory
-            mkdir -p build/ipa
-            echo "Created export directory: build/ipa"
-            
-            # Debug current working directory
-            echo "Current working directory: $(pwd)"
-            echo "Archive path exists: $(ls -la build/Archive.xcarchive)"
-            
-            # Debug export options
-            echo "Export options content:"
-            cat ExportOptions.plist
-            
-            # Debug provisioning and signing setup
-            echo "Available signing identities:"
-            security find-identity -v -p codesigning || echo "No signing identities found"
-            
-            echo "Provisioning profiles:"
-            ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ 2>/dev/null || echo "No provisioning profiles found"
-            
-            echo "iOS signing configuration verification:"
-            echo "Distribution type: app_store"
-            echo "Bundle identifier: com.snakegame.nostalgic"
-            echo "Automatic signing enabled in export options"
-            
-            echo "App Store Connect integration verification:"
-            echo "Integration: Apple Connect App Mgr"
-            echo "Key ID: 7629KQWD3Z"
-            echo "Bundle ID: com.snakegame.nostalgic"
-            
-            # Export for App Store distribution with automatic signing
-            echo "Starting xcodebuild export for App Store distribution..."
-            xcodebuild -exportArchive \
-              -archivePath "$(pwd)/build/Archive.xcarchive" \
-              -exportPath "$(pwd)/build/ipa" \
-              -exportOptionsPlist "$(pwd)/ExportOptions.plist" \
-              -allowProvisioningUpdates \
-              -allowProvisioningDeviceRegistration \
-              2>&1 | tee export_build.log
-            
-            EXPORT_RESULT=$?
-            echo "Export exit code: $EXPORT_RESULT"
-            
-            # Debug what was actually created
-            echo "Full directory structure after export:"
-            find build -type f 2>/dev/null || echo "No files in build directory"
-            
-            if [ $EXPORT_RESULT -eq 0 ]; then
-              echo "✅ Export command completed successfully"
-              
-              # Check all possible export locations
-              echo "Checking for IPA files in multiple locations:"
-              find . -name "*.ipa" -type f 2>/dev/null || echo "No IPA files found anywhere"
-              
-              # Check export directory structure
-              if [ -d "build/ipa" ]; then
-                echo "Export directory contents:"
-                ls -la build/ipa/ || echo "Cannot list export directory"
-                
-                # Look for IPA in subdirectories
-                find build/ipa -name "*.ipa" -type f 2>/dev/null || echo "No IPA in export directory"
-              else
-                echo "❌ Export directory was not created"
-              fi
-              
-              # Verify IPA was created somewhere
-              IPA_FILES=$(find build -name "*.ipa" -type f 2>/dev/null)
-              if [ -n "$IPA_FILES" ]; then
-                echo "✅ IPA file(s) found:"
-                echo "$IPA_FILES"
-                ls -la $IPA_FILES
-                
-                # Move IPA to expected location if needed
-                for ipa in $IPA_FILES; do
-                  if [ "$ipa" != "build/ipa/$(basename $ipa)" ]; then
-                    echo "Moving IPA to expected location: $ipa -> build/ipa/"
-                    cp "$ipa" build/ipa/
-                  fi
-                done
-                
-                echo "Final IPA verification:"
-                ls -la build/ipa/*.ipa
-              else
-                echo "❌ No IPA file found anywhere in build directory"
-                echo "Export logs:"
-                tail -50 export_build.log
-                exit 1
-              fi
-            else
-              echo "❌ IPA Export failed with exit code: $EXPORT_RESULT"
-              echo "Export error logs:"
-              tail -50 export_build.log
-              exit 1
-            fi
+            echo "Archive verification:"
+            ls -la build/Archive.xcarchive/
+            echo "Archive Info.plist contents:"
+            cat build/Archive.xcarchive/Info.plist 2>/dev/null || echo "Info.plist not found"
           else
-            echo "❌ Cannot export IPA - no archive found"
+            echo "❌ Cannot proceed - no archive was created"
             exit 1
           fi
-          
-          echo "Build complete. Contents of build directory:"
-          ls -la build/
-          ls -la build/ipa/ || echo "IPA directory not found"
     artifacts:
-      - ios/App/build/ipa/*.ipa
-      - ios/App/build/**/*.ipa
       - ios/App/build/Archive.xcarchive
       - ios/App/archive_build.log
-      - ios/App/export_build.log
     publishing:
       email:
         recipients:

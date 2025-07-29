@@ -71,12 +71,43 @@ workflows:
             echo "✅ Capacitor copy successful"
           else
             echo "❌ Capacitor copy failed with code $COPY_EXIT_CODE"
-            echo "Trying basic sync..."
-            npx cap sync ios || echo "Sync also failed, but continuing..."
+            echo "Manually copying required files..."
+            
+            # Create iOS app directory structure
+            mkdir -p ios/App/App/public
+            
+            # Copy web assets
+            if [ -d "dist/public" ]; then
+              cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
+            fi
+            
+            # Create required config.xml
+            cat > ios/App/App/config.xml << 'EOF'
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.snakegame.nostalgic" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Snake Game - Nostalgic</name>
+    <description>A nostalgic Snake game</description>
+    <content src="index.html" />
+    <access origin="*" />
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+</widget>
+EOF
+            
+            # Copy capacitor config
+            cp capacitor.config.ts ios/App/App/capacitor.config.json 2>/dev/null || {
+              echo '{"appId":"com.snakegame.nostalgic","appName":"Snake Game - Nostalgic","webDir":"dist/public"}' > ios/App/App/capacitor.config.json
+            }
+            
+            echo "Manual copy completed"
           fi
           
-          echo "Checking iOS sync result..."
-          ls -la ios/App/App/public/ || echo "iOS public directory not found"
+          echo "Verifying required files are present..."
+          ls -la ios/App/App/public/ || echo "Public directory still missing"
+          ls -la ios/App/App/config.xml || echo "Config.xml still missing"
+          ls -la ios/App/App/capacitor.config.* || echo "Capacitor config still missing"
           set -e  # Re-enable exit on error
       - name: Install CocoaPods dependencies
         script: |

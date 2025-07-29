@@ -80,23 +80,42 @@ workflows:
           set -e  # Re-enable exit on error
       - name: Install CocoaPods dependencies
         script: |
-          cd ios/App && pod install
+          echo "Installing CocoaPods dependencies..."
+          cd ios/App
+          
+          # Clean and reinstall pods
+          rm -rf Pods/ Podfile.lock
+          pod install --repo-update
+          
+          # Verify workspace was created properly
+          ls -la App.xcworkspace/
+          ls -la App.xcworkspace/contents.xcworkspacedata || echo "Workspace data file missing"
       - name: Debug iOS Build Configuration
         script: |
           echo "=== iOS Build Debug Information ==="
           echo "Xcode version:"
-          xcodebuild -version
+          xcodebuild -version || echo "xcodebuild not available"
+          
+          echo "Current directory and files:"
+          pwd
+          ls -la
+          
+          echo "iOS directory structure:"
+          ls -la ios/App/ || echo "iOS App directory not found"
+          
+          echo "Workspace exists:"
+          ls -la "$XCODE_WORKSPACE" || echo "Workspace not found: $XCODE_WORKSPACE"
           
           echo "Available schemes:"
-          xcodebuild -list -workspace "$XCODE_WORKSPACE"
+          xcodebuild -list -workspace "$XCODE_WORKSPACE" || echo "Cannot list schemes"
           
           echo "Code signing identities:"
-          security find-identity -v -p codesigning
+          security find-identity -v -p codesigning || echo "No code signing identities found"
           
           echo "Bundle ID check:"
           echo "Expected: $BUNDLE_ID"
           echo "Capacitor config:"
-          grep -A 1 -B 1 "appId" capacitor.config.ts || echo "Config not found"
+          cat capacitor.config.ts | grep -A 2 -B 2 "appId" || echo "Config not found"
       - name: Set up code signing settings on Xcode project
         script: |
           echo "Setting up code signing..."
@@ -109,7 +128,16 @@ workflows:
           echo "Scheme: $XCODE_SCHEME"
           echo "Bundle ID: $BUNDLE_ID"
           
-          # Simplified build command first
+          # Verify workspace before building
+          if [ ! -f "$XCODE_WORKSPACE/contents.xcworkspacedata" ]; then
+            echo "ERROR: Workspace file not found at $XCODE_WORKSPACE"
+            exit 1
+          fi
+          
+          echo "Workspace verified, starting build..."
+          
+          # Build with enhanced error handling
+          set -e
           xcode-project build-ipa \
             --workspace "$XCODE_WORKSPACE" \
             --scheme "$XCODE_SCHEME"

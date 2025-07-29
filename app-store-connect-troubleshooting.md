@@ -79,8 +79,13 @@ The enhanced logging will now show:
 - Upload destination confirmation
 - Team ID and provisioning profile validation
 
-**Most Common Remaining Issue**: Team ID mismatch
-- Ensure your Apple Developer account Team ID matches Codemagic integration
-- Check App Store Connect integration in Codemagic settings
+**App Store Connect API Configuration**:
+- **Key ID**: 7629KQWD3Z (configured)
+- **Apple ID**: 6749170406 (configured)
+- **Bundle ID**: com.snakegame.nostalgic (configured)
+
+**Most Common Remaining Issue**: API Key permissions
+- Ensure your App Store Connect API key has proper permissions for app management
+- Verify the Key ID (7629KQWD3Z) matches your Codemagic integration settings
 
 Your builds should now properly appear in App Store Connect TestFlight after these fixes.

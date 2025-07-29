@@ -24,6 +24,7 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - **Team ID**: TYRA6QN5W5 (Apple Developer Team)
 - **App Store Connect Integration**: "Apple Connect App Mgr" with Key ID 7629KQWD3Z
 - **Privacy Policy**: Integrated at `/privacy` route - resolves Jekyll deployment issues
+- **Support Page**: Available at `/support` route for App Store Connect submission
 - **Encryption Exemption**: Added ITSAppUsesNonExemptEncryption=false to Info.plist to skip encryption questions
 - iOS automatic certificate and provisioning profile management ("ios provisioning profile")
 - Android keystore integration with secure vault storage

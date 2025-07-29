@@ -29,6 +29,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Support page route
+  app.get('/support', (req, res) => {
+    try {
+      const supportHTML = readFileSync(join(process.cwd(), 'support.html'), 'utf8');
+      res.setHeader('Content-Type', 'text/html');
+      res.send(supportHTML);
+    } catch (error) {
+      res.status(404).send(`
+        <html>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h1>Support</h1>
+            <p>Support page temporarily unavailable. Please contact kathrynbrown@heykanb.com</p>
+          </body>
+        </html>
+      `);
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

@@ -12,6 +12,7 @@ This guide explains how to enable automatic code signing in Codemagic for both i
 
 ### Configuration Status
 ✅ **Automatic Code Signing Enabled** in `codemagic.yaml`:
+✅ **YAML Validation Fixed**: Removed empty TEAM_ID that caused validation errors
 ```yaml
 ios_signing:
   distribution_type: app_store

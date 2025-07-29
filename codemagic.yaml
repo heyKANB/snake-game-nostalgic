@@ -16,8 +16,8 @@ workflows:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
         APP_STORE_APPLE_ID: 1234567890  # You'll get this from App Store Connect
-        TEAM_ID: ""  # Your Apple Developer Team ID (fill this in)
         CODE_SIGN_IDENTITY: "iPhone Distribution"
+        # TEAM_ID: "XXXXXXXXXX"  # Add your 10-character Apple Developer Team ID here when available
       groups:
         - app_store_credentials  # This group will contain your Apple Developer credentials
       node: v18.17.0

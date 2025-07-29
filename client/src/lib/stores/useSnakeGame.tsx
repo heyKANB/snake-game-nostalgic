@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { subscribeWithSelector } from "zustand/middleware";
 import { 
   Position, 
   Direction, 
@@ -26,8 +25,7 @@ interface SnakeGameState {
   gameLoop: () => 'continue' | 'ate_food' | 'game_over';
 }
 
-export const useSnakeGame = create<SnakeGameState>()(
-  subscribeWithSelector((set, get) => ({
+export const useSnakeGame = create<SnakeGameState>((set, get) => ({
     snake: [{ x: Math.floor(GRID_WIDTH / 2), y: Math.floor(GRID_HEIGHT / 2) }],
     food: null,
     direction: 'right',
@@ -105,5 +103,4 @@ export const useSnakeGame = create<SnakeGameState>()(
       set({ snake: newSnake });
       return 'continue';
     }
-  }))
-);
+  }));

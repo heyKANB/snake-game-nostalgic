@@ -6,24 +6,28 @@ Your Codemagic builds were completing successfully but not showing up in App Sto
 
 ## ✅ Root Causes Identified & Fixed
 
-### 1. **Missing Export Configuration**
-**Issue**: Export options didn't specify proper App Store upload destination
-**Fix Applied**: Added `destination: upload` and proper team/provisioning configuration
+### 1. **Team ID Export Error** 
+**Issue**: `teamID` was empty causing "teamID should be non-empty" export failure
+**Fix Applied**: Removed explicit teamID dependency, using automatic team detection via App Store Connect integration
 
-### 2. **Incomplete ExportOptions.plist**
-**Issue**: Missing critical keys for App Store Connect upload
+### 2. **Export Method Deprecation**
+**Issue**: Using deprecated "app-store" method name
+**Fix Applied**: Updated to "app-store-connect" method for proper App Store Connect upload
+
+### 3. **Missing Export Configuration**
+**Issue**: Export options missing destination and automatic provisioning
 **Fix Applied**: Added:
-- `teamID` reference
-- `provisioningProfiles` mapping  
-- `destination: upload` for proper App Store routing
+- `destination: upload` for App Store Connect routing
+- `manageAppVersionAndBuildNumber: true` for automatic version management
+- Automatic provisioning updates
 
-### 3. **YAML Validation Error**
+### 4. **YAML Validation Error**
 **Issue**: `bundle_id` field not permitted in `app_store_connect` publishing section
-**Fix Applied**: Removed invalid field - bundle ID is automatically detected from environment vars
+**Fix Applied**: Removed invalid field - bundle ID automatically detected from environment vars
 
-### 4. **Insufficient Upload Verification**
-**Issue**: No verification that IPA was properly created for upload
-**Fix Applied**: Added comprehensive IPA validation and metadata checks
+### 5. **Path Resolution Issues**
+**Issue**: Export directory not created properly due to relative path issues
+**Fix Applied**: Added absolute path resolution and directory pre-creation
 
 ## 🔧 Critical Fixes Applied
 

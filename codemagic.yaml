@@ -17,7 +17,7 @@ workflows:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
         CODE_SIGN_IDENTITY: "iPhone Distribution"
-        TEAM_ID: "$TEAM_ID"  # Team ID from App Store Connect integration
+        # TEAM_ID: "$TEAM_ID"  # Team ID from App Store Connect integration (auto-detected)
       groups:
         - app_store_credentials  # This group will contain your Apple Developer credentials
       node: v18.17.0
@@ -282,14 +282,14 @@ workflows:
           # Create build directory
           mkdir -p build
           
-          # Create export options
+          # Create export options (simplified without teamID dependency)
           cat > ExportOptions.plist << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
               <key>method</key>
-              <string>app-store</string>
+              <string>app-store-connect</string>
               <key>destination</key>
               <string>upload</string>
               <key>uploadBitcode</key>
@@ -298,13 +298,8 @@ workflows:
               <true/>
               <key>compileBitcode</key>
               <false/>
-              <key>teamID</key>
-              <string>$(TEAM_ID)</string>
-              <key>provisioningProfiles</key>
-              <dict>
-                  <key>com.snakegame.nostalgic</key>
-                  <string>$(sigh_com.snakegame.nostalgic_appstore)</string>
-              </dict>
+              <key>manageAppVersionAndBuildNumber</key>
+              <true/>
           </dict>
           </plist>
           EOF
@@ -325,14 +320,15 @@ workflows:
             echo "Export options content:"
             cat ExportOptions.plist
             
-            # Export with verbose logging
-            echo "Starting xcodebuild export..."
+            # Export with automatic provisioning
+            echo "Starting xcodebuild export with automatic provisioning..."
             xcodebuild -exportArchive \
               -archivePath "$(pwd)/build/Archive.xcarchive" \
               -exportPath "$(pwd)/build/ipa" \
               -exportOptionsPlist "$(pwd)/ExportOptions.plist" \
               -allowProvisioningUpdates \
-              -verbose 2>&1 | tee export_build.log
+              -allowProvisioningDeviceRegistration \
+              2>&1 | tee export_build.log
             
             EXPORT_RESULT=$?
             echo "Export exit code: $EXPORT_RESULT"

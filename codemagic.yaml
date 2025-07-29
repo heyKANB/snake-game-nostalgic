@@ -172,20 +172,33 @@ workflows:
           echo "Checking Info.plist version settings..."
           grep -A 1 -B 1 "MARKETING_VERSION\|CURRENT_PROJECT_VERSION" App/Info.plist || echo "Version settings not found in Info.plist"
           
-          echo "Building project to validate configuration..."
+          echo "Validating build configuration first..."
+          xcodebuild clean \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release
+          
+          echo "Testing basic build without signing..."
           xcodebuild build \
             -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
             -destination "generic/platform=iOS" \
-            CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates \
-            -verbose
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            -quiet || {
+              echo "Basic build failed - checking for compilation errors..."
+              echo "Build logs above should show specific compilation issues"
+              exit 1
+            }
+          
+          echo "Basic build succeeded, proceeding with signed build..."
           
           # Create build directory
           mkdir -p build
           
-          echo "Creating archive with explicit version settings..."
+          echo "Creating archive..."
+          set -x  # Enable command echoing for debugging
           xcodebuild archive \
             -workspace App.xcworkspace \
             -scheme App \
@@ -193,29 +206,22 @@ workflows:
             -destination "generic/platform=iOS" \
             -archivePath build/App.xcarchive \
             CODE_SIGN_STYLE=Automatic \
-            MARKETING_VERSION="1.0" \
-            CURRENT_PROJECT_VERSION="1" \
-            PRODUCT_BUNDLE_IDENTIFIER="com.snakegame.nostalgic" \
-            -allowProvisioningUpdates || {
-              echo "Archive failed with explicit settings, trying alternative approach..."
-              
-              # Alternative: Build without code signing first, then archive
-              echo "Trying simplified archive without complex flags..."
-              xcodebuild archive \
-                -workspace App.xcworkspace \
-                -scheme App \
-                -configuration Release \
-                -archivePath build/App.xcarchive \
-                CODE_SIGN_STYLE=Automatic \
-                -allowProvisioningUpdates || {
-                  echo "All archive attempts failed. Checking for fundamental issues..."
-                  echo "Available SDKs:"
-                  xcodebuild -showsdks
-                  echo "Scheme details:"
-                  cat App.xcodeproj/xcshareddata/xcschemes/App.xcscheme
-                  exit 1
-                }
-            }
+            -allowProvisioningUpdates
+          set +x  # Disable command echoing
+          
+          echo "Checking if archive was created..."
+          if [ -d "build/App.xcarchive" ]; then
+            echo "✅ Archive created successfully!"
+            ls -la build/App.xcarchive/
+          else
+            echo "❌ Archive creation failed"
+            echo "Build directory contents:"
+            ls -la build/ || echo "Build directory doesn't exist"
+            echo "Available SDKs:"
+            xcodebuild -showsdks | head -10
+            echo "Last 50 lines of build output should show the error above"
+            exit 1
+          fi
           
           # Create export options
           cat > ExportOptions.plist << EOF

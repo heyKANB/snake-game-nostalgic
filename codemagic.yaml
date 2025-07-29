@@ -170,29 +170,50 @@ workflows:
       - name: Build iOS app for App Store
         script: |
           echo "Building iOS app for App Store distribution..."
+          cd ios/App
+          
+          # Verify workspace exists
+          if [ ! -f "App.xcworkspace/contents.xcworkspacedata" ]; then
+            echo "ERROR: Workspace not found"
+            exit 1
+          fi
+          
+          # Build using Codemagic's native command
           xcode-project build-ipa \
-            --workspace "$XCODE_WORKSPACE" \
-            --scheme "$XCODE_SCHEME"
+            --workspace "App.xcworkspace" \
+            --scheme "App" \
+            --config "Release"
       - name: Verify build completion
         script: |
           echo "✅ iOS build completed using Codemagic's xcode-project build-ipa"
-          echo "Verifying IPA creation..."
+          echo "Debugging IPA location..."
           
-          # Look for created IPA files
-          find . -name "*.ipa" -type f 2>/dev/null && echo "IPA files found" || echo "IPA files will be detected by publishing step"
+          # Search for IPA files everywhere
+          echo "=== Searching for IPA files ==="
+          find . -name "*.ipa" -type f 2>/dev/null | head -10 || echo "No IPA files found yet"
           
-          echo "Build artifacts:"
-          ls -la build/ 2>/dev/null || echo "Build directory will be created by build-ipa"
+          # Check common build directories
+          echo "=== Checking build directories ==="
+          ls -la ios/App/build/ 2>/dev/null || echo "ios/App/build/ not found"
+          ls -la build/ 2>/dev/null || echo "build/ not found"
+          
+          # Check Xcode DerivedData equivalent
+          echo "=== Checking for Xcode build products ==="
+          find . -name "Products" -type d 2>/dev/null | head -5
+          find . -name "*.app" -type d 2>/dev/null | head -5
+          
+          # List all directories that might contain build outputs
+          echo "=== All directories in ios/App ==="
+          find ios/App -type d -maxdepth 2 2>/dev/null || echo "Cannot list ios/App directories"
           
           echo "Ready for App Store Connect publishing using integration: Apple Connect App Mgr"
           echo "Key ID: 7629KQWD3Z"
     artifacts:
-      - build/**/outputs/**/*.ipa
-      - build/**/outputs/**/mapping.txt
-      - build/**/outputs/**/*.aab
-      - build/**/outputs/**/*.apk
-      - "*.xcarchive"
-      - "*.ipa"
+      - ios/App/build/**/*.ipa
+      - ios/App/build/**/*.xcarchive
+      - "**/*.ipa"
+      - "**/*.xcarchive"
+      - "build/**/*.ipa"
     publishing:
       email:
         recipients:

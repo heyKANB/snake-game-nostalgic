@@ -4,7 +4,7 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m1
     integrations:
-      app_store_connect: Apple Connect App Mgr
+      app_store_connect: codemagic
     environment:
       ios_signing:
         distribution_type: app_store
@@ -37,13 +37,27 @@ workflows:
       - name: Install npm dependencies
         script: |
           npm ci
+      - name: Build web application
+        script: |
+          npm run build
+      - name: Verify build output
+        script: |
+          echo "Checking build output..."
+          ls -la dist/ || echo "dist/ directory not found"
+          ls -la dist/public/ || echo "dist/public/ directory not found"
+      - name: Initialize Capacitor platforms
+        script: |
+          echo "Setting up Capacitor platforms..."
+          npx cap add ios --confirm || echo "iOS platform already exists"
+          npx cap add android --confirm || echo "Android platform already exists"
+      - name: Sync Capacitor with web app
+        script: |
+          echo "Syncing Capacitor..."
+          npx cap sync ios
+          npx cap copy ios
       - name: Install CocoaPods dependencies
         script: |
           cd ios/App && pod install
-      - name: Set up Capacitor
-        script: |
-          npm run build
-          npx cap sync ios
       - name: Set up code signing settings on Xcode project
         script: |
           # Apply automatic code signing with Codemagic-managed certificates
@@ -114,10 +128,24 @@ workflows:
       - name: Install npm dependencies
         script: |
           npm ci
-      - name: Set up Capacitor
+      - name: Build web application
         script: |
           npm run build
+      - name: Verify build output
+        script: |
+          echo "Checking build output..."
+          ls -la dist/ || echo "dist/ directory not found"
+          ls -la dist/public/ || echo "dist/public/ directory not found"
+      - name: Initialize Capacitor platforms
+        script: |
+          echo "Setting up Capacitor platforms..."
+          npx cap add ios --confirm || echo "iOS platform already exists"
+          npx cap add android --confirm || echo "Android platform already exists"
+      - name: Sync Capacitor with web app
+        script: |
+          echo "Syncing Capacitor..."
           npx cap sync android
+          npx cap copy android
       - name: Set up local.properties
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"

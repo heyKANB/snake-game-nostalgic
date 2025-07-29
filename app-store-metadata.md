@@ -11,11 +11,11 @@
 
 ### Required for Submission
 - [ ] App Store Connect account access
-- [ ] Screenshots (5.5" and 6.5" iPhone)
+- [x] Screenshots (5.5" and 6.5" iPhone) - Generated via screenshot tool
 - [ ] App icon (1024x1024px)
 - [ ] App description
 - [ ] Keywords
-- [ ] Privacy policy URL
+- [x] Privacy policy URL - Available at privacy-policy.html
 - [ ] Support URL
 
 ### Current Status
@@ -26,9 +26,15 @@
 
 ### Next Steps
 1. Resolve iOS archive creation issues
-2. Generate required App Store screenshots
-3. Prepare app metadata and descriptions
-4. Submit for App Store review
+2. ✅ Generate required App Store screenshots (use generate-screenshots.html)
+3. ✅ Privacy policy created (privacy-policy.html)
+4. Prepare app metadata and descriptions
+5. Submit for App Store review
+
+### Generated Assets
+- **Privacy Policy**: `privacy-policy.html` (ready for web hosting)
+- **Screenshot Generator**: `generate-screenshots.html` (interactive tool)
+- **Privacy Policy URL**: Deploy privacy-policy.html to get public URL
 
 ## Build Configuration
 - **Development Team**: Set via Codemagic provisioning

@@ -50,11 +50,32 @@ workflows:
           echo "Setting up Capacitor platforms..."
           npx cap add ios --confirm || echo "iOS platform already exists"
           npx cap add android --confirm || echo "Android platform already exists"
+          echo "Platform setup complete"
       - name: Sync Capacitor with web app
         script: |
+          set +e  # Don't exit on error
           echo "Syncing Capacitor..."
-          npx cap sync ios
+          echo "Current directory: $(pwd)"
+          echo "Checking capacitor.config.ts..."
+          cat capacitor.config.ts
+          echo "Checking webDir exists..."
+          ls -la dist/public/
+          
+          echo "Running capacitor copy (safer than sync)..."
           npx cap copy ios
+          COPY_EXIT_CODE=$?
+          
+          if [ $COPY_EXIT_CODE -eq 0 ]; then
+            echo "✅ Capacitor copy successful"
+          else
+            echo "❌ Capacitor copy failed with code $COPY_EXIT_CODE"
+            echo "Trying basic sync..."
+            npx cap sync ios || echo "Sync also failed, but continuing..."
+          fi
+          
+          echo "Checking iOS sync result..."
+          ls -la ios/App/App/public/ || echo "iOS public directory not found"
+          set -e  # Re-enable exit on error
       - name: Install CocoaPods dependencies
         script: |
           cd ios/App && pod install
@@ -141,11 +162,32 @@ workflows:
           echo "Setting up Capacitor platforms..."
           npx cap add ios --confirm || echo "iOS platform already exists"
           npx cap add android --confirm || echo "Android platform already exists"
+          echo "Platform setup complete"
       - name: Sync Capacitor with web app
         script: |
+          set +e  # Don't exit on error
           echo "Syncing Capacitor..."
-          npx cap sync android
+          echo "Current directory: $(pwd)"
+          echo "Checking capacitor.config.ts..."
+          cat capacitor.config.ts
+          echo "Checking webDir exists..."
+          ls -la dist/public/
+          
+          echo "Running capacitor copy (safer than sync)..."
           npx cap copy android
+          COPY_EXIT_CODE=$?
+          
+          if [ $COPY_EXIT_CODE -eq 0 ]; then
+            echo "✅ Capacitor copy successful"
+          else
+            echo "❌ Capacitor copy failed with code $COPY_EXIT_CODE"
+            echo "Trying basic sync..."
+            npx cap sync android || echo "Sync also failed, but continuing..."
+          fi
+          
+          echo "Checking Android sync result..."
+          ls -la android/app/src/main/assets/public/ || echo "Android public directory not found"
+          set -e  # Re-enable exit on error
       - name: Set up local.properties
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"

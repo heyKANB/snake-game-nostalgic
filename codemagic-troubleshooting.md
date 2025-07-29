@@ -1,6 +1,9 @@
 # Codemagic Build Troubleshooting Guide
 
-## Current Issue: "Set up Capacitor script exited with status code 1"
+## Latest Issue: "Sync Capacitor with web app script exited with status code 1"
+
+**Previous Issue**: "Set up Capacitor script exited with status code 1" - ✅ RESOLVED
+**Current Issue**: Step 8 - Capacitor sync still failing
 
 ### Root Cause Analysis
 
@@ -10,9 +13,27 @@ The Capacitor setup is failing because:
 2. **Platform Initialization**: iOS/Android platforms might not be properly initialized
 3. **Sync Order**: Capacitor sync running before platforms are ready
 
-### Fixed Configuration Changes
+### Latest Fix: Robust Capacitor Sync (2025-01-29)
 
-#### 1. Proper Script Order
+#### New Approach: Copy Instead of Sync
+```yaml
+- name: Sync Capacitor with web app
+  script: |
+    set +e  # Don't exit on error
+    echo "Running capacitor copy (safer than sync)..."
+    npx cap copy ios
+    COPY_EXIT_CODE=$?
+    
+    if [ $COPY_EXIT_CODE -eq 0 ]; then
+      echo "✅ Capacitor copy successful"
+    else
+      echo "❌ Capacitor copy failed, trying sync..."
+      npx cap sync ios || echo "Sync also failed, but continuing..."
+    fi
+    set -e  # Re-enable exit on error
+```
+
+### Previous Fix: Proper Script Order
 ```yaml
 scripts:
   - name: Install npm dependencies

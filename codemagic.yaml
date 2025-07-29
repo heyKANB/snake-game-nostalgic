@@ -197,8 +197,7 @@ workflows:
           # Create build directory
           mkdir -p build
           
-          echo "Creating archive..."
-          set -x  # Enable command echoing for debugging
+          echo "Creating archive with detailed output..."
           xcodebuild archive \
             -workspace App.xcworkspace \
             -scheme App \
@@ -206,20 +205,32 @@ workflows:
             -destination "generic/platform=iOS" \
             -archivePath build/App.xcarchive \
             CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates
-          set +x  # Disable command echoing
+            -allowProvisioningUpdates \
+            2>&1 | tee archive_build.log
           
-          echo "Checking if archive was created..."
-          if [ -d "build/App.xcarchive" ]; then
+          ARCHIVE_EXIT_CODE=${PIPESTATUS[0]}
+          echo "Archive command exit code: $ARCHIVE_EXIT_CODE"
+          
+          echo "Checking archive result (exit code: $ARCHIVE_EXIT_CODE)..."
+          if [ $ARCHIVE_EXIT_CODE -eq 0 ] && [ -d "build/App.xcarchive" ]; then
             echo "✅ Archive created successfully!"
             ls -la build/App.xcarchive/
           else
-            echo "❌ Archive creation failed"
+            echo "❌ Archive creation failed (exit code: $ARCHIVE_EXIT_CODE)"
             echo "Build directory contents:"
             ls -la build/ || echo "Build directory doesn't exist"
+            echo ""
+            echo "=== ARCHIVE BUILD LOG (last 100 lines) ==="
+            tail -100 archive_build.log 2>/dev/null || echo "No build log found"
+            echo ""
+            echo "=== ENVIRONMENT INFO ==="
             echo "Available SDKs:"
             xcodebuild -showsdks | head -10
-            echo "Last 50 lines of build output should show the error above"
+            echo "Xcode version:"
+            xcodebuild -version
+            echo "Current directory: $(pwd)"
+            echo "Workspace check:"
+            ls -la App.xcworkspace/
             exit 1
           fi
           

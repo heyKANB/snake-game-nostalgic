@@ -80,7 +80,8 @@ The enhanced logging will now show:
 - Team ID and provisioning profile validation
 
 **App Store Connect API Configuration**:
-- **Key ID**: 7629KQWD3Z (configured)
+- **Integration Name**: Apple Connect App Mgr (in Codemagic)
+- **Key ID**: 7629KQWD3Z (configured in integration)
 - **Apple ID**: 6749170406 (configured)
 - **Bundle ID**: com.snakegame.nostalgic (configured)
 

@@ -21,7 +21,7 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - Implemented manual file copy fallback when Capacitor sync fails
 - Enhanced build process with comprehensive error handling and fallbacks
 - **Apple ID**: 6749170406 (registered for App Store Connect)
-- **App Store Connect Key ID**: 7629KQWD3Z (for Codemagic API authentication)
+- **App Store Connect Integration**: "Apple Connect App Mgr" with Key ID 7629KQWD3Z
 - **Privacy Policy**: Integrated at `/privacy` route - resolves Jekyll deployment issues
 - iOS automatic certificate and provisioning profile management ("ios provisioning profile")
 - Android keystore integration with secure vault storage

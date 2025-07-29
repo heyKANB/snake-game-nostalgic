@@ -321,9 +321,17 @@ workflows:
             echo "Export options content:"
             cat ExportOptions.plist
             
-            # Check available signing identities
+            # Debug provisioning and signing setup
             echo "Available signing identities:"
             security find-identity -v -p codesigning || echo "No signing identities found"
+            
+            echo "Provisioning profiles:"
+            ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ 2>/dev/null || echo "No provisioning profiles found"
+            
+            echo "App Store Connect integration verification:"
+            echo "Integration: Apple Connect App Mgr"
+            echo "Key ID: 7629KQWD3Z"
+            echo "Bundle ID: com.snakegame.nostalgic"
             
             # Export for App Store distribution (no upload)
             echo "Starting xcodebuild export for App Store distribution..."

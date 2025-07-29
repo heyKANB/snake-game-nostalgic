@@ -19,7 +19,7 @@ The issue is with using `destination: upload` in ExportOptions.plist when the Ap
 ### 3. Simplified Authentication Flow
 - Export doesn't require App Store Connect authentication
 - Upload handled by Codemagic's native App Store Connect integration
-- Uses Key ID (7629KQWD3Z) configured in Codemagic settings
+- Uses Key ID (7629KQWD3Z) via "Apple Connect App Mgr" integration in Codemagic settings
 
 ## Configuration Changes
 

@@ -93,6 +93,18 @@ workflows:
             echo '        <allow-intent href="itms-apps:*" />' >> ios/App/App/config.xml
             echo '    </platform>' >> ios/App/App/config.xml
             echo '</widget>' >> ios/App/App/config.xml
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.snakegame.nostalgic" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Snake Game - Nostalgic</name>
+    <description>A nostalgic Snake game</description>
+    <content src="index.html" />
+    <access origin="*" />
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+</widget>
+EOF
             
             # Copy capacitor config
             cp capacitor.config.ts ios/App/App/capacitor.config.json 2>/dev/null || {

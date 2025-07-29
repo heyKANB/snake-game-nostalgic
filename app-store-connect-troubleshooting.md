@@ -6,9 +6,9 @@ Your Codemagic builds were completing successfully but not showing up in App Sto
 
 ## ✅ Root Causes Identified & Fixed
 
-### 1. **Team ID Export Error** 
-**Issue**: `teamID` was empty causing "teamID should be non-empty" export failure
-**Fix Applied**: Removed explicit teamID dependency, using automatic team detection via App Store Connect integration
+### 1. **App Store Connect Authentication Error**
+**Issue**: "Failed to Use Accounts" - export process couldn't authenticate with App Store Connect
+**Fix Applied**: Changed from `destination: upload` to `destination: export` - separating export and upload phases
 
 ### 2. **Export Method Deprecation**
 **Issue**: Using deprecated "app-store" method name

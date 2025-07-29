@@ -283,16 +283,16 @@ workflows:
           # Create build directory
           mkdir -p build
           
-          # Create export options (simplified without teamID dependency)
+          # Create export options for App Store distribution (export only, upload via publishing)
           cat > ExportOptions.plist << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
               <key>method</key>
-              <string>app-store-connect</string>
+              <string>app-store</string>
               <key>destination</key>
-              <string>upload</string>
+              <string>export</string>
               <key>uploadBitcode</key>
               <false/>
               <key>uploadSymbols</key>
@@ -300,7 +300,7 @@ workflows:
               <key>compileBitcode</key>
               <false/>
               <key>manageAppVersionAndBuildNumber</key>
-              <true/>
+              <false/>
           </dict>
           </plist>
           EOF
@@ -321,14 +321,17 @@ workflows:
             echo "Export options content:"
             cat ExportOptions.plist
             
-            # Export with automatic provisioning
-            echo "Starting xcodebuild export with automatic provisioning..."
+            # Check available signing identities
+            echo "Available signing identities:"
+            security find-identity -v -p codesigning || echo "No signing identities found"
+            
+            # Export for App Store distribution (no upload)
+            echo "Starting xcodebuild export for App Store distribution..."
             xcodebuild -exportArchive \
               -archivePath "$(pwd)/build/Archive.xcarchive" \
               -exportPath "$(pwd)/build/ipa" \
               -exportOptionsPlist "$(pwd)/ExportOptions.plist" \
               -allowProvisioningUpdates \
-              -allowProvisioningDeviceRegistration \
               2>&1 | tee export_build.log
             
             EXPORT_RESULT=$?

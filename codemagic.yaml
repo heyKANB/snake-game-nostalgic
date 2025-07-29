@@ -17,7 +17,7 @@ workflows:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
         CODE_SIGN_IDENTITY: "iPhone Distribution"
-        # TEAM_ID: "XXXXXXXXXX"  # Add your 10-character Apple Developer Team ID here when available
+        TEAM_ID: "$TEAM_ID"  # Team ID from App Store Connect integration
       groups:
         - app_store_credentials  # This group will contain your Apple Developer credentials
       node: v18.17.0
@@ -290,24 +290,69 @@ workflows:
           <dict>
               <key>method</key>
               <string>app-store</string>
+              <key>destination</key>
+              <string>upload</string>
               <key>uploadBitcode</key>
               <false/>
               <key>uploadSymbols</key>
               <true/>
               <key>compileBitcode</key>
               <false/>
+              <key>teamID</key>
+              <string>$(TEAM_ID)</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>com.snakegame.nostalgic</key>
+                  <string>$(sigh_com.snakegame.nostalgic_appstore)</string>
+              </dict>
           </dict>
           </plist>
           EOF
           
           # Export IPA if archive was successful
           if [ -d "build/Archive.xcarchive" ]; then
-            echo "Proceeding with IPA export..."
+            echo "Proceeding with IPA export for App Store Connect..."
+            
+            # Debug export options
+            echo "Export options content:"
+            cat ExportOptions.plist
+            
+            # Export with verbose logging
             xcodebuild -exportArchive \
               -archivePath build/Archive.xcarchive \
               -exportPath build/ipa \
               -exportOptionsPlist ExportOptions.plist \
-              -allowProvisioningUpdates
+              -allowProvisioningUpdates \
+              -verbose 2>&1 | tee export_build.log
+            
+            EXPORT_RESULT=$?
+            echo "Export exit code: $EXPORT_RESULT"
+            
+            if [ $EXPORT_RESULT -eq 0 ]; then
+              echo "✅ IPA Export successful"
+              echo "Export directory contents:"
+              ls -la build/ipa/
+              
+              # Verify IPA was created
+              if ls build/ipa/*.ipa 1> /dev/null 2>&1; then
+                echo "✅ IPA file found:"
+                ls -la build/ipa/*.ipa
+                
+                # Show IPA metadata
+                echo "IPA metadata:"
+                unzip -l build/ipa/*.ipa | head -20
+              else
+                echo "❌ No IPA file found in export directory"
+                echo "Export directory structure:"
+                find build/ipa -type f 2>/dev/null || echo "Export directory empty"
+                exit 1
+              fi
+            else
+              echo "❌ IPA Export failed"
+              echo "Export error logs:"
+              tail -50 export_build.log
+              exit 1
+            fi
           else
             echo "❌ Cannot export IPA - no archive found"
             exit 1
@@ -318,9 +363,9 @@ workflows:
           ls -la build/ipa/ || echo "IPA directory not found"
     artifacts:
       - ios/App/build/ipa/*.ipa
-      - ios/App/build/App.xcarchive
-      - /tmp/xcodebuild_logs/*.log
-      - build/ios/ipa/*.ipa
+      - ios/App/build/Archive.xcarchive
+      - ios/App/archive_build.log
+      - ios/App/export_build.log
     publishing:
       email:
         recipients:
@@ -331,11 +376,14 @@ workflows:
       app_store_connect:
         auth: integration
         
-        # Submit to TestFlight but not to App Store review
+        # Submit to TestFlight (this uploads the build to App Store Connect)
         submit_to_testflight: true
         beta_groups:
           - App Store Connect Users
         submit_to_app_store: false
+        
+        # Critical: Ensure the bundle ID matches exactly
+        bundle_id: com.snakegame.nostalgic
         
         # Uncomment when ready for App Store submission
         # submit_to_app_store: true

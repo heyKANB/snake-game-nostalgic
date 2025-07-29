@@ -13,9 +13,9 @@ workflows:
         # when App Store Connect integration is configured
       vars:
         BUNDLE_ID: "com.snakegame.nostalgic"
+        APPLE_ID: "6749170406"
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
-        APP_STORE_APPLE_ID: 1234567890  # You'll get this from App Store Connect
         CODE_SIGN_IDENTITY: "iPhone Distribution"
         # TEAM_ID: "XXXXXXXXXX"  # Add your 10-character Apple Developer Team ID here when available
       groups:
@@ -149,8 +149,9 @@ workflows:
           echo "Code signing identities:"
           security find-identity -v -p codesigning || echo "No code signing identities found"
           
-          echo "Bundle ID check:"
-          echo "Expected: $BUNDLE_ID"
+          echo "App Store Configuration:"
+          echo "Bundle ID: $BUNDLE_ID"
+          echo "Apple ID: $APPLE_ID"
           echo "Capacitor config:"
           cat capacitor.config.ts | grep -A 2 -B 2 "appId" || echo "Config not found"
           

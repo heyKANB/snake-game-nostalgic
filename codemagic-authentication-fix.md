@@ -12,7 +12,12 @@ The issue is with using `destination: upload` in ExportOptions.plist when the Ap
 **Before**: Export with immediate upload (`destination: upload`)
 **After**: Export for App Store distribution (`destination: export`)
 
-### 2. Separated Export and Upload
+### 2. Fixed Provisioning Profile Issue
+- **Problem**: "App.app requires a provisioning profile" - automatic signing not working
+- **Solution**: Added `signingStyle: automatic` to ExportOptions.plist
+- **Method**: Updated to `app-store-connect` (not deprecated `app-store`)
+
+### 3. Separated Export and Upload
 - **Export Stage**: Creates IPA file for App Store distribution
 - **Upload Stage**: Codemagic's publishing section handles the actual upload to App Store Connect
 

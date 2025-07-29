@@ -9,8 +9,6 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.snakegame.nostalgic
-        # Codemagic automatically manages certificates and provisioning profiles
-        # when App Store Connect integration is configured
       vars:
         BUNDLE_ID: "com.snakegame.nostalgic"
         APPLE_ID: "6749170406"
@@ -283,14 +281,14 @@ workflows:
           # Create build directory
           mkdir -p build
           
-          # Create export options for App Store distribution (export only, upload via publishing)
+          # Create export options for App Store distribution
           cat > ExportOptions.plist << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
               <key>method</key>
-              <string>app-store</string>
+              <string>app-store-connect</string>
               <key>destination</key>
               <string>export</string>
               <key>uploadBitcode</key>
@@ -301,6 +299,8 @@ workflows:
               <false/>
               <key>manageAppVersionAndBuildNumber</key>
               <false/>
+              <key>signingStyle</key>
+              <string>automatic</string>
           </dict>
           </plist>
           EOF
@@ -328,18 +328,24 @@ workflows:
             echo "Provisioning profiles:"
             ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ 2>/dev/null || echo "No provisioning profiles found"
             
+            echo "iOS signing configuration verification:"
+            echo "Distribution type: app_store"
+            echo "Bundle identifier: com.snakegame.nostalgic"
+            echo "Automatic signing enabled in export options"
+            
             echo "App Store Connect integration verification:"
             echo "Integration: Apple Connect App Mgr"
             echo "Key ID: 7629KQWD3Z"
             echo "Bundle ID: com.snakegame.nostalgic"
             
-            # Export for App Store distribution (no upload)
+            # Export for App Store distribution with automatic signing
             echo "Starting xcodebuild export for App Store distribution..."
             xcodebuild -exportArchive \
               -archivePath "$(pwd)/build/Archive.xcarchive" \
               -exportPath "$(pwd)/build/ipa" \
               -exportOptionsPlist "$(pwd)/ExportOptions.plist" \
               -allowProvisioningUpdates \
+              -allowProvisioningDeviceRegistration \
               2>&1 | tee export_build.log
             
             EXPORT_RESULT=$?

@@ -3,7 +3,7 @@ import GameCanvas from "./GameCanvas";
 import GameUI from "./GameUI";
 import TouchControls from "./TouchControls";
 import ThemeSelector from "./ThemeSelector";
-import { BannerAd } from "./AdComponents";
+// import { BannerAd } from "./AdComponents";
 import { useSnakeGame } from "../lib/stores/useSnakeGame";
 import { useAudio } from "../lib/stores/useAudio";
 import { useAdsStore } from "../lib/stores/useAds";
@@ -166,8 +166,7 @@ const Game = () => {
         onRestart={resetGame}
       />
       
-      {/* Banner Ad at bottom */}
-      <BannerAd />
+      {/* Banner Ad temporarily disabled for development */}
     </div>
   );
 };

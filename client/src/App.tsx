@@ -36,7 +36,6 @@ function App() {
   return (
     <div className="w-full h-full bg-black flex items-center justify-center">
       <Game />
-      <InterstitialAd />
     </div>
   );
 }

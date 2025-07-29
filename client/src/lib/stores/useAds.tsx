@@ -16,7 +16,7 @@ interface AdsState {
 export const useAdsStore = create<AdsState>((set, get) => ({
   isAdLoaded: false,
   showInterstitial: false,
-  adsEnabled: true,
+  adsEnabled: false,
   adSenseAppId: '',
 
   setAdLoaded: (loaded) => set({ isAdLoaded: loaded }),

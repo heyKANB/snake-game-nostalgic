@@ -14,10 +14,12 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - Persistent user preference storage
 - Mobile-optimized theme selector interface
 
-**Code Signing Update (2025-01-28)**: Enabled automatic code signing in Codemagic for streamlined deployment
+**Code Signing Update (2025-01-29)**: Resolved iOS build failures in Codemagic deployment pipeline
+- Fixed missing shared Xcode scheme preventing archive creation
+- Enhanced build process with comprehensive error handling and fallbacks
+- Simplified archive and export process using direct xcodebuild commands
 - iOS automatic certificate and provisioning profile management ("ios provisioning profile")
 - Android keystore integration with secure vault storage
-- Eliminates manual certificate handling and renewal issues
 - Professional deployment pipeline ready for App Store submission
 
 ## User Preferences

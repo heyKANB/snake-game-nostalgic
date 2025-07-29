@@ -1,9 +1,14 @@
 # Codemagic Build Troubleshooting Guide
 
-## Latest Issue: "Sync Capacitor with web app script exited with status code 1"
+## Latest Issue: "Archive not found at path" - Xcode Build Failure
 
-**Previous Issue**: "Set up Capacitor script exited with status code 1" - ✅ RESOLVED
-**Current Issue**: Step 8 - Capacitor sync still failing
+**Previous Issues RESOLVED**:
+- ✅ "Set up Capacitor script exited with status code 1" 
+- ✅ "Sync Capacitor with web app script exited with status code 1"
+- ✅ YAML validation errors
+
+**Current Issue**: Step 12 - iOS archive creation failing
+**Root Cause**: Missing shared Xcode scheme preventing Codemagic from building
 
 ### Root Cause Analysis
 

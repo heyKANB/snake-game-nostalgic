@@ -144,22 +144,57 @@ workflows:
           
           echo "Building with xcodebuild directly..."
           
-          # Clean first
-          xcodebuild clean \
+          # Verify project configuration
+          echo "Checking workspace and schemes..."
+          xcodebuild -list -workspace App.xcworkspace
+          
+          echo "Ensuring scheme is shared..."
+          ls -la App.xcodeproj/xcshareddata/xcschemes/ || {
+            echo "No shared schemes found, scheme should be created in project setup"
+            echo "Available schemes in workspace:"
+            xcodebuild -list -workspace App.xcworkspace | grep -A 10 "Schemes:"
+          }
+          
+          echo "Checking project build settings..."
+          xcodebuild -showBuildSettings \
             -workspace App.xcworkspace \
             -scheme App \
-            -configuration Release
+            -configuration Release | grep -E "(BUNDLE_ID|CODE_SIGN|TEAM)"
           
-          # Build archive
+          echo "Building project to validate configuration..."
+          xcodebuild build \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -quiet \
+            CODE_SIGN_STYLE=Automatic \
+            -allowProvisioningUpdates || {
+              echo "Regular build failed, trying with force code signing..."
+              xcodebuild build \
+                -workspace App.xcworkspace \
+                -scheme App \
+                -configuration Release \
+                -destination "generic/platform=iOS" \
+                -quiet \
+                CODE_SIGN_STYLE=Automatic \
+                CODE_SIGN_IDENTITY="" \
+                PROVISIONING_PROFILE="" \
+                -allowProvisioningUpdates
+            }
+          
+          # Create build directory
+          mkdir -p build
+          
+          echo "Creating archive..."
           xcodebuild archive \
             -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
             -destination "generic/platform=iOS" \
             -archivePath build/App.xcarchive \
-            -allowProvisioningUpdates \
             CODE_SIGN_STYLE=Automatic \
-            DEVELOPMENT_TEAM=""
+            -allowProvisioningUpdates
           
           # Create export options
           cat > ExportOptions.plist << EOF
@@ -179,12 +214,26 @@ workflows:
           </plist>
           EOF
           
+          # Verify archive was created
+          if [ ! -d "build/App.xcarchive" ]; then
+            echo "ERROR: Archive not created at build/App.xcarchive"
+            echo "Listing build directory contents:"
+            ls -la build/ || echo "Build directory does not exist"
+            exit 1
+          fi
+          
+          echo "Archive created successfully, proceeding with export..."
+          
           # Export IPA
           xcodebuild -exportArchive \
             -archivePath build/App.xcarchive \
             -exportPath build/ipa \
             -exportOptionsPlist ExportOptions.plist \
             -allowProvisioningUpdates
+          
+          echo "Build complete. Contents of build directory:"
+          ls -la build/
+          ls -la build/ipa/ || echo "IPA directory not found"
     artifacts:
       - ios/App/build/ipa/*.ipa
       - ios/App/build/App.xcarchive

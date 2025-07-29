@@ -7,8 +7,9 @@
 - ✅ "Sync Capacitor with web app script exited with status code 1"
 - ✅ YAML validation errors
 
-**Current Issue**: Step 12 - iOS archive creation failing
-**Root Cause**: Missing shared Xcode scheme preventing Codemagic from building
+**Current Issue**: Step 12 - iOS archive creation failing despite shared scheme
+**Root Cause**: Archive step fails even with proper shared scheme and configuration
+**Status**: Investigating build environment and dependency issues
 
 ### Root Cause Analysis
 

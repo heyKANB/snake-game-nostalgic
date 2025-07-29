@@ -1,169 +1,98 @@
-# iOS Build Troubleshooting - Exit Code 65
+# iOS Build Troubleshooting Guide
 
-## Current Issue: "Build ipa for distribution script exited with status code 65"
+## Current Issue: Archive Creation Failure
 
-### What Exit Code 65 Means
+**Status**: Archive step fails with "archive not found at path" despite proper configuration
 
-Exit code 65 from Xcode typically indicates:
-1. **Code Signing Issues**: Missing certificates, provisioning profiles, or team ID mismatches
-2. **Build Configuration Problems**: Invalid project settings or missing dependencies
-3. **Archive/Export Failures**: Issues creating the .ipa file
+### Confirmed Working Components ✅
+- ✅ Shared Xcode scheme created and configured
+- ✅ Project build settings include proper version numbers (MARKETING_VERSION=1.0, CURRENT_PROJECT_VERSION=1)
+- ✅ Bundle identifier correctly set (com.snakegame.nostalgic)
+- ✅ Info.plist properly configured with version placeholders
+- ✅ CocoaPods dependencies installed successfully
+- ✅ Workspace file structure is correct
 
-### Common Causes and Solutions
+### Potential Root Causes
 
-#### 1. Code Signing Configuration
-**Problem**: Automatic code signing not working properly
-**Solution**: Enhanced build command with explicit settings
+#### 1. Code Signing Issues
+- **Problem**: Automatic code signing may fail if Apple Developer account isn't properly configured
+- **Solution**: Codemagic needs valid provisioning profile "ios provisioning profile"
+- **Test**: Try manual code signing approach if automatic fails
 
-```yaml
-- name: Build ipa for distribution
-  script: |
-    xcode-project build-ipa \
-      --workspace "$XCODE_WORKSPACE" \
-      --scheme "$XCODE_SCHEME" \
-      --archive-flags="-destination 'generic/platform=iOS' \
-                      -allowProvisioningUpdates \
-                      CODE_SIGN_IDENTITY='iPhone Distribution' \
-                      PROVISIONING_PROFILE_SPECIFIER='ios provisioning profile'"
-```
+#### 2. Build Environment Issues
+- **Problem**: Xcode version compatibility or missing SDK components
+- **Solution**: Enhanced cleaning of build artifacts and dependency cache
+- **Test**: Verify available SDKs with `xcodebuild -showsdks`
 
-#### 2. Missing Team ID
-**Problem**: Xcode can't determine the correct development team
-**Solution**: Add TEAM_ID environment variable
+#### 3. Capacitor Integration Issues
+- **Problem**: Native iOS project may have build configuration conflicts
+- **Solution**: Ensure Capacitor sync completed properly
+- **Test**: Verify public assets copied to iOS project
 
-```yaml
-environment:
-  vars:
-    TEAM_ID: "XXXXXXXXXX"  # Your 10-character Apple Developer Team ID
-```
+### Current Build Strategy
 
-#### 3. Bundle Identifier Mismatch
-**Problem**: Bundle ID doesn't match provisioning profile
-**Solution**: Ensure consistency across:
-- `capacitor.config.ts`: `appId: 'com.snakegame.nostalgic'`
-- Codemagic vars: `BUNDLE_ID: "com.snakegame.nostalgic"`
-- Apple Developer portal: App ID registration
-- Provisioning profile: Associated with correct App ID
+The build process now includes:
 
-#### 4. Xcode Project Configuration
-**Problem**: Project file has incorrect settings
-**Solution**: Verify project.pbxproj has correct:
-- PRODUCT_BUNDLE_IDENTIFIER
-- CODE_SIGN_STYLE = Automatic
-- DEVELOPMENT_TEAM
+1. **Complete Environment Cleanup**
+   - Remove all cached build artifacts
+   - Clear CocoaPods cache
+   - Fresh dependency installation
 
-### Debugging Steps for Codemagic
+2. **Build Validation**
+   - Verify workspace and scheme availability
+   - Check build settings for critical values
+   - Test basic build before attempting archive
 
-Add this debug script before the build:
-
-```yaml
-- name: Debug iOS Build Configuration
-  script: |
-    echo "=== Xcode Version ==="
-    xcodebuild -version
-    
-    echo "=== Available Schemes ==="
-    xcodebuild -list -workspace "$XCODE_WORKSPACE"
-    
-    echo "=== Provisioning Profiles ==="
-    security find-identity -v -p codesigning
-    
-    echo "=== Project Configuration ==="
-    xcodebuild -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -showBuildSettings | grep -E "(BUNDLE_ID|CODE_SIGN|TEAM|PROVISIONING)"
-    
-    echo "=== Capacitor Config ==="
-    cat capacitor.config.ts
-```
-
-### Alternative Build Approach
-
-If standard build fails, try gradual approach:
-
-```yaml
-- name: Clean and Build iOS
-  script: |
-    cd ios/App
-    
-    # Clean build folder
-    xcodebuild clean -workspace App.xcworkspace -scheme App
-    
-    # Build archive
-    xcodebuild archive \
-      -workspace App.xcworkspace \
-      -scheme App \
-      -destination "generic/platform=iOS" \
-      -archivePath build/App.xcarchive \
-      -allowProvisioningUpdates
-    
-    # Export IPA
-    xcodebuild -exportArchive \
-      -archivePath build/App.xcarchive \
-      -exportPath build/ipa \
-      -exportOptionsPlist exportOptions.plist
-```
-
-### Required Files Check
-
-Ensure these files exist:
-- ✅ `ios/App/App.xcworkspace`
-- ✅ `ios/App/App.xcodeproj/project.pbxproj`
-- ✅ `ios/App/App/Info.plist`
-- ❓ `ios/App/exportOptions.plist` (auto-generated)
-
-### Manual Verification Steps
-
-Test locally to debug:
-
-```bash
-# 1. Check workspace opens
-cd ios/App
-open App.xcworkspace
-
-# 2. Verify scheme builds
-xcodebuild -workspace App.xcworkspace -scheme App -destination "generic/platform=iOS" build
-
-# 3. Test archive creation
-xcodebuild -workspace App.xcworkspace -scheme App -destination "generic/platform=iOS" archive
-```
-
-### Common Configuration Issues
-
-#### Bundle ID Mismatch
-```typescript
-// capacitor.config.ts - ensure this matches
-appId: 'com.snakegame.nostalgic'
-```
-
-#### Info.plist Issues
-```xml
-<!-- Ensure these are properly set -->
-<key>CFBundleIdentifier</key>
-<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-
-<key>CFBundleDisplayName</key>
-<string>Snake Game - Nostalgic</string>
-```
-
-#### Project Settings
-```
-PRODUCT_BUNDLE_IDENTIFIER = com.snakegame.nostalgic
-CODE_SIGN_STYLE = Automatic
-DEVELOPMENT_TEAM = [Your Team ID]
-```
-
-### Expected Resolution
-
-When fixed, the build should:
-1. ✅ Successfully create an archive
-2. ✅ Export .ipa file to artifacts
-3. ✅ Complete with exit code 0
-4. ✅ Proceed to App Store Connect upload
+3. **Progressive Archive Attempts**
+   - Primary: Archive with explicit version and bundle settings
+   - Fallback: Simplified archive with minimal flags
+   - Debug: Comprehensive error reporting and SDK verification
 
 ### Next Steps
 
-1. **Update Configuration**: Apply the enhanced build settings
-2. **Run Debug Build**: Add debugging script to identify specific issues
-3. **Check Logs**: Review full Xcode build output in Codemagic
-4. **Iterate**: Adjust settings based on specific error messages
+1. **Run Updated Codemagic Build** with enhanced error reporting
+2. **Review Detailed Logs** for specific archive failure reasons
+3. **Verify Code Signing** configuration in Apple Developer account
+4. **Consider Alternative Approaches** if fundamental issues persist
 
-This comprehensive approach should resolve the exit code 65 issue and get your iOS build working.
+### Alternative Build Options
+
+If archive continues to fail:
+- **Local Build Test**: Create archive locally and compare configuration
+- **Manual Code Signing**: Use specific certificates instead of automatic
+- **Xcode Cloud**: Consider Apple's native CI/CD solution
+- **Different iOS Version**: Test with different Xcode/iOS SDK versions
+
+## Build Command Reference
+
+### Current Primary Command
+```bash
+xcodebuild archive \
+  -workspace App.xcworkspace \
+  -scheme App \
+  -configuration Release \
+  -destination "generic/platform=iOS" \
+  -archivePath build/App.xcarchive \
+  CODE_SIGN_STYLE=Automatic \
+  MARKETING_VERSION="1.0" \
+  CURRENT_PROJECT_VERSION="1" \
+  PRODUCT_BUNDLE_IDENTIFIER="com.snakegame.nostalgic" \
+  -allowProvisioningUpdates
+```
+
+### Debug Commands
+```bash
+# List available schemes
+xcodebuild -list -workspace App.xcworkspace
+
+# Show build settings
+xcodebuild -showBuildSettings -workspace App.xcworkspace -scheme App
+
+# Show available SDKs
+xcodebuild -showsdks
+
+# Verify code signing identities
+security find-identity -v -p codesigning
+```
+
+The comprehensive error reporting in the updated build process should provide specific details about why the archive step is failing.

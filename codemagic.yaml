@@ -83,9 +83,17 @@ workflows:
           echo "Installing CocoaPods dependencies..."
           cd ios/App
           
-          # Clean and reinstall pods
-          rm -rf Pods/ Podfile.lock
-          pod install --repo-update
+          # Clean build environment completely
+          echo "Cleaning previous build artifacts..."
+          rm -rf Pods/ 
+          rm -rf Podfile.lock
+          rm -rf build/
+          rm -rf App.xcworkspace/xcuserdata/
+          rm -rf DerivedData/
+          
+          # Fresh CocoaPods installation
+          pod cache clean --all
+          pod install --repo-update --verbose
           
           # Verify workspace was created properly
           ls -la App.xcworkspace/
@@ -159,7 +167,10 @@ workflows:
           xcodebuild -showBuildSettings \
             -workspace App.xcworkspace \
             -scheme App \
-            -configuration Release | grep -E "(BUNDLE_ID|CODE_SIGN|TEAM)"
+            -configuration Release | grep -E "(BUNDLE_ID|CODE_SIGN|TEAM|MARKETING|CURRENT_PROJECT)"
+          
+          echo "Checking Info.plist version settings..."
+          grep -A 1 -B 1 "MARKETING_VERSION\|CURRENT_PROJECT_VERSION" App/Info.plist || echo "Version settings not found in Info.plist"
           
           echo "Building project to validate configuration..."
           xcodebuild build \
@@ -167,26 +178,14 @@ workflows:
             -scheme App \
             -configuration Release \
             -destination "generic/platform=iOS" \
-            -quiet \
             CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates || {
-              echo "Regular build failed, trying with force code signing..."
-              xcodebuild build \
-                -workspace App.xcworkspace \
-                -scheme App \
-                -configuration Release \
-                -destination "generic/platform=iOS" \
-                -quiet \
-                CODE_SIGN_STYLE=Automatic \
-                CODE_SIGN_IDENTITY="" \
-                PROVISIONING_PROFILE="" \
-                -allowProvisioningUpdates
-            }
+            -allowProvisioningUpdates \
+            -verbose
           
           # Create build directory
           mkdir -p build
           
-          echo "Creating archive..."
+          echo "Creating archive with explicit version settings..."
           xcodebuild archive \
             -workspace App.xcworkspace \
             -scheme App \
@@ -194,7 +193,29 @@ workflows:
             -destination "generic/platform=iOS" \
             -archivePath build/App.xcarchive \
             CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates
+            MARKETING_VERSION="1.0" \
+            CURRENT_PROJECT_VERSION="1" \
+            PRODUCT_BUNDLE_IDENTIFIER="com.snakegame.nostalgic" \
+            -allowProvisioningUpdates || {
+              echo "Archive failed with explicit settings, trying alternative approach..."
+              
+              # Alternative: Build without code signing first, then archive
+              echo "Trying simplified archive without complex flags..."
+              xcodebuild archive \
+                -workspace App.xcworkspace \
+                -scheme App \
+                -configuration Release \
+                -archivePath build/App.xcarchive \
+                CODE_SIGN_STYLE=Automatic \
+                -allowProvisioningUpdates || {
+                  echo "All archive attempts failed. Checking for fundamental issues..."
+                  echo "Available SDKs:"
+                  xcodebuild -showsdks
+                  echo "Scheme details:"
+                  cat App.xcodeproj/xcshareddata/xcschemes/App.xcscheme
+                  exit 1
+                }
+            }
           
           # Create export options
           cat > ExportOptions.plist << EOF

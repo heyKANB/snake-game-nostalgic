@@ -4,7 +4,12 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-01-29)**: Fixed critical React hook compatibility issue and restored complete Google AdSense integration. App ID: ca-app-pub-8626828126160251~4239118513
+**Latest Update (2025-01-30)**: Successfully implemented mobile UX improvements and fixed React compatibility issues
+- Centered and enlarged touch controls (40x40 grid, h-12 w-12 buttons) for better mobile usability
+- Moved score display outside game canvas to prevent overlay with playing field
+- Fixed React hook errors by adding explicit React imports and using Zustand 4.5.7
+- Confirmed working on mobile devices with improved touch control layout
+**Previous Update (2025-01-29)**: Fixed critical React hook compatibility issue and restored complete Google AdSense integration. App ID: ca-app-pub-8626828126160251~4239118513
 **Developer**: Hunter Games by HeyKANB (kathrynbrown@heykanb.com)
 - Banner Ad Unit: ca-app-pub-8626828126160251/5048803159 (320x50 bottom placement)
 - Interstitial Ad Unit: ca-app-pub-8626828126160251/6485506895 (full-screen game over)

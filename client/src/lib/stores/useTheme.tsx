@@ -96,6 +96,7 @@ interface ThemeState {
   getThemeConfig: () => ThemeConfig;
   isThemeUnlocked: (theme: GameTheme, highScore: number, isPurchased?: boolean) => boolean;
   getAvailableThemes: (highScore: number, purchasedThemes?: GameTheme[]) => GameTheme[];
+  getUnlockedThemes: () => GameTheme[];
 }
 
 export const useThemeStore = create<ThemeState>((set, get) => ({
@@ -136,5 +137,10 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     return Object.keys(themes).filter(theme => 
       get().isThemeUnlocked(theme as GameTheme, highScore, purchasedThemes.includes(theme as GameTheme))
     ) as GameTheme[];
+  },
+
+  getUnlockedThemes: () => {
+    const highScore = parseInt(localStorage.getItem('snakeHighScore') || '0');
+    return get().getAvailableThemes(highScore);
   }
 }));

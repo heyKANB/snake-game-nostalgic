@@ -34,7 +34,7 @@ const AchievementNotification: React.FC<AchievementNotificationProps> = ({
   return (
     <div 
       className={`
-        fixed top-4 right-4 z-50 transform transition-all duration-300 ease-out
+        fixed top-4 right-4 z-50 transform transition-all duration-300 ease-out max-w-xs
         ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
       `}
     >

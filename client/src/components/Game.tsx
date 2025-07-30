@@ -81,17 +81,17 @@ const Game = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [handleKeyPress]);
 
-  // Achievement notification queue handler
+  // Achievement notification queue handler - only show when not actively playing
   useEffect(() => {
-    if (achievementQueue.length > 0 && !currentNotification) {
+    if (achievementQueue.length > 0 && !currentNotification && gameState !== 'playing') {
       setCurrentNotification(achievementQueue[0]);
       setAchievementQueue(prev => prev.slice(1));
     }
-  }, [achievementQueue, currentNotification]);
+  }, [achievementQueue, currentNotification, gameState]);
 
-  // Check achievements when score changes
+  // Check achievements when score changes or game ends
   useEffect(() => {
-    if (gameState === 'playing' || gameState === 'gameOver') {
+    if (gameState === 'gameOver') {
       const unlockedThemes = getUnlockedThemes();
       const newAchievements = checkAchievements(score, highScore, unlockedThemes);
       if (newAchievements.length > 0) {

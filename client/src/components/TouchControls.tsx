@@ -8,6 +8,7 @@ interface TouchControlsProps {
   onDirectionChange: (direction: Direction) => void;
   onStart: () => void;
   onRestart: () => void;
+  onShowLeaderboard?: () => void;
 }
 
 const TouchControls = ({ 
@@ -15,7 +16,8 @@ const TouchControls = ({
   direction, 
   onDirectionChange, 
   onStart, 
-  onRestart 
+  onRestart,
+  onShowLeaderboard
 }: TouchControlsProps) => {
   const isMobile = useIsMobile();
   const { getThemeConfig } = useThemeStore();
@@ -162,27 +164,52 @@ const TouchControls = ({
           </div>
         </div>
 
-        {/* Action Button */}
-        {(gameState === 'menu' || gameState === 'gameOver') && (
-          <button
-            className="font-mono font-bold px-6 py-4 touch-manipulation transition-all duration-150 active:scale-95 shadow-lg text-base"
-            style={{
-              backgroundColor: theme.colors.food,
-              color: theme.colors.background,
-              borderRadius: theme.effects.rounded ? '8px' : '4px'
-            }}
-            onTouchStart={(e) => {
-              e.preventDefault();
-              handleActionPress();
-            }}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              handleActionPress();
-            }}
-          >
-            {gameState === 'menu' ? 'START' : 'RESTART'}
-          </button>
-        )}
+        {/* Menu Buttons */}
+        <div className="flex gap-2 ml-4">
+          {/* Leaderboard Button (Menu only) */}
+          {gameState === 'menu' && onShowLeaderboard && (
+            <button
+              className="font-mono font-bold px-3 py-4 touch-manipulation transition-all duration-150 active:scale-95 shadow-lg text-sm"
+              style={{
+                backgroundColor: theme.colors.ui,
+                color: theme.colors.text,
+                borderRadius: theme.effects.rounded ? '8px' : '4px'
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                onShowLeaderboard();
+              }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                onShowLeaderboard();
+              }}
+            >
+              🏆
+            </button>
+          )}
+          
+          {/* Action Button */}
+          {(gameState === 'menu' || gameState === 'gameOver') && (
+            <button
+              className="font-mono font-bold px-6 py-4 touch-manipulation transition-all duration-150 active:scale-95 shadow-lg text-base"
+              style={{
+                backgroundColor: theme.colors.food,
+                color: theme.colors.background,
+                borderRadius: theme.effects.rounded ? '8px' : '4px'
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                handleActionPress();
+              }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                handleActionPress();
+              }}
+            >
+              {gameState === 'menu' ? 'START' : 'RESTART'}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

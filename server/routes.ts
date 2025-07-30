@@ -11,6 +11,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // use storage to perform CRUD operations on the storage interface
   // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
 
+  // Leaderboard endpoints
+  app.post("/api/leaderboard", async (req, res) => {
+    try {
+      const { playerName, score, theme } = req.body;
+      if (!playerName || typeof score !== 'number' || !theme) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+      
+      const entry = await storage.addScore({ playerName, score, theme });
+      res.json(entry);
+    } catch (error) {
+      console.error("Error adding score:", error);
+      res.status(500).json({ error: "Failed to add score" });
+    }
+  });
+
+  app.get("/api/leaderboard/all-time", async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const leaderboard = await storage.getAllTimeLeaderboard(limit);
+      res.json(leaderboard);
+    } catch (error) {
+      console.error("Error fetching all-time leaderboard:", error);
+      res.status(500).json({ error: "Failed to fetch leaderboard" });
+    }
+  });
+
+  app.get("/api/leaderboard/weekly", async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const leaderboard = await storage.getWeeklyLeaderboard(limit);
+      res.json(leaderboard);
+    } catch (error) {
+      console.error("Error fetching weekly leaderboard:", error);
+      res.status(500).json({ error: "Failed to fetch leaderboard" });
+    }
+  });
+
+  app.get("/api/leaderboard/daily", async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const leaderboard = await storage.getDailyLeaderboard(limit);
+      res.json(leaderboard);
+    } catch (error) {
+      console.error("Error fetching daily leaderboard:", error);
+      res.status(500).json({ error: "Failed to fetch leaderboard" });
+    }
+  });
+
   // Privacy policy route (not prefixed with /api since it's a page)
   app.get('/privacy', (req, res) => {
     try {

@@ -3,6 +3,8 @@ import GameCanvas from "./GameCanvas";
 import GameUI from "./GameUI";
 import TouchControls from "./TouchControls";
 import ThemeSelector from "./ThemeSelector";
+import Leaderboard from "./Leaderboard";
+import NameInputModal from "./NameInputModal";
 import { BannerAd } from "./AdComponents";
 import ScoreDisplay from "./ScoreDisplay";
 import { useSnakeGame } from "../lib/stores/useSnakeGame";
@@ -28,6 +30,9 @@ const Game = () => {
   const { getThemeConfig } = useThemeStore();
   const isMobile = useIsMobile();
   const [showThemeSelector, setShowThemeSelector] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [submittedScore, setSubmittedScore] = useState<number | null>(null);
   const theme = getThemeConfig();
 
   // Handle keyboard input
@@ -95,6 +100,24 @@ const Game = () => {
     return () => clearInterval(interval);
   }, [gameState, gameLoop, playSuccess, playHit]);
 
+  // Check for high score achievement and show name input
+  useEffect(() => {
+    if (gameState === 'gameOver' && score > 0 && score >= highScore && submittedScore !== score) {
+      setShowNameInput(true);
+    }
+  }, [gameState, score, highScore, submittedScore]);
+
+  const handleNameSubmit = (name: string) => {
+    setSubmittedScore(score);
+    setShowNameInput(false);
+    // You can add a success message here if needed
+  };
+
+  const handleNameSkip = () => {
+    setSubmittedScore(score);
+    setShowNameInput(false);
+  };
+
   return (
     <div 
       className="flex flex-col items-center justify-start min-h-screen p-4 pt-8"
@@ -103,19 +126,32 @@ const Game = () => {
         color: theme.colors.text 
       }}
     >
-      {/* Theme Selector Button */}
+      {/* Menu Buttons */}
       {gameState === 'menu' && (
-        <button
-          onClick={() => setShowThemeSelector(!showThemeSelector)}
-          className="absolute top-4 right-4 p-2 rounded-lg border-2 transition-all duration-200"
-          style={{
-            backgroundColor: theme.colors.ui,
-            borderColor: theme.colors.border,
-            color: theme.colors.text
-          }}
-        >
-          🎨 Theme
-        </button>
+        <div className="absolute top-4 right-4 flex gap-2">
+          <button
+            onClick={() => setShowLeaderboard(true)}
+            className="p-2 rounded-lg border-2 transition-all duration-200"
+            style={{
+              backgroundColor: theme.colors.ui,
+              borderColor: theme.colors.border,
+              color: theme.colors.text
+            }}
+          >
+            🏆 Leaderboard
+          </button>
+          <button
+            onClick={() => setShowThemeSelector(!showThemeSelector)}
+            className="p-2 rounded-lg border-2 transition-all duration-200"
+            style={{
+              backgroundColor: theme.colors.ui,
+              borderColor: theme.colors.border,
+              color: theme.colors.text
+            }}
+          >
+            🎨 Theme
+          </button>
+        </div>
       )}
 
       {/* Theme Selector Modal */}
@@ -175,7 +211,22 @@ const Game = () => {
         onDirectionChange={changeDirection}
         onStart={startGame}
         onRestart={resetGame}
+        onShowLeaderboard={() => setShowLeaderboard(true)}
       />
+      
+      {/* Modals */}
+      {showLeaderboard && (
+        <Leaderboard onClose={() => setShowLeaderboard(false)} />
+      )}
+      
+      {showNameInput && (
+        <NameInputModal
+          score={score}
+          theme="retro" // Use current theme name
+          onSubmit={handleNameSubmit}
+          onSkip={handleNameSkip}
+        />
+      )}
       
       {/* Banner Ad at bottom */}
       <BannerAd />

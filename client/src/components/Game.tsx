@@ -4,6 +4,7 @@ import GameUI from "./GameUI";
 import TouchControls from "./TouchControls";
 import ThemeSelector from "./ThemeSelector";
 import { BannerAd } from "./AdComponents";
+import ScoreDisplay from "./ScoreDisplay";
 import { useSnakeGame } from "../lib/stores/useSnakeGame";
 import { useAudio } from "../lib/stores/useAudio";
 import { useAdsStore } from "../lib/stores/useAds";
@@ -147,15 +148,25 @@ const Game = () => {
         </div>
       )}
       
-      <div className="relative">
-        <GameCanvas />
-        <GameUI 
-          gameState={gameState}
+      <div className="w-full max-w-lg mx-auto">
+        {/* Score Display - Outside game canvas */}
+        <ScoreDisplay 
           score={score}
           highScore={highScore}
-          onStart={startGame}
-          onRestart={resetGame}
+          gameState={gameState}
         />
+        
+        {/* Game Canvas and UI */}
+        <div className="relative">
+          <GameCanvas />
+          <GameUI 
+            gameState={gameState}
+            score={score}
+            highScore={highScore}
+            onStart={startGame}
+            onRestart={resetGame}
+          />
+        </div>
       </div>
       
       <TouchControls

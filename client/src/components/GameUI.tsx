@@ -103,16 +103,8 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps
     );
   }
 
-  // Playing state - show score in corner
-  return (
-    <div 
-      className="absolute top-4 left-4 font-mono text-xl"
-      style={{ color: theme.colors.text }}
-    >
-      <div>Score: <span style={{ color: theme.colors.accent }}>{score}</span></div>
-      <div>High: <span style={{ color: theme.colors.accent }}>{highScore}</span></div>
-    </div>
-  );
+  // Playing state - no overlay needed since score is outside canvas
+  return null;
 };
 
 export default GameUI;

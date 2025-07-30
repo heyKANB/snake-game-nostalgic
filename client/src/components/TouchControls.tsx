@@ -52,16 +52,16 @@ const TouchControls = ({
       className="fixed bottom-0 left-0 right-0 p-4 bg-opacity-80"
       style={{ backgroundColor: theme.colors.background + 'CC' }}
     >
-      <div className="flex items-center justify-between max-w-md mx-auto">
-        {/* D-Pad Style Controls */}
+      <div className="flex items-center justify-center max-w-md mx-auto">
+        {/* D-Pad Style Controls - Centered and Bigger */}
         <div className="relative">
-          <div className="grid grid-cols-3 gap-1 w-32 h-32">
+          <div className="grid grid-cols-3 gap-2 w-40 h-40">
             {/* Empty top-left */}
             <div></div>
             
             {/* Up */}
             <button
-              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              className="font-bold text-3xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-12 w-12"
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
@@ -84,7 +84,7 @@ const TouchControls = ({
             
             {/* Left */}
             <button
-              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              className="font-bold text-3xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-12 w-12"
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
@@ -113,7 +113,7 @@ const TouchControls = ({
             
             {/* Right */}
             <button
-              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              className="font-bold text-3xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-12 w-12"
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
@@ -136,7 +136,7 @@ const TouchControls = ({
             
             {/* Down */}
             <button
-              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg"
+              className="font-bold text-3xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-12 w-12"
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,

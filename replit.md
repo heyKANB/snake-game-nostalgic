@@ -9,7 +9,10 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - Banner Ad Unit: ca-app-pub-8626828126160251/5048803159 (320x50 bottom placement)
 - Interstitial Ad Unit: ca-app-pub-8626828126160251/6485506895 (full-screen game over)
 
-**Theme System Update (2025-01-26)**: Added complete theme/skin selection system with Retro Classic and Modern UI options
+**Theme System Update (2025-01-30)**: Added complete theme/skin selection system with unlockable themes:
+- Retro Classic (always available)
+- Modern UI (unlocks at 100 points)  
+- Halloween Spooky (unlocks at 200 points)
 - Dynamic color schemes with real-time switching
 - Visual effects (glow, gradients, rounded corners, scanlines)
 - Persistent user preference storage

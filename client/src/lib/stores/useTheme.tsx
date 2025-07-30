@@ -48,7 +48,8 @@ export const themes: Record<GameTheme, ThemeConfig> = {
   },
   modern: {
     name: 'Modern UI',
-    description: 'Clean contemporary design with vibrant colors',
+    description: 'Clean contemporary design with vibrant colors - unlock at 100 points!',
+    unlockRequirement: 100,
     colors: {
       background: '#1a1a2e',
       snake: '#00d9ff',
@@ -113,8 +114,8 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   isThemeUnlocked: (theme: GameTheme, highScore: number, isPurchased = false) => {
     const themeConfig = themes[theme];
     
-    // Always allow retro and modern themes (base themes)
-    if (theme === 'retro' || theme === 'modern') {
+    // Always allow retro theme (base theme)
+    if (theme === 'retro') {
       return true;
     }
     

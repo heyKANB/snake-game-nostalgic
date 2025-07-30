@@ -28,20 +28,22 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
         
         // Add native event listeners for better mobile support
         const input = inputRef.current;
-        const handleNativeInput = (e: Event) => {
-          const target = e.target as HTMLInputElement;
-          const newValue = target.value.slice(0, 20);
-          console.log('Native input event:', newValue);
-          setPlayerName(newValue);
-        };
-        
-        input.addEventListener('input', handleNativeInput);
-        input.addEventListener('textInput', handleNativeInput);
-        
-        return () => {
-          input.removeEventListener('input', handleNativeInput);
-          input.removeEventListener('textInput', handleNativeInput);
-        };
+        if (input) {
+          const handleNativeInput = (e: Event) => {
+            const target = e.target as HTMLInputElement;
+            const newValue = target.value.slice(0, 20);
+            console.log('Native input event:', newValue);
+            setPlayerName(newValue);
+          };
+          
+          input.addEventListener('input', handleNativeInput);
+          input.addEventListener('textInput', handleNativeInput);
+          
+          return () => {
+            input.removeEventListener('input', handleNativeInput);
+            input.removeEventListener('textInput', handleNativeInput);
+          };
+        }
       }, 300);
       return () => clearTimeout(timer);
     }

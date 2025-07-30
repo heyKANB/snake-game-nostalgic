@@ -4,15 +4,17 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-01-30)**: Successfully implemented complete global leaderboard system with database integration
+**Latest Update (2025-01-30)**: Successfully resolved mobile keyboard input issues and optimized ad timing
+- FIXED: Mobile keyboard input now works perfectly for leaderboard name entry
+- Enhanced touch controls with improved event handling and responsiveness 
+- Implemented proper ad timing: interstitial ads appear every other game over (2nd, 4th, 6th, etc.) 
+- Delayed ad display until after leaderboard interaction is complete
 - Built full leaderboard system with daily/weekly/all-time rankings using PostgreSQL
-- Added leaderboard API endpoints for score submission and retrieval
+- Added leaderboard API endpoints for score submission and retrieval  
 - Created name input modal for high score submissions (appears after any game over with score > 0)
 - Added leaderboard buttons to both desktop menu and mobile touch controls
-- Fixed game over restart functionality and theme parameter issues
 - Database schema includes player name, score, theme, and timestamp for comprehensive tracking
 - Mobile UX improvements: centered and enlarged touch controls (h-12 w-12 buttons) for better usability
-- Moved score display outside game canvas to prevent overlay with playing field
 - Fixed React hook errors by adding explicit React imports and using Zustand 4.5.7
 **Previous Update (2025-01-29)**: Fixed critical React hook compatibility issue and restored complete Google AdSense integration. App ID: ca-app-pub-8626828126160251~4239118513
 **Developer**: Hunter Games by HeyKANB (kathrynbrown@heykanb.com)

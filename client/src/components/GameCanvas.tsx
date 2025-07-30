@@ -97,7 +97,37 @@ const GameCanvas = () => {
       
       ctx.fillStyle = theme.colors.food;
       
-      if (theme.effects.rounded) {
+      // Handle different food styles
+      if (theme.foodStyle === 'pumpkin') {
+        // Halloween pumpkin
+        const centerX = x + GRID_SIZE/2;
+        const centerY = y + GRID_SIZE/2;
+        const radius = size/2;
+        
+        // Draw pumpkin body
+        ctx.fillStyle = theme.colors.food;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Draw pumpkin lines
+        ctx.strokeStyle = '#FF4500'; // Darker orange for lines
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        // Vertical lines
+        ctx.moveTo(centerX - radius/2, centerY - radius);
+        ctx.lineTo(centerX - radius/2, centerY + radius);
+        ctx.moveTo(centerX, centerY - radius);
+        ctx.lineTo(centerX, centerY + radius);
+        ctx.moveTo(centerX + radius/2, centerY - radius);
+        ctx.lineTo(centerX + radius/2, centerY + radius);
+        ctx.stroke();
+        
+        // Draw stem
+        ctx.fillStyle = '#32D74B'; // Green stem
+        ctx.fillRect(centerX - 2, centerY - radius - 3, 4, 4);
+        
+      } else if (theme.effects.rounded || theme.foodStyle === 'circle') {
         // Modern circular food
         ctx.beginPath();
         ctx.arc(x + GRID_SIZE/2, y + GRID_SIZE/2, size/2, 0, 2 * Math.PI);
@@ -107,11 +137,15 @@ const GameCanvas = () => {
         ctx.fillRect(x + padding, y + padding, size, size);
       }
       
-      // Add glow effect for retro theme
+      // Add glow effect for themes that support it
       if (theme.effects.glow) {
         ctx.shadowColor = theme.colors.food;
         ctx.shadowBlur = 8;
-        if (theme.effects.rounded) {
+        if (theme.foodStyle === 'pumpkin') {
+          ctx.beginPath();
+          ctx.arc(x + GRID_SIZE/2, y + GRID_SIZE/2, size/2, 0, 2 * Math.PI);
+          ctx.fill();
+        } else if (theme.effects.rounded || theme.foodStyle === 'circle') {
           ctx.beginPath();
           ctx.arc(x + GRID_SIZE/2, y + GRID_SIZE/2, size/2, 0, 2 * Math.PI);
           ctx.fill();

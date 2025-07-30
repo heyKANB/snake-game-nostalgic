@@ -1,8 +1,10 @@
 import React from 'react';
 import { useThemeStore, themes, GameTheme } from '../lib/stores/useTheme';
+import { useSnakeGame } from '../lib/stores/useSnakeGame';
 
 const ThemeSelector: React.FC = () => {
-  const { currentTheme, setTheme, getThemeConfig } = useThemeStore();
+  const { currentTheme, setTheme, getThemeConfig, isThemeUnlocked } = useThemeStore();
+  const { highScore } = useSnakeGame();
   const config = getThemeConfig();
 
   return (
@@ -17,15 +19,18 @@ const ThemeSelector: React.FC = () => {
       <div className="grid grid-cols-1 gap-3">
         {Object.entries(themes).map(([themeKey, themeConfig]) => {
           const isSelected = currentTheme === themeKey;
+          const isUnlocked = isThemeUnlocked(themeKey as GameTheme, highScore);
           
           return (
             <button
               key={themeKey}
-              onClick={() => setTheme(themeKey as GameTheme)}
+              onClick={() => isUnlocked && setTheme(themeKey as GameTheme)}
+              disabled={!isUnlocked}
               className={`
                 relative p-4 border-2 transition-all duration-200 text-left
                 ${themeConfig.effects.rounded ? 'rounded-lg' : 'rounded-none'}
                 ${isSelected ? 'border-opacity-100' : 'border-opacity-50 hover:border-opacity-75'}
+                ${!isUnlocked ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
               `}
               style={{
                 backgroundColor: themeConfig.colors.ui,
@@ -64,23 +69,33 @@ const ThemeSelector: React.FC = () => {
                         />
                       </div>
                       {/* Mini food preview */}
-                      <div 
-                        className={`w-2 h-2 ml-1 ${themeConfig.effects.rounded ? 'rounded-full' : ''}`}
-                        style={{ 
-                          backgroundColor: themeConfig.colors.food,
-                          boxShadow: themeConfig.effects.glow ? `0 0 4px ${themeConfig.colors.food}` : 'none'
-                        }}
-                      />
+                      {themeConfig.foodStyle === 'pumpkin' ? (
+                        <div className="w-2 h-2 ml-1 relative">
+                          🎃
+                        </div>
+                      ) : (
+                        <div 
+                          className={`w-2 h-2 ml-1 ${themeConfig.effects.rounded || themeConfig.foodStyle === 'circle' ? 'rounded-full' : ''}`}
+                          style={{ 
+                            backgroundColor: themeConfig.colors.food,
+                            boxShadow: themeConfig.effects.glow ? `0 0 4px ${themeConfig.colors.food}` : 'none'
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
                 
                 <div className="flex-1">
-                  <div 
-                    className="font-semibold"
-                    style={{ color: themeConfig.colors.text }}
-                  >
-                    {themeConfig.name}
+                  <div className="flex items-center justify-between">
+                    <div 
+                      className="font-semibold"
+                      style={{ color: themeConfig.colors.text }}
+                    >
+                      {themeConfig.name}
+                      {!isUnlocked && <span className="ml-2">🔒</span>}
+                    </div>
+                    {isSelected && <span className="text-sm">✓</span>}
                   </div>
                   <div 
                     className="text-sm opacity-75"
@@ -88,6 +103,14 @@ const ThemeSelector: React.FC = () => {
                   >
                     {themeConfig.description}
                   </div>
+                  {!isUnlocked && themeConfig.unlockRequirement && (
+                    <div 
+                      className="text-xs mt-1 font-medium"
+                      style={{ color: themeConfig.colors.accent }}
+                    >
+                      Need {themeConfig.unlockRequirement} points (Current: {highScore})
+                    </div>
+                  )}
                   
                   {/* Feature indicators */}
                   <div className="flex space-x-2 mt-2">

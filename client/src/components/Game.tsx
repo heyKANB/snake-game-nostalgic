@@ -27,7 +27,7 @@ const Game = () => {
   
   const { playHit, playSuccess } = useAudio();
   const { showInterstitialAd } = useAdsStore();
-  const { getThemeConfig } = useThemeStore();
+  const { getThemeConfig, currentTheme } = useThemeStore();
   const isMobile = useIsMobile();
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
@@ -102,10 +102,11 @@ const Game = () => {
 
   // Check for high score achievement and show name input
   useEffect(() => {
-    if (gameState === 'gameOver' && score > 0 && score >= highScore && submittedScore !== score) {
+    if (gameState === 'gameOver' && score > 0 && submittedScore !== score) {
+      // Show name input for any score > 0, not just high scores
       setShowNameInput(true);
     }
-  }, [gameState, score, highScore, submittedScore]);
+  }, [gameState, score, submittedScore]);
 
   const handleNameSubmit = (name: string) => {
     setSubmittedScore(score);
@@ -222,7 +223,7 @@ const Game = () => {
       {showNameInput && (
         <NameInputModal
           score={score}
-          theme="retro" // Use current theme name
+          theme={currentTheme || "retro"}
           onSubmit={handleNameSubmit}
           onSkip={handleNameSkip}
         />

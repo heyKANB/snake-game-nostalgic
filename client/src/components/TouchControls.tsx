@@ -70,14 +70,29 @@ const TouchControls = ({
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
-                borderRadius: theme.effects.rounded ? '8px' : '4px'
+                borderRadius: theme.effects.rounded ? '8px' : '4px',
+                WebkitTapHighlightColor: 'transparent',
+                userSelect: 'none'
               }}
               onTouchStart={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Up touch start');
                 handleDirectionPress('up');
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Up mouse down');
+                handleDirectionPress('up');
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 handleDirectionPress('up');
               }}
             >
@@ -93,14 +108,29 @@ const TouchControls = ({
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
-                borderRadius: theme.effects.rounded ? '8px' : '4px'
+                borderRadius: theme.effects.rounded ? '8px' : '4px',
+                WebkitTapHighlightColor: 'transparent',
+                userSelect: 'none'
               }}
               onTouchStart={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Left touch start');
                 handleDirectionPress('left');
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Left mouse down');
+                handleDirectionPress('left');
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 handleDirectionPress('left');
               }}
             >
@@ -122,14 +152,29 @@ const TouchControls = ({
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
-                borderRadius: theme.effects.rounded ? '8px' : '4px'
+                borderRadius: theme.effects.rounded ? '8px' : '4px',
+                WebkitTapHighlightColor: 'transparent',
+                userSelect: 'none'
               }}
               onTouchStart={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Right touch start');
                 handleDirectionPress('right');
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Right mouse down');
+                handleDirectionPress('right');
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 handleDirectionPress('right');
               }}
             >
@@ -145,14 +190,29 @@ const TouchControls = ({
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
-                borderRadius: theme.effects.rounded ? '8px' : '4px'
+                borderRadius: theme.effects.rounded ? '8px' : '4px',
+                WebkitTapHighlightColor: 'transparent',
+                userSelect: 'none'
               }}
               onTouchStart={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Down touch start');
                 handleDirectionPress('down');
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Down mouse down');
+                handleDirectionPress('down');
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 handleDirectionPress('down');
               }}
             >

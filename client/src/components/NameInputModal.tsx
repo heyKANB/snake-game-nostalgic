@@ -79,7 +79,17 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="font-mono text-sm block mb-2" style={{ color: themeConfig.colors.text }}>
+            <label 
+              className="font-mono text-sm block mb-2" 
+              style={{ color: themeConfig.colors.text }}
+              onClick={() => {
+                const input = document.querySelector('[data-testid="player-name-input"]') as HTMLInputElement;
+                if (input) {
+                  input.focus();
+                  input.click();
+                }
+              }}
+            >
               Your Name
             </label>
             <input
@@ -87,24 +97,36 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
               value={playerName}
               onChange={handleInputChange}
               onInput={handleInputChange}
+              onFocus={() => console.log('Input focused')}
+              onBlur={() => console.log('Input blurred')}
               placeholder="Enter your name"
-              className="w-full px-3 py-2 font-mono border-2 rounded-lg focus:outline-none focus:ring-2 touch-manipulation"
+              className="w-full px-3 py-2 font-mono border-2 rounded-lg focus:outline-none focus:ring-2"
               style={{
                 backgroundColor: themeConfig.colors.ui,
                 borderColor: themeConfig.colors.border,
                 color: themeConfig.colors.text,
                 borderRadius: themeConfig.effects.rounded ? '8px' : '4px',
-                fontSize: isMobile ? '16px' : '14px' // Prevent zoom on iOS
+                fontSize: '16px', // Prevent zoom on iOS
+                WebkitUserSelect: 'text',
+                userSelect: 'text',
+                WebkitTouchCallout: 'default',
+                WebkitTapHighlightColor: 'transparent'
               }}
               maxLength={20}
-              autoFocus={!isMobile} // Don't autofocus on mobile to prevent keyboard issues
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="words"
               spellCheck="false"
               inputMode="text"
               enterKeyHint="done"
+              readOnly={false}
+              tabIndex={1}
               data-testid="player-name-input"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.currentTarget.focus();
+                console.log('Input clicked');
+              }}
             />
             <div className="font-mono text-xs mt-1 opacity-60">
               {playerName.length}/20 characters

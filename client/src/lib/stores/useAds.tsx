@@ -5,12 +5,14 @@ interface AdsState {
   showInterstitial: boolean;
   adsEnabled: boolean;
   adSenseAppId: string;
+  gameOverCount: number;
   setAdLoaded: (loaded: boolean) => void;
   setShowInterstitial: (show: boolean) => void;
   setAdsEnabled: (enabled: boolean) => void;
   setAdSenseAppId: (appId: string) => void;
   showInterstitialAd: () => void;
   loadBannerAd: () => void;
+  incrementGameOverCount: () => void;
 }
 
 export const useAdsStore = create<AdsState>((set, get) => ({
@@ -18,15 +20,21 @@ export const useAdsStore = create<AdsState>((set, get) => ({
   showInterstitial: false,
   adsEnabled: true,
   adSenseAppId: '',
+  gameOverCount: 0,
 
   setAdLoaded: (loaded) => set({ isAdLoaded: loaded }),
   setShowInterstitial: (show) => set({ showInterstitial: show }),
   setAdsEnabled: (enabled) => set({ adsEnabled: enabled }),
   setAdSenseAppId: (appId) => set({ adSenseAppId: appId }),
 
+  incrementGameOverCount: () => set((state) => ({ gameOverCount: state.gameOverCount + 1 })),
+
   showInterstitialAd: () => {
-    const { adsEnabled } = get();
+    const { adsEnabled, gameOverCount } = get();
     if (!adsEnabled) return;
+
+    // Only show ads on every other game over (even counts: 2, 4, 6, etc)
+    if (gameOverCount % 2 !== 0) return;
 
     // Show interstitial ad on game over
     if (typeof window !== 'undefined' && (window as any).adsbygoogle) {

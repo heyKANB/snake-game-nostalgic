@@ -26,7 +26,7 @@ const Game = () => {
   } = useSnakeGame();
   
   const { playHit, playSuccess } = useAudio();
-  const { showInterstitialAd } = useAdsStore();
+  const { showInterstitialAd, incrementGameOverCount } = useAdsStore();
   const { getThemeConfig, currentTheme } = useThemeStore();
   const isMobile = useIsMobile();
   const [showThemeSelector, setShowThemeSelector] = useState(false);
@@ -90,10 +90,8 @@ const Game = () => {
         playSuccess();
       } else if (result === 'game_over') {
         playHit();
-        // Show ad after game over
-        setTimeout(() => {
-          showInterstitialAd();
-        }, 1000);
+        incrementGameOverCount();
+        // Delay ads until after leaderboard interaction is complete
       }
     }, 150); // Game speed
 
@@ -111,12 +109,19 @@ const Game = () => {
   const handleNameSubmit = (name: string) => {
     setSubmittedScore(score);
     setShowNameInput(false);
-    // You can add a success message here if needed
+    // Show ad after leaderboard interaction is complete
+    setTimeout(() => {
+      showInterstitialAd();
+    }, 500);
   };
 
   const handleNameSkip = () => {
     setSubmittedScore(score);
     setShowNameInput(false);
+    // Show ad after leaderboard interaction is complete
+    setTimeout(() => {
+      showInterstitialAd();
+    }, 500);
   };
 
   return (

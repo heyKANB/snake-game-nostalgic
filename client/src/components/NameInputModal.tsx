@@ -17,6 +17,13 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
   const isMobile = useIsMobile();
   const themeConfig = getThemeConfig();
 
+  // Debug input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value.slice(0, 20);
+    console.log('Input changed:', newValue);
+    setPlayerName(newValue);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!playerName.trim() || isSubmitting) return;
@@ -45,7 +52,10 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+      style={{ zIndex: 9999 }} // Ensure highest z-index
+    >
       <div 
         className={`border-2 rounded-lg p-6 max-w-md w-full ${isMobile ? 'mx-4' : ''}`}
         style={{
@@ -53,6 +63,7 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
           borderColor: themeConfig.colors.border,
           color: themeConfig.colors.text
         }}
+        onClick={(e) => e.stopPropagation()} // Prevent event bubbling
       >
         <div className="text-center mb-6">
           <h2 className={`font-mono font-bold mb-2 ${isMobile ? 'text-xl' : 'text-2xl'}`} style={{ color: themeConfig.colors.accent }}>
@@ -74,17 +85,26 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
             <input
               type="text"
               value={playerName}
-              onChange={(e) => setPlayerName(e.target.value.slice(0, 20))} // Limit to 20 chars
+              onChange={handleInputChange}
+              onInput={handleInputChange}
               placeholder="Enter your name"
-              className="w-full px-3 py-2 font-mono border-2 rounded-lg focus:outline-none focus:ring-2"
+              className="w-full px-3 py-2 font-mono border-2 rounded-lg focus:outline-none focus:ring-2 touch-manipulation"
               style={{
                 backgroundColor: themeConfig.colors.ui,
                 borderColor: themeConfig.colors.border,
                 color: themeConfig.colors.text,
-                borderRadius: themeConfig.effects.rounded ? '8px' : '4px'
+                borderRadius: themeConfig.effects.rounded ? '8px' : '4px',
+                fontSize: isMobile ? '16px' : '14px' // Prevent zoom on iOS
               }}
               maxLength={20}
-              autoFocus
+              autoFocus={!isMobile} // Don't autofocus on mobile to prevent keyboard issues
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="words"
+              spellCheck="false"
+              inputMode="text"
+              enterKeyHint="done"
+              data-testid="player-name-input"
             />
             <div className="font-mono text-xs mt-1 opacity-60">
               {playerName.length}/20 characters

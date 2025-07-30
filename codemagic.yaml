@@ -82,7 +82,7 @@ workflows:
             
             # Create required config.xml
             echo '<?xml version="1.0" encoding="utf-8"?>' > ios/App/App/config.xml
-            echo '<widget id="com.snakegame.nostalgic" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">' >> ios/App/App/config.xml
+            echo '<widget id="com.snakegame.nostalgic" version="1.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">' >> ios/App/App/config.xml
             echo '    <name>Snake Game - Nostalgic</name>' >> ios/App/App/config.xml
             echo '    <description>A nostalgic Snake game</description>' >> ios/App/App/config.xml
             echo '    <content src="index.html" />' >> ios/App/App/config.xml

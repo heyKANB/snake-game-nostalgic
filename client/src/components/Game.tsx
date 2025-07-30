@@ -33,6 +33,7 @@ const Game = () => {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showNameInput, setShowNameInput] = useState(false);
   const [submittedScore, setSubmittedScore] = useState<number | null>(null);
+  const [previousHighScore, setPreviousHighScore] = useState<number>(0);
   const theme = getThemeConfig();
 
   // Handle keyboard input
@@ -98,17 +99,36 @@ const Game = () => {
     return () => clearInterval(interval);
   }, [gameState, gameLoop, playSuccess, playHit]);
 
+  // Initialize previous high score on component mount
+  useEffect(() => {
+    const currentHighScore = parseInt(localStorage.getItem('snakeHighScore') || '0');
+    setPreviousHighScore(currentHighScore);
+    console.log('Initialized previous high score:', currentHighScore);
+  }, []);
+
+  // Update previous high score when starting a new game
+  useEffect(() => {
+    if (gameState === 'playing') {
+      // Capture the high score at the moment the game starts
+      const gameStartHighScore = parseInt(localStorage.getItem('snakeHighScore') || '0');
+      setPreviousHighScore(gameStartHighScore);
+      console.log('Game started - previous high score set to:', gameStartHighScore);
+    }
+  }, [gameState]);
+
   // Check for high score achievement and show name input
   useEffect(() => {
     if (gameState === 'gameOver' && submittedScore !== score) {
-      // Get the previous high score from localStorage for comparison
-      const previousHighScore = parseInt(localStorage.getItem('snakeHighScore') || '0');
-      if (score > previousHighScore) {
-        // Show name input only for new personal high scores
+      console.log('High score check:', { score, previousHighScore, highScore, submittedScore, gameState });
+      
+      if (score > 0 && score > previousHighScore) {
+        console.log('New high score achieved! Showing name input');
         setShowNameInput(true);
+      } else {
+        console.log('Not a new high score, skipping name input');
       }
     }
-  }, [gameState, score, submittedScore]);
+  }, [gameState, score, previousHighScore, submittedScore]);
 
   const handleNameSubmit = (name: string) => {
     setSubmittedScore(score);

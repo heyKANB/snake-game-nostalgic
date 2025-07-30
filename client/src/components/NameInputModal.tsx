@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
 import { useThemeStore } from '../lib/stores/useTheme';
 import { useIsMobile } from '../hooks/use-is-mobile';
@@ -16,12 +16,38 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
   const { getThemeConfig } = useThemeStore();
   const isMobile = useIsMobile();
   const themeConfig = getThemeConfig();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Force focus on mount for mobile
+  useEffect(() => {
+    if (isMobile && inputRef.current) {
+      const timer = setTimeout(() => {
+        console.log('Mobile focus attempt via useEffect');
+        inputRef.current?.focus();
+        inputRef.current?.click();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isMobile]);
 
   // Debug input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value.slice(0, 20);
-    console.log('Input changed:', newValue);
+    console.log('Input changed:', newValue, 'Event type:', e.type);
     setPlayerName(newValue);
+  };
+
+  // Additional event handlers for debugging
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log('Key down:', e.key, e.code);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log('Key press:', e.key, e.code);
+  };
+
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log('Key up:', e.key, e.code);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,16 +80,31 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
   return (
     <div 
       className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
-      style={{ zIndex: 9999 }} // Ensure highest z-index
+      style={{ 
+        zIndex: 9999,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      }}
+      onTouchStart={(e) => e.stopPropagation()}
+      onTouchMove={(e) => e.stopPropagation()}
+      onTouchEnd={(e) => e.stopPropagation()}
     >
       <div 
         className={`border-2 rounded-lg p-6 max-w-md w-full ${isMobile ? 'mx-4' : ''}`}
         style={{
           backgroundColor: themeConfig.colors.background,
           borderColor: themeConfig.colors.border,
-          color: themeConfig.colors.text
+          color: themeConfig.colors.text,
+          position: 'relative',
+          zIndex: 10000
         }}
-        onClick={(e) => e.stopPropagation()} // Prevent event bubbling
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
+        onTouchEnd={(e) => e.stopPropagation()}
       >
         <div className="text-center mb-6">
           <h2 className={`font-mono font-bold mb-2 ${isMobile ? 'text-xl' : 'text-2xl'}`} style={{ color: themeConfig.colors.accent }}>
@@ -97,6 +138,9 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
               value={playerName}
               onChange={handleInputChange}
               onInput={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onKeyPress={handleKeyPress}
+              onKeyUp={handleKeyUp}
               onFocus={() => console.log('Input focused')}
               onBlur={() => console.log('Input blurred')}
               placeholder="Enter your name"
@@ -106,11 +150,18 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
                 borderColor: themeConfig.colors.border,
                 color: themeConfig.colors.text,
                 borderRadius: themeConfig.effects.rounded ? '8px' : '4px',
-                fontSize: '16px', // Prevent zoom on iOS
+                fontSize: '16px',
+                lineHeight: '1.5',
+                WebkitAppearance: 'none',
+                appearance: 'none',
+                border: 'none',
+                outline: 'none',
+                boxShadow: 'none',
                 WebkitUserSelect: 'text',
                 userSelect: 'text',
                 WebkitTouchCallout: 'default',
-                WebkitTapHighlightColor: 'transparent'
+                WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+                touchAction: 'manipulation'
               }}
               maxLength={20}
               autoComplete="off"
@@ -119,14 +170,9 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
               spellCheck="false"
               inputMode="text"
               enterKeyHint="done"
-              readOnly={false}
               tabIndex={1}
               data-testid="player-name-input"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.currentTarget.focus();
-                console.log('Input clicked');
-              }}
+              ref={inputRef}
             />
             <div className="font-mono text-xs mt-1 opacity-60">
               {playerName.length}/20 characters

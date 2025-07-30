@@ -50,7 +50,10 @@ const TouchControls = ({
   return (
     <div 
       className="fixed bottom-0 left-0 right-0 p-4 bg-opacity-80"
-      style={{ backgroundColor: theme.colors.background + 'CC' }}
+      style={{ 
+        backgroundColor: theme.colors.background + 'CC',
+        paddingBottom: 'env(safe-area-inset-bottom, 1rem)'
+      }}
     >
       <div className="flex items-center justify-center max-w-md mx-auto">
         {/* D-Pad Style Controls - Centered and Bigger */}

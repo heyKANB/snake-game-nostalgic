@@ -97,7 +97,7 @@ const Game = () => {
 
   return (
     <div 
-      className="flex flex-col items-center justify-center min-h-screen p-4"
+      className="flex flex-col items-center justify-start min-h-screen p-4 pt-8"
       style={{ 
         backgroundColor: theme.colors.background,
         color: theme.colors.text 
@@ -148,7 +148,7 @@ const Game = () => {
         </div>
       )}
       
-      <div className="w-full max-w-lg mx-auto">
+      <div className="w-full max-w-lg mx-auto mb-20">
         {/* Score Display - Outside game canvas */}
         <ScoreDisplay 
           score={score}

@@ -131,15 +131,24 @@ interface AchievementState {
   generateShareUrl: (achievement: Achievement) => string;
 }
 
+const getStorageValue = (key: string, defaultValue: string) => {
+  if (typeof window === 'undefined') return defaultValue;
+  try {
+    return localStorage.getItem(key) || defaultValue;
+  } catch {
+    return defaultValue;
+  }
+};
+
 export const useAchievements = create<AchievementState>((set, get) => ({
   achievements: achievements.map(achievement => ({
     ...achievement,
-    unlocked: JSON.parse(localStorage.getItem(`achievement_${achievement.id}`) || 'false'),
-    unlockedAt: localStorage.getItem(`achievement_${achievement.id}_date`) 
-      ? new Date(localStorage.getItem(`achievement_${achievement.id}_date`)!) 
+    unlocked: JSON.parse(getStorageValue(`achievement_${achievement.id}`, 'false')),
+    unlockedAt: getStorageValue(`achievement_${achievement.id}_date`, '') 
+      ? new Date(getStorageValue(`achievement_${achievement.id}_date`, '')) 
       : undefined
   })),
-  gamesPlayed: parseInt(localStorage.getItem('snakeGamesPlayed') || '0'),
+  gamesPlayed: parseInt(getStorageValue('snakeGamesPlayed', '0')),
   lastUnlockedAchievement: null,
 
   checkAchievements: (score: number, highScore: number, themesUnlocked: string[]) => {
@@ -188,8 +197,12 @@ export const useAchievements = create<AchievementState>((set, get) => ({
           };
           
           // Persist to localStorage
-          localStorage.setItem(`achievement_${achievementId}`, 'true');
-          localStorage.setItem(`achievement_${achievementId}_date`, new Date().toISOString());
+          try {
+            localStorage.setItem(`achievement_${achievementId}`, 'true');
+            localStorage.setItem(`achievement_${achievementId}_date`, new Date().toISOString());
+          } catch {
+            // Ignore localStorage errors
+          }
           
           return unlockedAchievement;
         }
@@ -208,7 +221,11 @@ export const useAchievements = create<AchievementState>((set, get) => ({
   incrementGamesPlayed: () => {
     set(state => {
       const newCount = state.gamesPlayed + 1;
-      localStorage.setItem('snakeGamesPlayed', newCount.toString());
+      try {
+        localStorage.setItem('snakeGamesPlayed', newCount.toString());
+      } catch {
+        // Ignore localStorage errors
+      }
       return { gamesPlayed: newCount };
     });
   },

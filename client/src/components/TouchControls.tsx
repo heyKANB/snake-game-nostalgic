@@ -23,8 +23,6 @@ const TouchControls = ({
   const theme = getThemeConfig();
 
   const handleDirectionPress = useCallback((newDirection: Direction) => {
-    console.log('Direction pressed:', newDirection, 'Current state:', gameState, 'Current direction:', direction);
-    
     if (gameState !== 'playing') return;
     
     // Prevent opposite direction changes
@@ -36,10 +34,7 @@ const TouchControls = ({
     };
     
     if (direction !== opposites[newDirection]) {
-      console.log('Changing direction to:', newDirection);
       onDirectionChange(newDirection);
-    } else {
-      console.log('Blocked opposite direction change from', direction, 'to', newDirection);
     }
   }, [gameState, direction, onDirectionChange]);
 
@@ -108,7 +103,6 @@ const TouchControls = ({
               onTouchStart={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Left button touched');
                 handleDirectionPress('left');
               }}
               onTouchEnd={(e) => {
@@ -118,7 +112,6 @@ const TouchControls = ({
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Left button clicked');
                 handleDirectionPress('left');
               }}
             >
@@ -145,7 +138,6 @@ const TouchControls = ({
               onTouchStart={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Right button touched');
                 handleDirectionPress('right');
               }}
               onTouchEnd={(e) => {
@@ -155,7 +147,6 @@ const TouchControls = ({
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Right button clicked');
                 handleDirectionPress('right');
               }}
             >

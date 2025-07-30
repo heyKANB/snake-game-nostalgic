@@ -25,6 +25,23 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
         console.log('Mobile focus attempt via useEffect');
         inputRef.current?.focus();
         inputRef.current?.click();
+        
+        // Add native event listeners for better mobile support
+        const input = inputRef.current;
+        const handleNativeInput = (e: Event) => {
+          const target = e.target as HTMLInputElement;
+          const newValue = target.value.slice(0, 20);
+          console.log('Native input event:', newValue);
+          setPlayerName(newValue);
+        };
+        
+        input.addEventListener('input', handleNativeInput);
+        input.addEventListener('textInput', handleNativeInput);
+        
+        return () => {
+          input.removeEventListener('input', handleNativeInput);
+          input.removeEventListener('textInput', handleNativeInput);
+        };
       }, 300);
       return () => clearTimeout(timer);
     }
@@ -37,9 +54,22 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
     setPlayerName(newValue);
   };
 
-  // Additional event handlers for debugging
+  // Handle keyboard input directly for mobile compatibility
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     console.log('Key down:', e.key, e.code);
+    
+    // For mobile compatibility, manually handle character input
+    if (e.key.length === 1 && playerName.length < 20) {
+      const newValue = playerName + e.key;
+      console.log('Manual character input:', newValue);
+      setPlayerName(newValue);
+      e.preventDefault();
+    } else if (e.key === 'Backspace' && playerName.length > 0) {
+      const newValue = playerName.slice(0, -1);
+      console.log('Manual backspace:', newValue);
+      setPlayerName(newValue);
+      e.preventDefault();
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

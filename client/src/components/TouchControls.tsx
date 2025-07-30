@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useIsMobile } from "../hooks/use-is-mobile";
 import { useThemeStore } from "../lib/stores/useTheme";
 import { Direction } from "../lib/gameLogic";
@@ -21,8 +20,10 @@ const TouchControls = ({
   const isMobile = useIsMobile();
   const { getThemeConfig } = useThemeStore();
   const theme = getThemeConfig();
+  
+  if (!isMobile) return null;
 
-  const handleDirectionPress = useCallback((newDirection: Direction) => {
+  const handleDirectionPress = (newDirection: Direction) => {
     if (gameState !== 'playing') return;
     
     // Prevent opposite direction changes
@@ -36,17 +37,15 @@ const TouchControls = ({
     if (direction !== opposites[newDirection]) {
       onDirectionChange(newDirection);
     }
-  }, [gameState, direction, onDirectionChange]);
+  };
 
-  const handleActionPress = useCallback(() => {
+  const handleActionPress = () => {
     if (gameState === 'menu') {
       onStart();
     } else if (gameState === 'gameOver') {
       onRestart();
     }
-  }, [gameState, onStart, onRestart]);
-  
-  if (!isMobile) return null;
+  };
 
   return (
     <div 
@@ -59,7 +58,7 @@ const TouchControls = ({
       <div className="flex items-center justify-center max-w-md mx-auto">
         {/* D-Pad Style Controls - Centered and Bigger */}
         <div className="relative">
-          <div className="grid grid-cols-3 gap-3 w-44 h-44">
+          <div className="grid grid-cols-3 gap-2 w-40 h-40">
             {/* Empty top-left */}
             <div></div>
             
@@ -73,16 +72,10 @@ const TouchControls = ({
               }}
               onTouchStart={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 handleDirectionPress('up');
               }}
-              onTouchEnd={(e) => {
+              onMouseDown={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
                 handleDirectionPress('up');
               }}
             >
@@ -102,16 +95,10 @@ const TouchControls = ({
               }}
               onTouchStart={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 handleDirectionPress('left');
               }}
-              onTouchEnd={(e) => {
+              onMouseDown={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
                 handleDirectionPress('left');
               }}
             >
@@ -137,16 +124,10 @@ const TouchControls = ({
               }}
               onTouchStart={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 handleDirectionPress('right');
               }}
-              onTouchEnd={(e) => {
+              onMouseDown={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
                 handleDirectionPress('right');
               }}
             >
@@ -166,16 +147,10 @@ const TouchControls = ({
               }}
               onTouchStart={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 handleDirectionPress('down');
               }}
-              onTouchEnd={(e) => {
+              onMouseDown={(e) => {
                 e.preventDefault();
-                e.stopPropagation();
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
                 handleDirectionPress('down');
               }}
             >
@@ -198,16 +173,10 @@ const TouchControls = ({
             }}
             onTouchStart={(e) => {
               e.preventDefault();
-              e.stopPropagation();
               handleActionPress();
             }}
-            onTouchEnd={(e) => {
+            onMouseDown={(e) => {
               e.preventDefault();
-              e.stopPropagation();
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
               handleActionPress();
             }}
           >

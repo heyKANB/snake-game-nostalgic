@@ -25,22 +25,13 @@ interface SnakeGameState {
   gameLoop: () => 'continue' | 'ate_food' | 'game_over';
 }
 
-const getStorageValue = (key: string, defaultValue: string) => {
-  if (typeof window === 'undefined') return defaultValue;
-  try {
-    return localStorage.getItem(key) || defaultValue;
-  } catch {
-    return defaultValue;
-  }
-};
-
 export const useSnakeGame = create<SnakeGameState>((set, get) => ({
     snake: [{ x: Math.floor(GRID_WIDTH / 2), y: Math.floor(GRID_HEIGHT / 2) }],
     food: null,
     direction: 'right',
     gameState: 'menu',
     score: 0,
-    highScore: parseInt(getStorageValue('snakeHighScore', '0')),
+    highScore: parseInt(localStorage.getItem('snakeHighScore') || '0'),
 
     startGame: () => {
       const initialSnake = [{ x: Math.floor(GRID_WIDTH / 2), y: Math.floor(GRID_HEIGHT / 2) }];
@@ -77,11 +68,7 @@ export const useSnakeGame = create<SnakeGameState>((set, get) => ({
       // Check collision with walls or self
       if (checkCollision(head, newSnake.slice(1))) {
         const newHighScore = Math.max(score, highScore);
-        try {
-          localStorage.setItem('snakeHighScore', newHighScore.toString());
-        } catch {
-          // Ignore localStorage errors
-        }
+        localStorage.setItem('snakeHighScore', newHighScore.toString());
         
         set({
           gameState: 'gameOver',

@@ -96,27 +96,13 @@ interface ThemeState {
   getThemeConfig: () => ThemeConfig;
   isThemeUnlocked: (theme: GameTheme, highScore: number, isPurchased?: boolean) => boolean;
   getAvailableThemes: (highScore: number, purchasedThemes?: GameTheme[]) => GameTheme[];
-  getUnlockedThemes: () => GameTheme[];
 }
 
-const getStorageValue = (key: string, defaultValue: string) => {
-  if (typeof window === 'undefined') return defaultValue;
-  try {
-    return localStorage.getItem(key) || defaultValue;
-  } catch {
-    return defaultValue;
-  }
-};
-
 export const useThemeStore = create<ThemeState>((set, get) => ({
-  currentTheme: (getStorageValue('snakeGameTheme', 'retro') as GameTheme),
+  currentTheme: (localStorage.getItem('snakeGameTheme') as GameTheme) || 'retro',
 
   setTheme: (theme: GameTheme) => {
-    try {
-      localStorage.setItem('snakeGameTheme', theme);
-    } catch {
-      // Ignore localStorage errors
-    }
+    localStorage.setItem('snakeGameTheme', theme);
     set({ currentTheme: theme });
   },
 
@@ -150,10 +136,5 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     return Object.keys(themes).filter(theme => 
       get().isThemeUnlocked(theme as GameTheme, highScore, purchasedThemes.includes(theme as GameTheme))
     ) as GameTheme[];
-  },
-
-  getUnlockedThemes: () => {
-    const highScore = parseInt(getStorageValue('snakeHighScore', '0'));
-    return get().getAvailableThemes(highScore);
   }
 }));

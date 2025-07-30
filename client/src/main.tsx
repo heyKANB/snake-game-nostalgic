@@ -1,10 +1,18 @@
 import { createRoot } from "react-dom/client";
-import SimpleApp from "./SimpleApp";
+import App from "./App";
+import "./index.css";
 
-const container = document.getElementById("root");
-if (container) {
-  const root = createRoot(container);
-  root.render(<SimpleApp />);
-} else {
-  console.error("Root element not found");
+// Register service worker for PWA functionality
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
 }
+
+createRoot(document.getElementById("root")!).render(<App />);

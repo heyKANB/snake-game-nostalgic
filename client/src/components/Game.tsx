@@ -100,9 +100,13 @@ const Game = () => {
 
   // Check for high score achievement and show name input
   useEffect(() => {
-    if (gameState === 'gameOver' && score > 0 && submittedScore !== score) {
-      // Show name input for any score > 0, not just high scores
-      setShowNameInput(true);
+    if (gameState === 'gameOver' && submittedScore !== score) {
+      // Get the previous high score from localStorage for comparison
+      const previousHighScore = parseInt(localStorage.getItem('snakeHighScore') || '0');
+      if (score > previousHighScore) {
+        // Show name input only for new personal high scores
+        setShowNameInput(true);
+      }
     }
   }, [gameState, score, submittedScore]);
 
@@ -132,9 +136,9 @@ const Game = () => {
         color: theme.colors.text 
       }}
     >
-      {/* Menu Buttons */}
+      {/* Menu Buttons - positioned below status bar */}
       {gameState === 'menu' && (
-        <div className="absolute top-4 right-4 flex gap-2">
+        <div className="absolute top-16 right-4 flex gap-2 z-10">
           <button
             onClick={() => setShowLeaderboard(true)}
             className="p-2 rounded-lg border-2 transition-all duration-200"

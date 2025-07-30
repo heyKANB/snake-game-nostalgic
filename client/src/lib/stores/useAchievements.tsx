@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
 
 export interface Achievement {
   id: string;
@@ -141,8 +140,7 @@ const getStorageValue = (key: string, defaultValue: string) => {
   }
 };
 
-export const useAchievements = create<AchievementState>()(
-  subscribeWithSelector((set, get) => ({
+export const useAchievements = create<AchievementState>((set, get) => ({
   achievements: achievements.map(achievement => ({
     ...achievement,
     unlocked: JSON.parse(getStorageValue(`achievement_${achievement.id}`, 'false')),
@@ -253,4 +251,4 @@ export const useAchievements = create<AchievementState>()(
     const text = encodeURIComponent(get().generateShareText(achievement));
     return `https://twitter.com/intent/tweet?text=${text}`;
   }
-})));
+}));

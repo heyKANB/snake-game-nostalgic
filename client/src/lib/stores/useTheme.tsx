@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
 
 export type GameTheme = 'retro' | 'modern' | 'halloween';
 
@@ -109,8 +108,7 @@ const getStorageValue = (key: string, defaultValue: string) => {
   }
 };
 
-export const useThemeStore = create<ThemeState>()(
-  subscribeWithSelector((set, get) => ({
+export const useThemeStore = create<ThemeState>((set, get) => ({
   currentTheme: (getStorageValue('snakeGameTheme', 'retro') as GameTheme),
 
   setTheme: (theme: GameTheme) => {
@@ -158,4 +156,4 @@ export const useThemeStore = create<ThemeState>()(
     const highScore = parseInt(getStorageValue('snakeHighScore', '0'));
     return get().getAvailableThemes(highScore);
   }
-})));
+}));

@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
 
 interface AdsState {
   isAdLoaded: boolean;
@@ -14,8 +13,7 @@ interface AdsState {
   loadBannerAd: () => void;
 }
 
-export const useAdsStore = create<AdsState>()(
-  subscribeWithSelector((set, get) => ({
+export const useAdsStore = create<AdsState>((set, get) => ({
   isAdLoaded: false,
   showInterstitial: false,
   adsEnabled: true,
@@ -58,4 +56,4 @@ export const useAdsStore = create<AdsState>()(
       }
     }
   },
-})));
+}));

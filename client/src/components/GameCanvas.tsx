@@ -11,6 +11,15 @@ const GameCanvas = () => {
   const isMobile = useIsMobile();
   const theme = getThemeConfig();
 
+  // Calculate responsive canvas size
+  const canvasSize = isMobile ? {
+    width: Math.min(320, (typeof window !== 'undefined' ? window.innerWidth : 400) - 40),
+    height: Math.min(320, (typeof window !== 'undefined' ? window.innerWidth : 400) - 40)
+  } : {
+    width: CANVAS_WIDTH,
+    height: CANVAS_HEIGHT
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

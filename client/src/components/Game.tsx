@@ -150,18 +150,18 @@ const Game = () => {
 
   return (
     <div 
-      className="flex flex-col items-center justify-start min-h-screen p-4 pt-8"
+      className="flex flex-col min-h-screen relative"
       style={{ 
         backgroundColor: theme.colors.background,
         color: theme.colors.text 
       }}
     >
-      {/* Menu Buttons - positioned below status bar */}
+      {/* Menu Buttons - positioned below status bar with better spacing */}
       {gameState === 'menu' && (
-        <div className="absolute top-16 right-4 flex gap-2 z-10">
+        <div className="absolute top-4 right-4 flex gap-3 z-10" style={{ marginTop: isMobile ? '60px' : '20px' }}>
           <button
             onClick={() => setShowLeaderboard(true)}
-            className="p-2 rounded-lg border-2 transition-all duration-200"
+            className="px-3 py-2 rounded-lg border-2 transition-all duration-200 text-sm font-medium"
             style={{
               backgroundColor: theme.colors.ui,
               borderColor: theme.colors.border,
@@ -172,7 +172,7 @@ const Game = () => {
           </button>
           <button
             onClick={() => setShowThemeSelector(!showThemeSelector)}
-            className="p-2 rounded-lg border-2 transition-all duration-200"
+            className="px-3 py-2 rounded-lg border-2 transition-all duration-200 text-sm font-medium"
             style={{
               backgroundColor: theme.colors.ui,
               borderColor: theme.colors.border,
@@ -214,24 +214,29 @@ const Game = () => {
         </div>
       )}
       
-      <div className="w-full max-w-lg mx-auto mb-20">
-        {/* Score Display - Outside game canvas */}
-        <ScoreDisplay 
-          score={score}
-          highScore={highScore}
-          gameState={gameState}
-        />
-        
-        {/* Game Canvas and UI */}
-        <div className="relative">
-          <GameCanvas />
-          <GameUI 
-            gameState={gameState}
-            score={score}
-            highScore={highScore}
-            onStart={startGame}
-            onRestart={resetGame}
-          />
+      {/* Main Game Area - Centered and Properly Spaced */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md mx-auto space-y-6">
+          {/* Score Display - Better spacing from top */}
+          <div className="flex justify-center">
+            <ScoreDisplay 
+              score={score}
+              highScore={highScore}
+              gameState={gameState}
+            />
+          </div>
+          
+          {/* Game Canvas and UI - Centered with breathing room */}
+          <div className="relative mx-auto" style={{ width: 'fit-content' }}>
+            <GameCanvas />
+            <GameUI 
+              gameState={gameState}
+              score={score}
+              highScore={highScore}
+              onStart={startGame}
+              onRestart={resetGame}
+            />
+          </div>
         </div>
       </div>
       

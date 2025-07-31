@@ -34,7 +34,7 @@ function App() {
   }, [setHitSound, setSuccessSound, setAdSenseAppId]);
 
   return (
-    <div className="w-full h-full bg-black flex items-center justify-center">
+    <div className="w-full min-h-screen bg-black">
       <Game />
       <InterstitialAd />
     </div>

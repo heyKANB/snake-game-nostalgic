@@ -24,9 +24,9 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps
           color: theme.colors.text 
         }}
       >
-        <div className="text-center space-y-6 px-4">
+        <div className={`text-center px-6 ${isMobile ? 'space-y-5' : 'space-y-8'}`}>
           <h1 
-            className={`font-mono font-bold tracking-wider mb-8 ${isMobile ? 'text-4xl' : 'text-6xl'}`}
+            className={`font-mono font-bold tracking-wider ${isMobile ? 'text-5xl mb-6' : 'text-7xl mb-8'}`}
             style={{ 
               color: theme.colors.text,
               textShadow: theme.effects.glow ? `0 0 20px ${theme.colors.text}` : 'none'
@@ -34,13 +34,13 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps
           >
             SNAKE
           </h1>
-          <div className={`font-mono space-y-2 ${isMobile ? 'text-lg' : 'text-xl'}`}>
+          <div className={`font-mono ${isMobile ? 'space-y-3 text-base' : 'space-y-4 text-lg'}`}>
             <p>{isMobile ? 'Use touch controls to move' : 'Use ARROW KEYS or WASD to move'}</p>
             <p style={{ color: theme.colors.food }}>Eat the food to grow</p>
             <p>Don't hit the walls or yourself!</p>
           </div>
-          <div className={`font-mono ${isMobile ? 'text-base' : 'text-lg'}`}>
-            <p>High Score: {highScore}</p>
+          <div className={`font-mono ${isMobile ? 'text-lg' : 'text-xl'} font-bold`}>
+            <p>High Score: <span style={{ color: theme.colors.food }}>{highScore}</span></p>
           </div>
           {!isMobile && (
             <Button 
@@ -70,9 +70,9 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps
           color: theme.colors.text 
         }}
       >
-        <div className="text-center space-y-6 px-4">
+        <div className={`text-center px-6 ${isMobile ? 'space-y-4' : 'space-y-6'}`}>
           <h1 
-            className={`font-mono font-bold mb-4 ${isMobile ? 'text-3xl' : 'text-5xl'}`}
+            className={`font-mono font-bold ${isMobile ? 'text-4xl mb-3' : 'text-6xl mb-4'}`}
             style={{ 
               color: theme.colors.food,
               textShadow: theme.effects.glow ? `0 0 20px ${theme.colors.food}` : 'none'

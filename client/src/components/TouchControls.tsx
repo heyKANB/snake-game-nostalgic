@@ -51,26 +51,29 @@ const TouchControls = ({
 
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 p-4 bg-opacity-80"
+      className="fixed bottom-0 left-0 right-0 bg-opacity-90"
       style={{ 
-        backgroundColor: theme.colors.background + 'CC',
-        paddingBottom: 'env(safe-area-inset-bottom, 1rem)'
+        backgroundColor: theme.colors.background + 'E6',
+        paddingBottom: 'env(safe-area-inset-bottom, 2rem)',
+        paddingTop: '1rem',
+        paddingLeft: '1rem',
+        paddingRight: '1rem'
       }}
     >
-      <div className="flex items-center justify-center max-w-md mx-auto">
-        {/* D-Pad Style Controls - Centered and Bigger */}
+      <div className="flex items-center justify-center max-w-sm mx-auto">
+        {/* D-Pad Style Controls - Better spacing and proportions */}
         <div className="relative">
-          <div className="grid grid-cols-3 gap-2 w-40 h-40">
+          <div className="grid grid-cols-3 gap-3 w-44 h-44">
             {/* Empty top-left */}
             <div></div>
             
             {/* Up */}
             <button
-              className="font-bold text-3xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-12 w-12"
+              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-14 w-14"
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
-                borderRadius: theme.effects.rounded ? '8px' : '4px',
+                borderRadius: theme.effects.rounded ? '12px' : '6px',
                 WebkitTapHighlightColor: 'transparent',
                 userSelect: 'none'
               }}
@@ -104,11 +107,11 @@ const TouchControls = ({
             
             {/* Left */}
             <button
-              className="font-bold text-3xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-12 w-12"
+              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-14 w-14"
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
-                borderRadius: theme.effects.rounded ? '8px' : '4px',
+                borderRadius: theme.effects.rounded ? '12px' : '6px',
                 WebkitTapHighlightColor: 'transparent',
                 userSelect: 'none'
               }}
@@ -148,11 +151,11 @@ const TouchControls = ({
             
             {/* Right */}
             <button
-              className="font-bold text-3xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-12 w-12"
+              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-14 w-14"
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
-                borderRadius: theme.effects.rounded ? '8px' : '4px',
+                borderRadius: theme.effects.rounded ? '12px' : '6px',
                 WebkitTapHighlightColor: 'transparent',
                 userSelect: 'none'
               }}
@@ -186,11 +189,11 @@ const TouchControls = ({
             
             {/* Down */}
             <button
-              className="font-bold text-3xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-12 w-12"
+              className="font-bold text-2xl touch-manipulation flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg h-14 w-14"
               style={{
                 backgroundColor: theme.colors.snake,
                 color: theme.colors.background,
-                borderRadius: theme.effects.rounded ? '8px' : '4px',
+                borderRadius: theme.effects.rounded ? '12px' : '6px',
                 WebkitTapHighlightColor: 'transparent',
                 userSelect: 'none'
               }}

@@ -126,50 +126,11 @@ workflows:
           # Fix CocoaPods framework embedding issue
           echo "Fixing CocoaPods build phases..."
           
-          # Fix CocoaPods manually using direct project modification
-          echo "Fixing CocoaPods build phases directly..."
-          
-          # Create Ruby script to fix build phases after pod install
-          cat > fix_build_phases_after_install.rb << 'EOF'
-require 'xcodeproj'
-
-puts "Opening Pods project to fix build phases..."
-project_path = 'Pods/Pods.xcodeproj'
-
-if File.exist?(project_path)
-  project = Xcodeproj::Project.open(project_path)
-  
-  project.targets.each do |target|
-    target.build_phases.each do |phase|
-      # Fix the Embed Pods Frameworks phase
-      if phase.respond_to?(:name) && phase.name && 
-         (phase.name.include?('Embed Pods Frameworks') || phase.name.include?('[CP]'))
-        
-        if phase.respond_to?(:output_file_list_paths=) && 
-           (phase.output_file_list_paths.nil? || phase.output_file_list_paths.empty?)
-          
-          phase.output_file_list_paths = [
-            "${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}",
-            "${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
-          ]
-          puts "✅ Fixed build phase: #{phase.name} in target: #{target.name}"
-        end
-      end
-    end
-  end
-  
-  project.save
-  puts "✅ Pods project build phases updated successfully"
-else
-  puts "❌ Pods project not found at #{project_path}"
-end
-EOF
-          
-          # Install pods first
+          # Simplified approach: Install CocoaPods and accept the warning  
+          echo "Installing CocoaPods dependencies (accepting build phase warning)..."
           pod install --repo-update --verbose
           
-          # Run the fix script after installation
-          ruby fix_build_phases_after_install.rb || echo "Ruby fix script failed, continuing..."
+          # The build warning is non-fatal, Codemagic can proceed with the build
           
           # Verify workspace was created properly
           ls -la App.xcworkspace/

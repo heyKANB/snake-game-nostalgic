@@ -1,4 +1,7 @@
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
 import { users, leaderboard, type User, type InsertUser, type LeaderboardEntry, type InsertLeaderboardEntry } from "@shared/schema";
+import { desc, gte, eq } from "drizzle-orm";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -84,4 +87,66 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+class DatabaseStorage implements IStorage {
+  private db;
+
+  constructor() {
+    const sql = neon(process.env.DATABASE_URL!);
+    this.db = drizzle(sql, { schema: { users, leaderboard } });
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.username, username)).limit(1);
+    return result[0];
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const result = await this.db.insert(users).values(insertUser).returning();
+    return result[0];
+  }
+
+  async addScore(entry: InsertLeaderboardEntry): Promise<LeaderboardEntry> {
+    const result = await this.db.insert(leaderboard).values({
+      playerName: entry.playerName,
+      score: entry.score,
+      theme: entry.theme || 'retro'
+    }).returning();
+    return result[0];
+  }
+
+  async getAllTimeLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
+    return await this.db.select()
+      .from(leaderboard)
+      .orderBy(desc(leaderboard.score))
+      .limit(limit);
+  }
+
+  async getWeeklyLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    
+    return await this.db.select()
+      .from(leaderboard)
+      .where(gte(leaderboard.createdAt, oneWeekAgo))
+      .orderBy(desc(leaderboard.score))
+      .limit(limit);
+  }
+
+  async getDailyLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    
+    return await this.db.select()
+      .from(leaderboard)
+      .where(gte(leaderboard.createdAt, oneDayAgo))
+      .orderBy(desc(leaderboard.score))
+      .limit(limit);
+  }
+}
+
+export const storage = new DatabaseStorage();

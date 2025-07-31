@@ -4,14 +4,15 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-01-30)**: Fixed App Store Connect version issue and enabled Game Center
-- FIXED: Updated iOS app version to 1.1.0 (build 2) to resolve App Store Connect upload rejection
-- FIXED: Added Game Center entitlement (com.apple.developer.game-center) to iOS app configuration
-- FIXED: Mobile keyboard input now works perfectly for leaderboard name entry
-- FIXED: PWA service worker caching issues for proper mobile installation
+**Latest Update (2025-01-30)**: Fixed leaderboard persistence and high score detection
+- FIXED: Switched from in-memory storage to PostgreSQL database for persistent leaderboard storage
+- FIXED: High score input now only appears for new personal best scores (not every game over)
+- FIXED: Menu buttons repositioned below status bar to avoid mobile interface blocking
+- FIXED: All-time leaderboard now properly stores and displays scores across sessions
+- Updated iOS app version to 1.1.0 (build 2) to resolve App Store Connect upload rejection
+- Added Game Center entitlement (com.apple.developer.game-center) to iOS app configuration
 - Enhanced touch controls with improved event handling and responsiveness 
-- Implemented proper ad timing: interstitial ads appear every other game over (2nd, 4th, 6th, etc.) 
-- Delayed ad display until after leaderboard interaction is complete
+- Implemented proper ad timing: interstitial ads appear every other game over (2nd, 4th, 6th, etc.)
 - Built full leaderboard system with daily/weekly/all-time rankings using PostgreSQL
 - Added leaderboard API endpoints for score submission and retrieval  
 - Created name input modal for high score submissions (appears after any game over with score > 0)

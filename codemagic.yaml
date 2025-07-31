@@ -126,10 +126,50 @@ workflows:
           # Fix CocoaPods framework embedding issue
           echo "Fixing CocoaPods build phases..."
           
-          # Use the comprehensive CocoaPods fix script
-          echo "Running CocoaPods fix script..."
-          chmod +x fix_cocoapods.sh
-          ./fix_cocoapods.sh
+          # Fix CocoaPods manually using direct project modification
+          echo "Fixing CocoaPods build phases directly..."
+          
+          # Create Ruby script to fix build phases after pod install
+          cat > fix_build_phases_after_install.rb << 'EOF'
+require 'xcodeproj'
+
+puts "Opening Pods project to fix build phases..."
+project_path = 'Pods/Pods.xcodeproj'
+
+if File.exist?(project_path)
+  project = Xcodeproj::Project.open(project_path)
+  
+  project.targets.each do |target|
+    target.build_phases.each do |phase|
+      # Fix the Embed Pods Frameworks phase
+      if phase.respond_to?(:name) && phase.name && 
+         (phase.name.include?('Embed Pods Frameworks') || phase.name.include?('[CP]'))
+        
+        if phase.respond_to?(:output_file_list_paths=) && 
+           (phase.output_file_list_paths.nil? || phase.output_file_list_paths.empty?)
+          
+          phase.output_file_list_paths = [
+            "${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}",
+            "${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
+          ]
+          puts "✅ Fixed build phase: #{phase.name} in target: #{target.name}"
+        end
+      end
+    end
+  end
+  
+  project.save
+  puts "✅ Pods project build phases updated successfully"
+else
+  puts "❌ Pods project not found at #{project_path}"
+end
+EOF
+          
+          # Install pods first
+          pod install --repo-update --verbose
+          
+          # Run the fix script after installation
+          ruby fix_build_phases_after_install.rb || echo "Ruby fix script failed, continuing..."
           
           # Verify workspace was created properly
           ls -la App.xcworkspace/
@@ -178,7 +218,20 @@ workflows:
           # Set team ID as environment variable
           export TEAM_ID="TYRA6QN5W5"
           
-          # Apply automatic code signing with Codemagic-managed certificates
+          # Configure automatic code signing (recommended for Codemagic)
+          echo "Configuring automatic code signing for Codemagic compatibility..."
+          cd ios/App
+          
+          # Update project settings to use automatic signing
+          sed -i '' 's/CODE_SIGN_STYLE = Manual/CODE_SIGN_STYLE = Automatic/' App.xcodeproj/project.pbxproj || echo "CODE_SIGN_STYLE not found"
+          sed -i '' 's/ProvisioningStyle = Manual/ProvisioningStyle = Automatic/' App.xcodeproj/project.pbxproj || echo "ProvisioningStyle not found"
+          
+          # Set development team
+          sed -i '' "s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = TYRA6QN5W5;/" App.xcodeproj/project.pbxproj || echo "DEVELOPMENT_TEAM not updated"
+          
+          cd ../..
+          
+          # Apply Codemagic's automatic code signing
           xcode-project use-profiles
       - name: Build iOS app for App Store
         script: |
@@ -198,23 +251,20 @@ workflows:
           echo "Cleaning workspace to prevent build cache issues..."
           xcodebuild -workspace "App.xcworkspace" -scheme "App" -config "Release" clean
           
-          # Build using manual xcodebuild with optimized settings
-          echo "Building archive with optimized settings..."
-          xcodebuild \
-            -workspace "App.xcworkspace" \
-            -scheme "App" \
-            -config "Release" \
-            -archivePath "build/ios/xcarchive/App.xcarchive" \
-            archive \
-            COMPILER_INDEX_STORE_ENABLE=NO \
-            DEVELOPMENT_TEAM="TYRA6QN5W5" \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            CODE_SIGN_STYLE=Manual \
-            ONLY_ACTIVE_ARCH=NO \
-            ARCHS="arm64" \
-            VALID_ARCHS="arm64" \
-            IPHONEOS_DEPLOYMENT_TARGET="13.0" \
-            SWIFT_OPTIMIZATION_LEVEL="-O"
+          # Use Codemagic's recommended build method to handle code signing automatically
+          echo "Building archive using Codemagic's xcode-project build-ipa..."
+          
+          # Set build environment variables
+          export DEVELOPMENT_TEAM="TYRA6QN5W5"
+          export CODE_SIGN_STYLE="Automatic"
+          export IPHONEOS_DEPLOYMENT_TARGET="14.0"
+          
+          # Use Codemagic's native build command which handles provisioning profiles
+          xcode-project build-ipa \
+            --workspace "App.xcworkspace" \
+            --scheme "App" \
+            --config "Release" \
+            --archive-flags="-destination 'generic/platform=iOS' ONLY_ACTIVE_ARCH=NO ARCHS=arm64"
       - name: Verify build completion
         script: |
           echo "✅ iOS build completed using Codemagic's xcode-project build-ipa"

@@ -4,11 +4,14 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-01-30)**: Fixed leaderboard persistence and high score detection
+**Latest Update (2025-01-30)**: Implemented proper daily/weekly leaderboard reset system
+- FIXED: Daily and weekly leaderboards now reset properly (daily scores reset each day, weekly scores reset each week)
+- FIXED: Users can achieve daily/weekly high scores even without beating their lifetime best
+- FIXED: Separate database tables for daily_leaderboard and weekly_leaderboard with date/week tracking
+- FIXED: Smart score submission logic only adds to daily/weekly if it beats user's current daily/weekly best
 - FIXED: Switched from in-memory storage to PostgreSQL database for persistent leaderboard storage
 - FIXED: High score input now only appears for new personal best scores (not every game over)
 - FIXED: Menu buttons repositioned below status bar to avoid mobile interface blocking
-- FIXED: All-time leaderboard now properly stores and displays scores across sessions
 - Updated iOS app version to 1.1.0 (build 2) to resolve App Store Connect upload rejection
 - Added Game Center entitlement (com.apple.developer.game-center) to iOS app configuration
 - Enhanced touch controls with improved event handling and responsiveness 

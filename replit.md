@@ -14,7 +14,7 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - FIXED: Daily and weekly leaderboards now reset properly with separate database tracking
 - FIXED: Users can achieve daily/weekly high scores without beating lifetime best
 - FIXED: Smart score submission logic only adds to daily/weekly if it beats current period best
-- Updated iOS app version to 1.1.0 (build 2) to resolve App Store Connect upload rejection
+- Updated iOS app version to 1.2.0 (build 3) with latest Codemagic build fixes
 - Added Game Center entitlement (com.apple.developer.game-center) to iOS app configuration
 - Enhanced touch controls with improved event handling and responsiveness 
 - Implemented proper ad timing: interstitial ads appear every other game over (2nd, 4th, 6th, etc.)

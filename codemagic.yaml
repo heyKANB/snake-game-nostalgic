@@ -106,7 +106,7 @@ workflows:
           ls -la ios/App/App/config.xml || echo "Config.xml still missing"
           ls -la ios/App/App/capacitor.config.* || echo "Capacitor config still missing"
           set -e  # Re-enable exit on error
-      - name: Install CocoaPods dependencies
+      - name: Install CocoaPods dependencies and fix build phases
         script: |
           echo "Installing CocoaPods dependencies..."
           cd ios/App
@@ -122,6 +122,14 @@ workflows:
           # Fresh CocoaPods installation
           pod cache clean --all
           pod install --repo-update --verbose
+          
+          # Fix CocoaPods framework embedding issue
+          echo "Fixing CocoaPods build phases..."
+          
+          # Use the comprehensive CocoaPods fix script
+          echo "Running CocoaPods fix script..."
+          chmod +x fix_cocoapods.sh
+          ./fix_cocoapods.sh
           
           # Verify workspace was created properly
           ls -la App.xcworkspace/
@@ -186,11 +194,27 @@ workflows:
           # Set team ID for build
           export TEAM_ID="TYRA6QN5W5"
           
-          # Build using Codemagic's native command
-          xcode-project build-ipa \
-            --workspace "App.xcworkspace" \
-            --scheme "App" \
-            --config "Release"
+          # Clean workspace before building
+          echo "Cleaning workspace to prevent build cache issues..."
+          xcodebuild -workspace "App.xcworkspace" -scheme "App" -config "Release" clean
+          
+          # Build using manual xcodebuild with optimized settings
+          echo "Building archive with optimized settings..."
+          xcodebuild \
+            -workspace "App.xcworkspace" \
+            -scheme "App" \
+            -config "Release" \
+            -archivePath "build/ios/xcarchive/App.xcarchive" \
+            archive \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            DEVELOPMENT_TEAM="TYRA6QN5W5" \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            CODE_SIGN_STYLE=Manual \
+            ONLY_ACTIVE_ARCH=NO \
+            ARCHS="arm64" \
+            VALID_ARCHS="arm64" \
+            IPHONEOS_DEPLOYMENT_TARGET="13.0" \
+            SWIFT_OPTIMIZATION_LEVEL="-O"
       - name: Verify build completion
         script: |
           echo "✅ iOS build completed using Codemagic's xcode-project build-ipa"

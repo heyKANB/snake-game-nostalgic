@@ -39,9 +39,14 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - Persistent user preference storage
 - Mobile-optimized theme selector interface
 
-**Code Signing Update (2025-01-29)**: Resolved iOS build failures in Codemagic deployment pipeline
+**Codemagic Build Update (2025-01-30)**: Fixed CocoaPods framework embedding issues causing build failures
+- **Critical Fix**: Resolved "[CP] Embed Pods Frameworks will be run during every build" error
+- Enhanced Podfile with comprehensive post_install hook to fix build phases and add output dependencies
+- Created automated fix script (ios/App/fix_cocoapods.sh) for consistent CocoaPods configuration
+- Optimized codemagic.yaml with manual xcodebuild command and enhanced build settings
+- Added proper deployment target (14.0), architecture settings (arm64), and Swift optimization
 - Fixed missing shared Xcode scheme preventing archive creation
-- **Critical Fix**: Resolved missing Capacitor files (config.xml, public directory, capacitor.config.json)
+- **Previous Fix**: Resolved missing Capacitor files (config.xml, public directory, capacitor.config.json)
 - Implemented manual file copy fallback when Capacitor sync fails
 - Enhanced build process with comprehensive error handling and fallbacks
 - **Apple ID**: 6749170406 (registered for App Store Connect)

@@ -80,8 +80,8 @@ workflows:
               cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
             fi
             
-            # Skip app icon setup temporarily to resolve build issues
-            echo "Skipping app icon setup for now"
+            # Removed Assets.xcassets directory to avoid CompileAssetCatalogVariant build errors
+            echo "Assets.xcassets removed to fix build compilation issues"
             
             # Create required config.xml
             echo '<?xml version="1.0" encoding="utf-8"?>' > ios/App/App/config.xml

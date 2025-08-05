@@ -199,8 +199,8 @@ workflows:
           # Set development team
           sed -i '' "s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = TYRA6QN5W5;/" App.xcodeproj/project.pbxproj || echo "DEVELOPMENT_TEAM not updated"
           
-          # Update bundle version to 7 for new app icon release
-          echo "Updating bundle version to 7 for new app icon release..."
+          # Update bundle version to 7 for version 1.6.0 app icon release
+          echo "Updating bundle version to 7 for version 1.6.0 app icon release..."
           sed -i '' 's/CURRENT_PROJECT_VERSION = [^;]*/CURRENT_PROJECT_VERSION = 7/' App.xcodeproj/project.pbxproj || echo "CURRENT_PROJECT_VERSION not found, adding..."
           sed -i '' 's/CFBundleVersion = [^;]*/CFBundleVersion = 7/' App.xcodeproj/project.pbxproj || echo "CFBundleVersion not found in pbxproj"
           

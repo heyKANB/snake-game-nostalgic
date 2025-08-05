@@ -16,6 +16,7 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - FIXED: Smart score submission logic only adds to daily/weekly if it beats current period best
 - Updated iOS app version to 1.6.0 (build 7) and Android version 1.6.0 (build 7) with Hunter Games app icon
 - FIXED: CFBundleVersion and CURRENT_PROJECT_VERSION set to 7 (higher than previous build 6) to resolve Codemagic build errors
+- UPDATED: Android versionCode 7 and versionName "1.6.0" to match iOS version consistency
 - FIXED: iOS asset catalog configuration with proper Contents.json format for all required icon sizes
 - UPDATED: App icon set to Hunter Games retro snake logo with proper PNG format for iOS/Android/Web platforms
 - FIXED: Touch controls positioned 90px from bottom to avoid overlapping Google AdSense banner ads

@@ -9,7 +9,7 @@ export const getApiBaseUrl = (): string => {
   }
   
   // For production mobile apps, use the deployed Replit server
-  // TODO: Replace this with your actual Replit deployment URL
+  // Based on your Replit username: ct5bbry8gg and project: snake-game-nostalgic
   return 'https://snake-game-nostalgic.ct5bbry8gg.replit.app';
 };
 

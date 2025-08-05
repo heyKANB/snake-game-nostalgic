@@ -140,7 +140,7 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
       >
         <div className="text-center mb-6">
           <h2 className={`font-mono font-bold mb-2 ${isMobile ? 'text-xl' : 'text-2xl'}`} style={{ color: themeConfig.colors.accent }}>
-            🏆 New High Score!
+            🏆 Submit Your Score!
           </h2>
           <div className={`font-mono ${isMobile ? 'text-lg' : 'text-xl'}`} style={{ color: themeConfig.colors.food }}>
             {score.toLocaleString()} points

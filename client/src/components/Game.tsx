@@ -116,16 +116,16 @@ const Game = () => {
     }
   }, [gameState]);
 
-  // Check for high score achievement and show name input
+  // Show name input for any game over with score > 0 (for leaderboard submission)
   useEffect(() => {
     if (gameState === 'gameOver' && submittedScore !== score) {
-      console.log('High score check:', { score, previousHighScore, highScore, submittedScore, gameState });
+      console.log('Score submission check:', { score, previousHighScore, highScore, submittedScore, gameState });
       
-      if (score > 0 && score > previousHighScore) {
-        console.log('New high score achieved! Showing name input');
+      if (score > 0) {
+        console.log('Score > 0, showing name input for leaderboard submission');
         setShowNameInput(true);
       } else {
-        console.log('Not a new high score, skipping name input');
+        console.log('Score is 0, skipping name input');
       }
     }
   }, [gameState, score, previousHighScore, submittedScore]);

@@ -20,7 +20,7 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - Implemented proper ad timing: interstitial ads appear every other game over (2nd, 4th, 6th, etc.)
 - Built full leaderboard system with daily/weekly/all-time rankings using PostgreSQL
 - Added leaderboard API endpoints for score submission and retrieval  
-- Created name input modal for high score submissions (appears after any game over with score > 0)
+- Created name input modal for score submissions (appears after any game over with score > 0)
 - Added leaderboard buttons to both desktop menu and mobile touch controls
 - Database schema includes player name, score, theme, and timestamp for comprehensive tracking
 - Mobile UX improvements: centered and enlarged touch controls (h-12 w-12 buttons) for better usability

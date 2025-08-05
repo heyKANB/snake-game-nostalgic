@@ -51,13 +51,14 @@ const TouchControls = ({
 
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 bg-opacity-90"
+      className="fixed left-0 right-0 bg-opacity-90"
       style={{ 
         backgroundColor: theme.colors.background + 'E6',
-        paddingBottom: 'env(safe-area-inset-bottom, 2rem)',
+        bottom: '90px', // 70px for banner ad (50px + 20px padding) + 20px additional clearance
         paddingTop: '1rem',
         paddingLeft: '1rem',
-        paddingRight: '1rem'
+        paddingRight: '1rem',
+        paddingBottom: '1rem'
       }}
     >
       <div className="flex items-center justify-center max-w-sm mx-auto">

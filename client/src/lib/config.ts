@@ -10,7 +10,7 @@ export const getApiBaseUrl = (): string => {
   
   // For production mobile apps, use the deployed Replit server
   // TODO: Replace this with your actual Replit deployment URL
-  return 'https://your-production-server.replit.app';
+  return 'https://snake-game-nostalgic.ct5bbry8gg.replit.app';
 };
 
 export const API_ENDPOINTS = {

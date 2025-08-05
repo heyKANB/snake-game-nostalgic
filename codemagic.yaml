@@ -85,23 +85,7 @@ workflows:
             if [ -f "attached_assets/Hunter GAmes_1754427099812.png" ]; then
               mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset/
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
-              
-              # Create simple Contents.json for iOS app icon
-              echo '{
-  "images" : [
-    {
-      "filename" : "AppIcon-1024.png",
-      "idiom" : "ios-marketing",
-      "scale" : "1x",
-      "size" : "1024x1024"
-    }
-  ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  }
-}' > ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json
-              echo "App icon copied and configured successfully"
+              echo "App icon copied successfully"
             fi
             
             # Create required config.xml

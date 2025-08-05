@@ -4,7 +4,7 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-05)**: Version 1.3.0 - Fixed touch control spacing and score submission logic
+**Latest Update (2025-08-05)**: Version 1.3.0 - Fixed production API connectivity for App Store deployment
 - FIXED: Optimized all component positioning for better screen adaptation across devices
 - FIXED: Game canvas now properly scales on mobile with responsive sizing (max 320px on mobile)
 - FIXED: Touch controls enlarged to 56x56px (h-14 w-14) with better spacing and padding
@@ -18,6 +18,9 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - FIXED: Touch controls positioned 90px from bottom to avoid overlapping Google AdSense banner ads
 - FIXED: Score submission modal now appears for ANY score > 0 (not just high scores) for complete leaderboard tracking
 - FIXED: Modal title changed from "New High Score!" to "Submit Your Score!" for consistency
+- CRITICAL FIX: Added production API URL configuration for App Store deployed apps to connect to backend server
+- ENHANCED: Added comprehensive error logging and Capacitor detection for mobile app debugging
+- ENHANCED: Created centralized API configuration system with environment-based URL routing
 - Added Game Center entitlement (com.apple.developer.game-center) to iOS app configuration
 - Enhanced touch controls with improved event handling and responsiveness 
 - Implemented proper ad timing: interstitial ads appear every other game over (2nd, 4th, 6th, etc.)

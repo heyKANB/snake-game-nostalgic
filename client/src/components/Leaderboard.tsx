@@ -28,9 +28,21 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
   const fetchLeaderboard = async (type: LeaderboardType) => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/leaderboard/${type}`);
+      const { getApiBaseUrl, API_ENDPOINTS } = await import('../lib/config');
+      const apiBaseUrl = getApiBaseUrl();
+      const fetchUrl = `${apiBaseUrl}${API_ENDPOINTS[`${type.toUpperCase().replace('-', '_')}_LEADERBOARD` as keyof typeof API_ENDPOINTS]}`;
+      
+      console.log(`Fetching ${type} leaderboard from:`, fetchUrl);
+      console.log('Environment info:', {
+        hostname: window.location.hostname,
+        userAgent: navigator.userAgent,
+        isCapacitor: !!(window as any).Capacitor
+      });
+      
+      const response = await fetch(fetchUrl);
       if (response.ok) {
         const data = await response.json();
+        console.log(`${type} leaderboard data received:`, data.length, 'entries');
         setLeaderboardData(data);
       } else {
         console.error(`Failed to fetch ${type} leaderboard, status:`, response.status);
@@ -38,6 +50,11 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
       }
     } catch (error) {
       console.error(`Error fetching ${type} leaderboard:`, error);
+      console.error('Fetch error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        url: window.location.href,
+        userAgent: navigator.userAgent
+      });
       setLeaderboardData([]);
     } finally {
       setLoading(false);

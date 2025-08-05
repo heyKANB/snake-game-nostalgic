@@ -88,7 +88,19 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
 
     setIsSubmitting(true);
     try {
-      await fetch('/api/leaderboard', {
+      const { getApiBaseUrl, API_ENDPOINTS } = await import('../lib/config');
+      const apiBaseUrl = getApiBaseUrl();
+      const submitUrl = `${apiBaseUrl}${API_ENDPOINTS.SUBMIT_SCORE}`;
+      
+      console.log('Submitting score to:', submitUrl);
+      console.log('Score data:', { playerName: playerName.trim(), score, theme });
+      console.log('Environment info:', {
+        hostname: window.location.hostname,
+        userAgent: navigator.userAgent,
+        isCapacitor: !!(window as any).Capacitor
+      });
+      
+      const response = await fetch(submitUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,9 +111,22 @@ const NameInputModal: React.FC<NameInputModalProps> = ({ score, theme, onSubmit,
           theme
         }),
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      console.log('Score submission successful:', result);
       onSubmit(playerName.trim());
     } catch (error) {
       console.error('Failed to submit score:', error);
+      console.error('Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace',
+        url: window.location.href,
+        userAgent: navigator.userAgent
+      });
       // Still call onSubmit to close modal and continue
       onSubmit(playerName.trim());
     } finally {

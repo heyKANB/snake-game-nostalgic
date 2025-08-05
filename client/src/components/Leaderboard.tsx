@@ -27,17 +27,20 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
 
   const fetchLeaderboard = async (type: LeaderboardType) => {
     setLoading(true);
+    console.log(`Fetching ${type} leaderboard...`);
     try {
       const response = await fetch(`/api/leaderboard/${type}`);
+      console.log(`Response status for ${type}:`, response.status);
       if (response.ok) {
         const data = await response.json();
+        console.log(`${type} leaderboard data:`, data);
         setLeaderboardData(data);
       } else {
-        console.error('Failed to fetch leaderboard');
+        console.error(`Failed to fetch ${type} leaderboard, status:`, response.status);
         setLeaderboardData([]);
       }
     } catch (error) {
-      console.error('Error fetching leaderboard:', error);
+      console.error(`Error fetching ${type} leaderboard:`, error);
       setLeaderboardData([]);
     } finally {
       setLoading(false);
@@ -82,17 +85,30 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
             <h2 className={`font-mono font-bold ${isMobile ? 'text-xl' : 'text-2xl'}`} style={{ color: theme.colors.accent }}>
               🏆 Global Leaderboard
             </h2>
-            <button
-              onClick={onClose}
-              className="font-mono font-bold px-3 py-1 rounded transition-all duration-200"
-              style={{
-                backgroundColor: theme.colors.ui,
-                borderColor: theme.colors.border,
-                color: theme.colors.text
-              }}
-            >
-              ✕
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => fetchLeaderboard(selectedType)}
+                className="font-mono text-sm px-2 py-1 rounded transition-all duration-200"
+                style={{
+                  backgroundColor: theme.colors.accent,
+                  borderColor: theme.colors.border,
+                  color: theme.colors.background
+                }}
+              >
+                🔄
+              </button>
+              <button
+                onClick={onClose}
+                className="font-mono font-bold px-3 py-1 rounded transition-all duration-200"
+                style={{
+                  backgroundColor: theme.colors.ui,
+                  borderColor: theme.colors.border,
+                  color: theme.colors.text
+                }}
+              >
+                ✕
+              </button>
+            </div>
           </div>
 
           {/* Type Selection */}
@@ -130,6 +146,9 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
               </div>
               <div className="font-mono text-sm mt-2" style={{ color: theme.colors.ui }}>
                 Be the first to set a high score
+              </div>
+              <div className="font-mono text-xs mt-1 opacity-50">
+                Debug: {selectedType} - {leaderboardData.length} entries
               </div>
             </div>
           ) : (

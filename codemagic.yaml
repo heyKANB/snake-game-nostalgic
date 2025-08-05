@@ -80,13 +80,8 @@ workflows:
               cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
             fi
             
-            # Ensure app icon is properly set up
-            echo "Setting up app icon..."
-            if [ -f "attached_assets/Hunter GAmes_1754427099812.png" ]; then
-              mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset/
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
-              echo "App icon copied successfully"
-            fi
+            # Skip app icon setup temporarily to resolve build issues
+            echo "Skipping app icon setup for now"
             
             # Create required config.xml
             echo '<?xml version="1.0" encoding="utf-8"?>' > ios/App/App/config.xml

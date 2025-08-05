@@ -15,6 +15,7 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - FIXED: Users can achieve daily/weekly high scores without beating lifetime best
 - FIXED: Smart score submission logic only adds to daily/weekly if it beats current period best
 - Updated iOS app version to 1.5.0 (build 6) and Android version 1.5.0 (build 6) with production API connectivity fixes
+- FIXED: CFBundleVersion and CURRENT_PROJECT_VERSION set to 6 (higher than previous build 4) to resolve Codemagic build errors
 - FIXED: Touch controls positioned 90px from bottom to avoid overlapping Google AdSense banner ads
 - FIXED: Score submission modal now appears for ANY score > 0 (not just high scores) for complete leaderboard tracking
 - FIXED: Modal title changed from "New High Score!" to "Submit Your Score!" for consistency

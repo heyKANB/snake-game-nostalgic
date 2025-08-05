@@ -215,7 +215,12 @@ const Game = () => {
       )}
       
       {/* Main Game Area - Centered and Properly Spaced */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+      <div 
+        className="flex-1 flex flex-col items-center justify-center px-4 py-8"
+        style={isMobile ? { 
+          paddingBottom: '200px' // Extra space for touch controls (176px) + ad banner (70px) + padding
+        } : {}}
+      >
         <div className="w-full max-w-md mx-auto space-y-6">
           {/* Score Display - Better spacing from top */}
           <div className="flex justify-center">

@@ -27,13 +27,10 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
 
   const fetchLeaderboard = async (type: LeaderboardType) => {
     setLoading(true);
-    console.log(`Fetching ${type} leaderboard...`);
     try {
       const response = await fetch(`/api/leaderboard/${type}`);
-      console.log(`Response status for ${type}:`, response.status);
       if (response.ok) {
         const data = await response.json();
-        console.log(`${type} leaderboard data:`, data);
         setLeaderboardData(data);
       } else {
         console.error(`Failed to fetch ${type} leaderboard, status:`, response.status);
@@ -147,9 +144,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
               <div className="font-mono text-sm mt-2" style={{ color: theme.colors.ui }}>
                 Be the first to set a high score
               </div>
-              <div className="font-mono text-xs mt-1 opacity-50">
-                Debug: {selectedType} - {leaderboardData.length} entries
-              </div>
+
             </div>
           ) : (
             <div className="space-y-2">

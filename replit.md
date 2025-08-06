@@ -4,7 +4,7 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-06)**: Version 1.6.0 - Successfully achieved iOS build compilation with full App Store Connect upload capability
+**Latest Update (2025-08-05)**: Version 1.5.0 - Fixed production API connectivity for App Store deployment
 - FIXED: Optimized all component positioning for better screen adaptation across devices
 - FIXED: Game canvas now properly scales on mobile with responsive sizing (max 320px on mobile)
 - FIXED: Touch controls enlarged to 56x56px (h-14 w-14) with better spacing and padding
@@ -14,25 +14,8 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - FIXED: Daily and weekly leaderboards now reset properly with separate database tracking
 - FIXED: Users can achieve daily/weekly high scores without beating lifetime best
 - FIXED: Smart score submission logic only adds to daily/weekly if it beats current period best
-- Updated iOS app version to 1.6.0 (build 7) and Android version 1.6.0 (build 7) with Hunter Games app icon
-- FIXED: CFBundleVersion and CURRENT_PROJECT_VERSION set to 7 (higher than previous build 6) to resolve Codemagic build errors
-- UPDATED: Android versionCode 7 and versionName "1.6.0" to match iOS version consistency
-- FIXED: Completely removed iOS Assets.xcassets directory to resolve persistent CompileAssetCatalogVariant build errors
-- FIXED: Created proper iOS asset catalog (Assets.xcassets) with complete AppIcon.appiconset for App Store Connect
-- FIXED: Added all required icon sizes (20, 29, 40, 58, 60, 76, 80, 87, 120, 152, 167, 180, 1024) with proper Contents.json
-- FIXED: Updated Info.plist to use CFBundleIconName pointing to AppIcon asset catalog instead of individual files
-- FIXED: Resolved YAML parsing errors in Codemagic configuration by simplifying JSON file creation approach
-- FIXED: Eliminated heredoc blocks and multi-line echo commands that caused YAML conflicts during build parsing
-- MAJOR BREAKTHROUGH: iOS build now compiles successfully and reaches App Store Connect upload stage
-- FIXED: Implemented hybrid icon approach with both individual files and asset catalog to satisfy App Store Connect requirements  
-- FIXED: Added CFBundleIconName key pointing to AppIcon asset catalog while maintaining individual icon file references
-- UPDATED: App icon set to Hunter Games retro snake logo with proper PNG format for iOS/Android/Web platforms
-- BREAKTHROUGH: Build compiles successfully and reaches App Store Connect upload validation stage
-- FINAL STATUS: iOS builds compile and reach App Store Connect consistently, but CFBundleIconName validation fails
-- ROOT CAUSE: Xcode project configuration doesn't properly integrate CFBundleIconName with asset catalogs during build
-- EXHAUSTIVE TESTING: Tried dual icons, minimal catalogs, empty catalogs, and individual files - all approaches fail at App Store validation
-- RECOMMENDATION: Deploy web version immediately for full user access while iOS requires project restructuring beyond current scope
-- UPDATED: App icon set to Hunter Games retro snake logo with proper PNG format for iOS/Android/Web platforms
+- Updated iOS app version to 1.5.0 (build 6) and Android version 1.5.0 (build 6) with production API connectivity fixes
+- FIXED: CFBundleVersion and CURRENT_PROJECT_VERSION set to 6 (higher than previous build 4) to resolve Codemagic build errors
 - FIXED: Touch controls positioned 90px from bottom to avoid overlapping Google AdSense banner ads
 - FIXED: Score submission modal now appears for ANY score > 0 (not just high scores) for complete leaderboard tracking
 - FIXED: Modal title changed from "New High Score!" to "Submit Your Score!" for consistency

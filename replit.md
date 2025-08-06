@@ -4,10 +4,12 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-06)**: Version 7.0.0 - Fixed iOS version configuration for App Store submission
-- CRITICAL FIX: Updated iOS Info.plist CFBundleVersion from "4" to "7" and CFBundleShortVersionString from "1.3.0" to "7.0.0"
-- CRITICAL FIX: Updated codemagic.yaml build script to set version 7 in both project.pbxproj and Info.plist
-- FIXED: App Store Connect upload error "bundle version must be higher than previously uploaded version 6"
+**Latest Update (2025-08-06)**: Version 8.0.0 - Fixed iOS version configuration and leaderboard refresh for App Store submission
+- CRITICAL FIX: Updated iOS Info.plist CFBundleVersion from "7" to "8" and CFBundleShortVersionString from "7.0.0" to "8.0.0"
+- CRITICAL FIX: Updated codemagic.yaml build script to set version 8 in both project.pbxproj and Info.plist
+- FIXED: App Store Connect upload error "bundle version must be higher than previously uploaded version 7"
+- FIXED: Leaderboard refresh issue - scores now appear immediately after submission with automatic refresh system
+- FIXED: Server routing issue that prevented React frontend from loading (moved health checks to dedicated endpoints)
 - FIXED: Added comprehensive health check endpoints at `/`, `/health`, and `/api/health` for deployment systems
 - FIXED: Server now properly responds with JSON health status instead of HTML in production mode
 - FIXED: Production build configuration correctly serves static files from `dist/public`

@@ -28,9 +28,9 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - FIXED: Added CFBundleIconName key pointing to AppIcon asset catalog while maintaining individual icon file references
 - UPDATED: App icon set to Hunter Games retro snake logo with proper PNG format for iOS/Android/Web platforms
 - BREAKTHROUGH: Build compiles successfully and reaches App Store Connect upload validation stage
-- COMPREHENSIVE SOLUTION: Populated asset catalog with actual icon files (120, 152, 167, 1024) + iOS 10.0 deployment target
-- COMPLETE APPROACH: Asset catalog with real icon files for CFBundleIconName requirement + individual icon files for complete compatibility
-- FINAL CONFIGURATION: Lower deployment target + populated asset catalog should satisfy App Store Connect validation requirements
+- CRITICAL DISCOVERY: Asset catalogs cause persistent CompileAssetCatalogVariant errors in this specific Xcode project configuration
+- LEGACY APPROACH: Using only individual icon files with iOS 10.0 deployment target for reliable compilation
+- COMPATIBILITY CHOICE: Prioritizing successful build compilation over modern App Store Connect requirements due to Xcode constraints
 - UPDATED: App icon set to Hunter Games retro snake logo with proper PNG format for iOS/Android/Web platforms
 - FIXED: Touch controls positioned 90px from bottom to avoid overlapping Google AdSense banner ads
 - FIXED: Score submission modal now appears for ANY score > 0 (not just high scores) for complete leaderboard tracking

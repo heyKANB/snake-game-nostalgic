@@ -80,10 +80,10 @@ workflows:
               cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
             fi
             
-            # Set up comprehensive icon configuration with both asset catalog and individual files for App Store Connect
-            echo "Setting up comprehensive icon configuration with populated asset catalog for App Store Connect..."
+            # Set up legacy icon configuration optimized for reliable compilation
+            echo "Setting up legacy icon configuration optimized for reliable compilation..."
             if [ -f "attached_assets/Hunter GAmes_1754427099812.png" ]; then
-              # Copy all required icon sizes directly to App bundle root for backward compatibility
+              # Copy all required icon sizes directly to App bundle root using legacy approach
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-20.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-29.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-40.png
@@ -98,14 +98,7 @@ workflows:
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-180.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-1024.png
               
-              # Populate asset catalog with required icons for CFBundleIconName validation
-              mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset/
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-120.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-152.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-167.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-1024.png
-              
-              echo "Comprehensive icon configuration created - populated asset catalog + individual files for complete App Store Connect validation"
+              echo "Legacy icon configuration created - individual files only for maximum compilation compatibility"
             fi
             
             # Create required config.xml

@@ -54,13 +54,27 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     const { adsEnabled } = get();
     if (!adsEnabled) return;
 
-    // Initialize banner ads
-    if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
+    // Initialize banner ads with better error handling
+    if (typeof window !== 'undefined') {
       try {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-        set({ isAdLoaded: true });
+        // Check if AdSense script is available
+        if ((window as any).adsbygoogle) {
+          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+          set({ isAdLoaded: true });
+        } else {
+          console.log('AdSense not loaded yet, will try again');
+          // Retry after a delay if AdSense script isn't ready
+          setTimeout(() => {
+            if ((window as any).adsbygoogle) {
+              ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+              set({ isAdLoaded: true });
+            }
+          }, 1000);
+        }
       } catch (error) {
         console.log('Banner ad load error:', error);
+        // Disable ads if there are persistent errors
+        set({ adsEnabled: false });
       }
     }
   },

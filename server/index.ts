@@ -39,14 +39,37 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  // Add health check that always responds with JSON
-  app.get("/", (req, res) => {
+  // Add health check endpoints that respond with JSON
+  app.get("/health", (req, res) => {
+    return res.status(200).json({ 
+      status: "ok", 
+      message: "Snake Game server is running",
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      uptime: process.uptime()
+    });
+  });
+
+  app.get("/api/health", (req, res) => {
+    return res.status(200).json({ 
+      status: "ok", 
+      message: "Snake Game server is running",
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      uptime: process.uptime()
+    });
+  });
+
+  // For production root requests from health checks
+  app.get("/", (req, res, next) => {
     // Check if this is a deployment health check (usually has specific headers)
     const isHealthCheck = req.headers['user-agent']?.includes('health') || 
+                         req.headers['user-agent']?.includes('GoogleHC') ||
+                         req.headers['user-agent']?.includes('kube-probe') ||
                          req.headers['x-health-check'] ||
                          req.query.health !== undefined;
     
-    if (isHealthCheck || process.env.NODE_ENV === 'production') {
+    if (isHealthCheck && process.env.NODE_ENV === 'production') {
       return res.status(200).json({ 
         status: "ok", 
         message: "Snake Game server is running",
@@ -55,14 +78,8 @@ app.use((req, res, next) => {
       });
     }
     
-    // For regular web requests in development, continue to next middleware
-    res.locals.skipHealthCheck = true;
-    return res.status(200).json({ 
-      status: "ok", 
-      message: "Snake Game server is running",
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || 'development'
-    });
+    // For regular web requests, continue to serve the frontend
+    next();
   });
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

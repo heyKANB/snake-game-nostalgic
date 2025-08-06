@@ -15,9 +15,10 @@ type LeaderboardType = 'daily' | 'weekly' | 'all-time';
 
 interface LeaderboardProps {
   onClose: () => void;
+  refreshTrigger?: number; // Optional prop to trigger refresh
 }
 
-const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
+const Leaderboard: React.FC<LeaderboardProps> = ({ onClose, refreshTrigger }) => {
   const [selectedType, setSelectedType] = useState<LeaderboardType>('all-time');
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -65,6 +66,19 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
     fetchLeaderboard(selectedType);
   }, [selectedType]);
 
+  // Refresh leaderboard when component mounts/opens or refreshTrigger changes
+  useEffect(() => {
+    fetchLeaderboard(selectedType);
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Refresh when refreshTrigger prop changes (after score submission)
+  useEffect(() => {
+    if (refreshTrigger !== undefined) {
+      console.log('Leaderboard refresh triggered by score submission, refreshing all types...');
+      fetchLeaderboard(selectedType);
+    }
+  }, [refreshTrigger, selectedType]);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -101,13 +115,18 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose }) => {
             </h2>
             <div className="flex gap-2">
               <button
-                onClick={() => fetchLeaderboard(selectedType)}
-                className="font-mono text-sm px-2 py-1 rounded transition-all duration-200"
+                onClick={() => {
+                  console.log(`Manually refreshing ${selectedType} leaderboard...`);
+                  setLeaderboardData([]); // Clear current data to show loading state
+                  fetchLeaderboard(selectedType);
+                }}
+                className="font-mono text-sm px-2 py-1 rounded transition-all duration-200 hover:opacity-80"
                 style={{
                   backgroundColor: theme.colors.accent,
                   borderColor: theme.colors.border,
                   color: theme.colors.background
                 }}
+                title="Refresh leaderboard"
               >
                 🔄
               </button>

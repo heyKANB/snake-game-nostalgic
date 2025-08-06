@@ -34,6 +34,7 @@ const Game = () => {
   const [showNameInput, setShowNameInput] = useState(false);
   const [submittedScore, setSubmittedScore] = useState<number | null>(null);
   const [previousHighScore, setPreviousHighScore] = useState<number>(0);
+  const [leaderboardRefreshTrigger, setLeaderboardRefreshTrigger] = useState(0);
   const theme = getThemeConfig();
 
   // Handle keyboard input
@@ -133,6 +134,9 @@ const Game = () => {
   const handleNameSubmit = (name: string) => {
     setSubmittedScore(score);
     setShowNameInput(false);
+    // Trigger leaderboard refresh for when user opens it next
+    setLeaderboardRefreshTrigger(prev => prev + 1);
+    console.log('Score submitted successfully, leaderboard refresh triggered');
     // Show ad after leaderboard interaction is complete
     setTimeout(() => {
       showInterstitialAd();
@@ -256,7 +260,10 @@ const Game = () => {
       
       {/* Modals */}
       {showLeaderboard && (
-        <Leaderboard onClose={() => setShowLeaderboard(false)} />
+        <Leaderboard 
+          onClose={() => setShowLeaderboard(false)} 
+          refreshTrigger={leaderboardRefreshTrigger}
+        />
       )}
       
       {showNameInput && (

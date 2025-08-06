@@ -80,33 +80,8 @@ workflows:
               cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
             fi
             
-            # Set up proper iOS asset catalog with all required app icons and Contents.json files
-            echo "Setting up iOS asset catalog with app icons..."
-            if [ -f "attached_assets/Hunter GAmes_1754427099812.png" ]; then
-              mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset/
-              
-              # Copy all icon files
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-20.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-29.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-40.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-58.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-60.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-76.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-80.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-87.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-120.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-152.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-167.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-180.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-1024.png
-              
-              # Copy Contents.json files from local directory to avoid YAML parsing issues
-              cp ios/App/App/Assets.xcassets/Contents.json ios/App/App/Assets.xcassets/Contents.json.backup || echo "No existing Contents.json"
-              cp ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json.backup || echo "No existing AppIcon Contents.json"
-
-              
-              echo "iOS asset catalog with complete app icon set and Contents.json files created for App Store Connect validation"
-            fi
+            # iOS asset catalog is already properly configured locally
+            echo "iOS asset catalog with app icons already configured for App Store Connect validation"
             
             # Create required config.xml
             echo '<?xml version="1.0" encoding="utf-8"?>' > ios/App/App/config.xml

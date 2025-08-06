@@ -80,9 +80,10 @@ workflows:
               cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
             fi
             
-            # Add individual app icon files for App Store Connect validation
-            echo "Setting up individual app icon files..."
+            # Set up hybrid approach with both asset catalog and individual icons for App Store Connect
+            echo "Setting up hybrid icon configuration for App Store Connect..."
             if [ -f "attached_assets/Hunter GAmes_1754427099812.png" ]; then
+              # Create individual icon files
               mkdir -p ios/App/App/icons/
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-29.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-40.png
@@ -93,7 +94,12 @@ workflows:
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-167.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-180.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-1024.png
-              echo "All required app icons created (29, 40, 60, 76, 120, 152, 167, 180, 1024) for App Store Connect validation"
+              
+              # Also copy to asset catalog for CFBundleIconName requirement
+              mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset/
+              cp ios/App/App/icons/* ios/App/App/Assets.xcassets/AppIcon.appiconset/
+              
+              echo "Hybrid icon configuration created - both individual files and asset catalog for App Store Connect validation"
             fi
             
             # Create required config.xml

@@ -101,17 +101,17 @@ workflows:
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-1024.png
               
               # Create main Assets.xcassets Contents.json
-              cat > ios/App/App/Assets.xcassets/Contents.json << 'EOF'
+              cat > ios/App/App/Assets.xcassets/Contents.json << 'MAIN_EOF'
 {
   "info" : {
     "author" : "xcode",
     "version" : 1
   }
 }
-EOF
+MAIN_EOF
               
-              # Create AppIcon.appiconset Contents.json
-              cat > ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json << 'EOF'
+              # Create AppIcon.appiconset Contents.json with proper escaping
+              cat > ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json << 'CONTENTS_EOF'
 {
   "images" : [
     {
@@ -228,7 +228,7 @@ EOF
     "version" : 1
   }
 }
-EOF
+CONTENTS_EOF
               
               echo "iOS asset catalog with complete app icon set and Contents.json files created for App Store Connect validation"
             fi

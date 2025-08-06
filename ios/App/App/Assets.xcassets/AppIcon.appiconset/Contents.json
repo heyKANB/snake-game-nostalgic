@@ -12,12 +12,7 @@
       "filename" : "icon-60.png",
       "scale" : "3x"
     },
-    {
-      "size" : "29x29",
-      "idiom" : "iphone",
-      "filename" : "icon-29.png",
-      "scale" : "1x"
-    },
+
     {
       "size" : "29x29",
       "idiom" : "iphone",

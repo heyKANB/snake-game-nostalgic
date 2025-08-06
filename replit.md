@@ -4,7 +4,16 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-05)**: Version 1.5.0 - Fixed production API connectivity for App Store deployment
+**Latest Update (2025-08-06)**: Version 1.6.0 - Fixed deployment health check configuration for Replit deployments
+- FIXED: Added comprehensive health check endpoints at `/`, `/health`, and `/api/health` for deployment systems
+- FIXED: Server now properly responds with JSON health status instead of HTML in production mode
+- FIXED: Production build configuration correctly serves static files from `dist/public`
+- FIXED: Added proper deployment configuration in `.replit.toml` for CloudRun deployment
+- ENHANCED: Health check endpoints include server uptime, environment status, and timestamp data
+- ENHANCED: Server now detects deployment health check requests and responds appropriately
+- CRITICAL: Fixed routing order to ensure health checks work in both development and production modes
+
+**Previous Update (2025-08-05)**: Version 1.5.0 - Fixed production API connectivity for App Store deployment
 - FIXED: Optimized all component positioning for better screen adaptation across devices
 - FIXED: Game canvas now properly scales on mobile with responsive sizing (max 320px on mobile)
 - FIXED: Touch controls enlarged to 56x56px (h-14 w-14) with better spacing and padding

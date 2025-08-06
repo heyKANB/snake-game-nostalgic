@@ -6,19 +6,23 @@
         <string>en</string>
         <key>CFBundleDisplayName</key>
         <string>Snake Game - Nostalgic</string>
-        <key>CFBundleIconName</key>
-        <string>AppIcon</string>
         <key>CFBundleIcons</key>
         <dict>
                 <key>CFBundlePrimaryIcon</key>
                 <dict>
                         <key>CFBundleIconFiles</key>
                         <array>
+                                <string>icon-29</string>
+                                <string>icon-40</string>
+                                <string>icon-60</string>
+                                <string>icon-76</string>
                                 <string>icon-120</string>
                                 <string>icon-152</string>
                                 <string>icon-167</string>
                                 <string>icon-180</string>
                         </array>
+                        <key>CFBundleIconName</key>
+                        <string>AppIcon</string>
                 </dict>
         </dict>
         <key>CFBundleExecutable</key>

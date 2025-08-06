@@ -7,8 +7,8 @@
 - **Bundle ID**: com.snakegame.nostalgic
 - **Apple ID**: 6749170406
 - **App Store Connect Key ID**: 7629KQWD3Z
-- **Version**: 8.0.0
-- **Build**: 8
+- **Version**: 8.1.0
+- **Build**: 9
 
 ## App Store Connect Configuration
 

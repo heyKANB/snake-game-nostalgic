@@ -44,7 +44,14 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose, refreshTrigger }) =>
       if (response.ok) {
         const data = await response.json();
         console.log(`${type} leaderboard data received:`, data.length, 'entries');
+        console.log(`${type} leaderboard data:`, data);
+        console.log(`Setting leaderboard data, current length: ${leaderboardData.length}, new length: ${data.length}`);
         setLeaderboardData(data);
+        
+        // Verify the data was set
+        setTimeout(() => {
+          console.log(`After setting ${type} data, state length:`, leaderboardData.length);
+        }, 100);
       } else {
         console.error(`Failed to fetch ${type} leaderboard, status:`, response.status);
         setLeaderboardData([]);
@@ -180,7 +187,9 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose, refreshTrigger }) =>
               <div className="font-mono text-sm mt-2" style={{ color: theme.colors.ui }}>
                 Be the first to set a high score
               </div>
-
+              <div className="font-mono text-xs mt-2 opacity-50">
+                Debug: Data length: {leaderboardData.length}, Loading: {loading ? 'true' : 'false'}
+              </div>
             </div>
           ) : (
             <div className="space-y-2">

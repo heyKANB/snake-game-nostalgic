@@ -80,10 +80,10 @@ workflows:
               cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
             fi
             
-            # Set up minimal asset catalog with empty slots to satisfy CFBundleIconName requirement
-            echo "Setting up minimal empty asset catalog with individual icon files for App Store Connect..."
+            # Set up complete icon configuration with both asset catalog and individual files
+            echo "Setting up complete icon configuration with asset catalog and individual files for App Store Connect..."
             if [ -f "attached_assets/Hunter GAmes_1754427099812.png" ]; then
-              # Copy icons directly to App bundle root for actual use
+              # Copy icons directly to App bundle root for backward compatibility
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-20.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-29.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-40.png
@@ -98,7 +98,14 @@ workflows:
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-180.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-1024.png
               
-              echo "Minimal empty asset catalog created with individual icon files for App Store Connect validation"
+              # Copy required icons to asset catalog for CFBundleIconName validation
+              mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset/
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-120.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-152.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-167.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/Assets.xcassets/AppIcon.appiconset/icon-1024.png
+              
+              echo "Complete icon configuration created - asset catalog with required icons + individual files for App Store Connect validation"
             fi
             
             # Create required config.xml

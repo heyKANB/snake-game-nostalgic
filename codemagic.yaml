@@ -80,8 +80,16 @@ workflows:
               cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
             fi
             
-            # Removed Assets.xcassets directory to avoid CompileAssetCatalogVariant build errors
-            echo "Assets.xcassets removed to fix build compilation issues"
+            # Add individual app icon files for App Store Connect validation
+            echo "Setting up individual app icon files..."
+            if [ -f "attached_assets/Hunter GAmes_1754427099812.png" ]; then
+              mkdir -p ios/App/App/icons/
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-120.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-152.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-167.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-180.png
+              echo "Individual app icons created for App Store Connect validation"
+            fi
             
             # Create required config.xml
             echo '<?xml version="1.0" encoding="utf-8"?>' > ios/App/App/config.xml

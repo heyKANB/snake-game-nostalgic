@@ -14,6 +14,10 @@
 
                 504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
                 50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
+                ICON120_REFERENCE /* icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = ICON120_FILE_REF /* icon-120.png */; };
+                ICON152_REFERENCE /* icon-152.png in Resources */ = {isa = PBXBuildFile; fileRef = ICON152_FILE_REF /* icon-152.png */; };
+                ICON167_REFERENCE /* icon-167.png in Resources */ = {isa = PBXBuildFile; fileRef = ICON167_FILE_REF /* icon-167.png */; };
+                ICON180_REFERENCE /* icon-180.png in Resources */ = {isa = PBXBuildFile; fileRef = ICON180_FILE_REF /* icon-180.png */; };
                 A084ECDBA7D38E1E42DFC39D /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */; };
 /* End PBXBuildFile section */
 

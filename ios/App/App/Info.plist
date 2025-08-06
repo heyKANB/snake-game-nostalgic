@@ -6,6 +6,21 @@
         <string>en</string>
         <key>CFBundleDisplayName</key>
         <string>Snake Game - Nostalgic</string>
+        <key>CFBundleIconName</key>
+        <string>AppIcon</string>
+        <key>CFBundleIcons</key>
+        <dict>
+                <key>CFBundlePrimaryIcon</key>
+                <dict>
+                        <key>CFBundleIconFiles</key>
+                        <array>
+                                <string>icon-120</string>
+                                <string>icon-152</string>
+                                <string>icon-167</string>
+                                <string>icon-180</string>
+                        </array>
+                </dict>
+        </dict>
         <key>CFBundleExecutable</key>
         <string>$(EXECUTABLE_NAME)</string>
         <key>CFBundleIdentifier</key>
@@ -17,9 +32,9 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>1.3.0</string>
+        <string>1.6.0</string>
         <key>CFBundleVersion</key>
-        <string>4</string>
+        <string>7</string>
         <key>LSRequiresIPhoneOS</key>
         <true/>
         <key>UILaunchStoryboardName</key>

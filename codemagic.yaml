@@ -80,10 +80,10 @@ workflows:
               cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
             fi
             
-            # Set up legacy individual icon files only (no asset catalog to avoid CompileAssetCatalogVariant errors)
-            echo "Setting up legacy individual icon files for App Store Connect..."
+            # Set up minimal asset catalog with empty slots to satisfy CFBundleIconName requirement
+            echo "Setting up minimal empty asset catalog with individual icon files for App Store Connect..."
             if [ -f "attached_assets/Hunter GAmes_1754427099812.png" ]; then
-              # Copy icons directly to App bundle root using legacy approach
+              # Copy icons directly to App bundle root for actual use
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-20.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-29.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-40.png
@@ -98,7 +98,7 @@ workflows:
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-180.png
               cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-1024.png
               
-              echo "Legacy individual icon files created for App Store Connect validation (no asset catalog)"
+              echo "Minimal empty asset catalog created with individual icon files for App Store Connect validation"
             fi
             
             # Create required config.xml

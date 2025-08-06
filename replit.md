@@ -4,9 +4,9 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-06)**: Version 8.1.0 - Fixed iOS API connectivity and added Hunter Games app icon
-- CRITICAL FIX: Updated iOS Info.plist CFBundleVersion to "9" and CFBundleShortVersionString to "8.1.0"
-- CRITICAL FIX: Updated codemagic.yaml build script to set version 9 in both project.pbxproj and Info.plist
+**Latest Update (2025-08-06)**: Version 8.2.0 - Added Hunter Games app icon and updated versions
+- UPDATED: iOS Info.plist CFBundleVersion to "10" and CFBundleShortVersionString to "8.2.0" 
+- UPDATED: Codemagic.yaml build script to set version 10 in both project.pbxproj and Info.plist
 - FIXED: iOS app API connectivity - corrected Replit deployment URL format for native mobile apps
 - FIXED: Added comprehensive CORS headers for mobile app cross-origin API requests
 - FIXED: Enhanced Capacitor detection to properly route native iOS app API calls to production server

@@ -192,8 +192,8 @@ workflows:
           
           # Update bundle version to be higher than previous version 4
           echo "Updating bundle version to 6 (higher than previous version 4)..."
-          sed -i '' 's/CURRENT_PROJECT_VERSION = [^;]*/CURRENT_PROJECT_VERSION = 6/' App.xcodeproj/project.pbxproj || echo "CURRENT_PROJECT_VERSION not found, adding..."
-          sed -i '' 's/CFBundleVersion = [^;]*/CFBundleVersion = 6/' App.xcodeproj/project.pbxproj || echo "CFBundleVersion not found in pbxproj"
+          sed -i '' 's/CURRENT_PROJECT_VERSION = [^;]*/CURRENT_PROJECT_VERSION = 7/' App.xcodeproj/project.pbxproj || echo "CURRENT_PROJECT_VERSION not found, adding..."
+          sed -i '' 's/CFBundleVersion = [^;]*/CFBundleVersion = 7/' App.xcodeproj/project.pbxproj || echo "CFBundleVersion not found in pbxproj"
           
           # Also update Info.plist if it exists
           if [ -f "App/Info.plist" ]; then

@@ -80,26 +80,25 @@ workflows:
               cp -r dist/public/* ios/App/App/public/ || echo "Failed to copy public files"
             fi
             
-            # Set up hybrid approach with both asset catalog and individual icons for App Store Connect
-            echo "Setting up hybrid icon configuration for App Store Connect..."
+            # Set up individual icon files directly in App bundle for App Store Connect
+            echo "Setting up direct icon files for App Store Connect..."
             if [ -f "attached_assets/Hunter GAmes_1754427099812.png" ]; then
-              # Create individual icon files
-              mkdir -p ios/App/App/icons/
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-29.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-40.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-60.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-76.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-120.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-152.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-167.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-180.png
-              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icons/icon-1024.png
+              # Copy icons directly to App bundle root
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-20.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-29.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-40.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-58.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-60.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-76.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-80.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-87.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-120.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-152.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-167.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-180.png
+              cp "attached_assets/Hunter GAmes_1754427099812.png" ios/App/App/icon-1024.png
               
-              # Also copy to asset catalog for CFBundleIconName requirement
-              mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset/
-              cp ios/App/App/icons/* ios/App/App/Assets.xcassets/AppIcon.appiconset/
-              
-              echo "Hybrid icon configuration created - both individual files and asset catalog for App Store Connect validation"
+              echo "Direct icon files created in App bundle for App Store Connect validation"
             fi
             
             # Create required config.xml

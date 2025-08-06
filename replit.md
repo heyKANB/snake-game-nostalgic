@@ -4,7 +4,9 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-06)**: Version 8.2.0 - Added Hunter Games app icon and updated versions
+**Latest Update (2025-08-06)**: Version 8.2.0 - Fixed TestFlight leaderboard connectivity
+- CRITICAL FIX: Updated iOS app API configuration to use correct production server URL (https://retro-snake-huntergames.replit.app)
+- FIXED: iOS TestFlight app now connects to production leaderboard server with existing score data
 - UPDATED: iOS Info.plist CFBundleVersion to "10" and CFBundleShortVersionString to "8.2.0" 
 - UPDATED: Codemagic.yaml build script to set version 10 in both project.pbxproj and Info.plist
 - FIXED: iOS app API connectivity - corrected Replit deployment URL format for native mobile apps

@@ -17,9 +17,9 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>8.2.2</string>
+        <string>8.2.3</string>
         <key>CFBundleVersion</key>
-        <string>12</string>
+        <string>13</string>
         <key>LSRequiresIPhoneOS</key>
         <true/>
         <key>UILaunchStoryboardName</key>
@@ -47,5 +47,7 @@
         <true/>
         <key>ITSAppUsesNonExemptEncryption</key>
         <false/>
+        <key>NSUserTrackingUsageDescription</key>
+        <string>This app uses tracking to show personalized ads and improve your gaming experience.</string>
 </dict>
 </plist>

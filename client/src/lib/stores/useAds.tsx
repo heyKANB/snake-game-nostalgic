@@ -7,12 +7,12 @@ interface AdsState {
   adsEnabled: boolean;
   adSenseAppId: string;
   gameOverCount: number;
-  trackingPermissionGranted: boolean;
+  trackingPermissionGranted: boolean | null; // null = not asked yet, true/false = permission result
   setAdLoaded: (loaded: boolean) => void;
   setShowInterstitial: (show: boolean) => void;
   setAdsEnabled: (enabled: boolean) => void;
   setAdSenseAppId: (appId: string) => void;
-  setTrackingPermission: (granted: boolean) => void;
+  setTrackingPermission: (granted: boolean | null) => void;
   requestTrackingPermission: () => Promise<boolean>;
   showInterstitialAd: () => void;
   loadBannerAd: () => void;
@@ -25,7 +25,7 @@ export const useAdsStore = create<AdsState>((set, get) => ({
   adsEnabled: true,
   adSenseAppId: '',
   gameOverCount: 0,
-  trackingPermissionGranted: false,
+  trackingPermissionGranted: null, // null = not asked yet
 
   setAdLoaded: (loaded) => set({ isAdLoaded: loaded }),
   setShowInterstitial: (show) => set({ showInterstitial: show }),
@@ -35,9 +35,22 @@ export const useAdsStore = create<AdsState>((set, get) => ({
 
   requestTrackingPermission: async () => {
     try {
-      const granted = await AppTracking.checkAndRequestPermission();
-      set({ trackingPermissionGranted: granted });
-      return granted;
+      console.log('Checking ATT permission status...');
+      const status = await AppTracking.getStatus();
+      console.log('Current ATT status:', status);
+      
+      if (status === 'notDetermined') {
+        console.log('Requesting ATT permission...');
+        const newStatus = await AppTracking.requestPermission();
+        console.log('ATT permission result:', newStatus);
+        const granted = newStatus === 'authorized';
+        set({ trackingPermissionGranted: granted });
+        return granted;
+      } else {
+        const granted = status === 'authorized';
+        set({ trackingPermissionGranted: granted });
+        return granted;
+      }
     } catch (error) {
       console.log('Tracking permission error:', error);
       set({ trackingPermissionGranted: false });
@@ -48,16 +61,18 @@ export const useAdsStore = create<AdsState>((set, get) => ({
   incrementGameOverCount: () => set((state) => ({ gameOverCount: state.gameOverCount + 1 })),
 
   showInterstitialAd: async () => {
-    const { adsEnabled, gameOverCount, trackingPermissionGranted, requestTrackingPermission } = get();
+    const { adsEnabled, gameOverCount, trackingPermissionGranted } = get();
     if (!adsEnabled) return;
 
-    // Request tracking permission if not already granted
+    // Check if tracking permission has been handled
+    if (trackingPermissionGranted === null) {
+      console.log('ATT permission not yet requested, skipping ads');
+      return;
+    }
+
     if (!trackingPermissionGranted) {
-      const granted = await requestTrackingPermission();
-      if (!granted) {
-        console.log('Tracking permission denied, not showing personalized ads');
-        return;
-      }
+      console.log('Tracking permission denied, not showing personalized ads');
+      return;
     }
 
     // Only show ads on every other game over (even counts: 2, 4, 6, etc)
@@ -78,16 +93,18 @@ export const useAdsStore = create<AdsState>((set, get) => ({
   },
 
   loadBannerAd: async () => {
-    const { adsEnabled, trackingPermissionGranted, requestTrackingPermission } = get();
+    const { adsEnabled, trackingPermissionGranted } = get();
     if (!adsEnabled) return;
 
-    // Request tracking permission if not already granted
+    // Check if tracking permission has been handled
+    if (trackingPermissionGranted === null) {
+      console.log('ATT permission not yet requested, skipping banner ads');
+      return;
+    }
+
     if (!trackingPermissionGranted) {
-      const granted = await requestTrackingPermission();
-      if (!granted) {
-        console.log('Tracking permission denied, not showing personalized ads');
-        return;
-      }
+      console.log('Tracking permission denied, not showing personalized ads');
+      return;
     }
 
     // Initialize banner ads with better error handling

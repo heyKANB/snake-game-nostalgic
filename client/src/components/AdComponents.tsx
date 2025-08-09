@@ -3,13 +3,14 @@ import { useAdsStore } from '../lib/stores/useAds';
 
 // Banner Ad Component for bottom of game screen
 export const BannerAd: React.FC = () => {
-  const { adsEnabled, isAdLoaded, loadBannerAd } = useAdsStore();
+  const { adsEnabled, isAdLoaded, loadBannerAd, trackingPermissionGranted } = useAdsStore();
 
   useEffect(() => {
-    if (adsEnabled && !isAdLoaded) {
+    // Only load ads if tracking permission has been handled and ads are enabled
+    if (adsEnabled && !isAdLoaded && trackingPermissionGranted !== null) {
       loadBannerAd();
     }
-  }, [adsEnabled, isAdLoaded, loadBannerAd]);
+  }, [adsEnabled, isAdLoaded, loadBannerAd, trackingPermissionGranted]);
 
   if (!adsEnabled) return null;
 

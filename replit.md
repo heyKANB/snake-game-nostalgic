@@ -4,15 +4,15 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-07)**: Version 8.2.3 - Apple App Store compliance with App Tracking Transparency
-- CRITICAL FIX: Implemented proper iOS App Tracking Transparency (ATT) framework to replace custom tracking prompt
-- ADDED: NSUserTrackingUsageDescription to Info.plist for App Store approval
-- ADDED: Native iOS AppTrackingPlugin.swift with ATTrackingManager integration
-- FIXED: Replaced custom tracking consent with Apple's required ATT permission system
-- UPDATED: Ad system now requests ATT permission before showing personalized ads
-- UPDATED: iOS Info.plist CFBundleVersion to "13" and CFBundleShortVersionString to "8.2.3"
-- UPDATED: Codemagic.yaml build script to set version 13 in both project.pbxproj and Info.plist
-- COMPLIANCE: App now meets Apple's App Store requirements for tracking transparency
+**Latest Update (2025-08-07)**: Version 8.2.4 - Enhanced ATT prompt visibility for App Store approval
+- CRITICAL FIX: ATT permission request now triggers immediately at app launch before any tracking
+- ENHANCED: Improved ATT usage description with Apple-compliant language for clarity
+- FIXED: Permission request timing to ensure Apple reviewers can easily locate the ATT prompt
+- UPDATED: Ad system completely blocks ads until ATT permission is explicitly handled
+- UPDATED: Console logging for ATT status tracking and debugging during review
+- UPDATED: iOS Info.plist CFBundleVersion to "14" and CFBundleShortVersionString to "8.2.4"
+- UPDATED: Codemagic.yaml build script to set version 14 in both project.pbxproj and Info.plist
+- COMPLIANCE: ATT prompt now appears prominently at app startup per Apple requirements
 - FIXED: iOS app API connectivity - corrected Replit deployment URL format for native mobile apps
 - FIXED: Added comprehensive CORS headers for mobile app cross-origin API requests
 - FIXED: Enhanced Capacitor detection to properly route native iOS app API calls to production server

@@ -10,13 +10,13 @@ function App() {
   const { setHitSound, setSuccessSound } = useAudio();
   const { setAdSenseAppId, requestTrackingPermission } = useAdsStore();
 
-  // Initialize audio and request tracking permission on app start
+  // Initialize audio and check tracking permission on app start
   useEffect(() => {
     const initApp = async () => {
       try {
-        // CRITICAL: Request App Tracking Transparency permission FIRST
-        // This must happen before any ads or tracking code is initialized
-        console.log("Requesting App Tracking Transparency permission...");
+        // CRITICAL: Check App Tracking Transparency permission status FIRST
+        // Only request permission if it hasn't been asked before (notDetermined)
+        console.log("Checking App Tracking Transparency permission status...");
         await requestTrackingPermission();
         
         // Load hit sound
@@ -29,7 +29,7 @@ function App() {
         successAudio.volume = 0.5;
         setSuccessSound(successAudio);
         
-        // Initialize AdSense with your App ID (after ATT permission)
+        // Initialize AdSense with your App ID (after ATT permission check)
         setAdSenseAppId('ca-app-pub-8626828126160251~4239118513');
       } catch (error) {
         console.log("App initialization failed:", error);

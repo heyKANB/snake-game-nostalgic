@@ -40,14 +40,16 @@ export const useAdsStore = create<AdsState>((set, get) => ({
       console.log('Current ATT status:', status);
       
       if (status === 'notDetermined') {
-        console.log('Requesting ATT permission...');
+        console.log('ATT permission not determined - showing permission dialog...');
         const newStatus = await AppTracking.requestPermission();
         console.log('ATT permission result:', newStatus);
         const granted = newStatus === 'authorized';
         set({ trackingPermissionGranted: granted });
         return granted;
       } else {
+        // Permission was already asked - use the existing status
         const granted = status === 'authorized';
+        console.log('ATT permission already determined:', granted ? 'granted' : 'denied');
         set({ trackingPermissionGranted: granted });
         return granted;
       }

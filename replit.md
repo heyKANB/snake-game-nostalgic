@@ -8,11 +8,12 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - CRITICAL FIX: ATT permission request now triggers immediately at app launch before any tracking
 - ENHANCED: Improved ATT usage description with Apple-compliant language for clarity
 - FIXED: Permission request timing to ensure Apple reviewers can easily locate the ATT prompt
+- FIXED: ATT permission now properly remembers user choice and only asks once (first launch only)
 - UPDATED: Ad system completely blocks ads until ATT permission is explicitly handled
 - UPDATED: Console logging for ATT status tracking and debugging during review
 - UPDATED: iOS Info.plist CFBundleVersion to "14" and CFBundleShortVersionString to "8.2.4"
 - UPDATED: Codemagic.yaml build script to set version 14 in both project.pbxproj and Info.plist
-- COMPLIANCE: ATT prompt now appears prominently at app startup per Apple requirements
+- COMPLIANCE: ATT prompt now appears prominently at app startup per Apple requirements and follows proper iOS behavior
 - FIXED: iOS app API connectivity - corrected Replit deployment URL format for native mobile apps
 - FIXED: Added comprehensive CORS headers for mobile app cross-origin API requests
 - FIXED: Enhanced Capacitor detection to properly route native iOS app API calls to production server

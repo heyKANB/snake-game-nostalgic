@@ -5,6 +5,7 @@ import TouchControls from "./TouchControls";
 import ThemeSelector from "./ThemeSelector";
 import Leaderboard from "./Leaderboard";
 import NameInputModal from "./NameInputModal";
+import SettingsButton from "./SettingsButton";
 import { BannerAd } from "./AdComponents";
 import ScoreDisplay from "./ScoreDisplay";
 import { useSnakeGame } from "../lib/stores/useSnakeGame";
@@ -160,6 +161,9 @@ const Game = () => {
         color: theme.colors.text 
       }}
     >
+      {/* Settings Button - Always visible in top-left */}
+      <SettingsButton />
+
       {/* Menu Buttons - positioned below status bar with better spacing */}
       {gameState === 'menu' && (
         <div className="absolute top-4 right-4 flex gap-3 z-10" style={{ marginTop: isMobile ? '60px' : '20px' }}>

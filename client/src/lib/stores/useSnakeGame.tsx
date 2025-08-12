@@ -21,6 +21,7 @@ interface SnakeGameState {
   // Actions
   startGame: () => void;
   resetGame: () => void;
+  resetUserData: () => void;
   changeDirection: (newDirection: Direction) => void;
   gameLoop: () => 'continue' | 'ate_food' | 'game_over';
 }
@@ -48,6 +49,23 @@ export const useSnakeGame = create<SnakeGameState>((set, get) => ({
 
     resetGame: () => {
       set({ gameState: 'menu' });
+    },
+
+    resetUserData: () => {
+      // Reset high score and clear localStorage
+      localStorage.removeItem('snakeHighScore');
+      
+      const initialSnake = [{ x: Math.floor(GRID_WIDTH / 2), y: Math.floor(GRID_HEIGHT / 2) }];
+      const initialFood = generateFood(initialSnake);
+      
+      set({
+        snake: initialSnake,
+        food: initialFood,
+        direction: 'right',
+        gameState: 'menu',
+        score: 0,
+        highScore: 0
+      });
     },
 
     changeDirection: (newDirection: Direction) => {

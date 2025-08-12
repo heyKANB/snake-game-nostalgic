@@ -4,15 +4,15 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-12)**: Version 8.2.5 - Fixed critical iPad touch controls bug for App Store approval
+**Latest Update (2025-08-12)**: Version 8.2.6 - Ready for App Store submission with iPad touch controls fix
 - CRITICAL FIX: Touch controls now display during gameplay on iPad devices (iPad Air 5th gen, iPad Pro, etc.)
 - ENHANCED: Mobile detection now properly identifies all touch-capable devices including iPads
 - FIXED: Touch controls were not appearing on iPad devices due to screen resolution detection logic
 - ADDED: Comprehensive touch device detection with fallback mechanisms for all iOS devices
 - ADDED: Settings button in top-left corner with "Reset User" functionality for Apple reviewers
 - ENHANCED: Reset User feature clears high scores, themes, and ATT permissions for easy testing
-- UPDATED: iOS Info.plist CFBundleVersion to "15" and CFBundleShortVersionString to "8.2.5"
-- UPDATED: Codemagic.yaml build script to set version 15 in both project.pbxproj and Info.plist
+- UPDATED: iOS Info.plist CFBundleVersion to "16" and CFBundleShortVersionString to "8.2.6"
+- UPDATED: Codemagic.yaml build script to set version 16 in both project.pbxproj and Info.plist
 - COMPLIANCE: Touch controls now work properly on all iOS devices including iPads per Apple requirements
 - FIXED: iOS app API connectivity - corrected Replit deployment URL format for native mobile apps
 - FIXED: Added comprehensive CORS headers for mobile app cross-origin API requests

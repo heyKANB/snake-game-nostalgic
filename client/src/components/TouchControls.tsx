@@ -23,7 +23,17 @@ const TouchControls = ({
   const { getThemeConfig } = useThemeStore();
   const theme = getThemeConfig();
   
-  if (!isMobile) return null;
+  // Always show touch controls on touch-capable devices or when explicitly mobile
+  if (!isMobile) {
+    // Double check for touch capability as fallback
+    const hasTouchScreen = typeof window !== 'undefined' && (
+      'ontouchstart' in window || 
+      navigator.maxTouchPoints > 0 ||
+      /iPad|iPhone|iPod|Android/i.test(navigator.userAgent)
+    );
+    
+    if (!hasTouchScreen) return null;
+  }
 
   const handleDirectionPress = (newDirection: Direction) => {
     if (gameState !== 'playing') return;

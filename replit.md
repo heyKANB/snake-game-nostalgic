@@ -4,16 +4,16 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-07)**: Version 8.2.4 - Enhanced ATT prompt visibility for App Store approval
-- CRITICAL FIX: ATT permission request now triggers immediately at app launch before any tracking
-- ENHANCED: Improved ATT usage description with Apple-compliant language for clarity
-- FIXED: Permission request timing to ensure Apple reviewers can easily locate the ATT prompt
-- FIXED: ATT permission now properly remembers user choice and only asks once (first launch only)
-- UPDATED: Ad system completely blocks ads until ATT permission is explicitly handled
-- UPDATED: Console logging for ATT status tracking and debugging during review
-- UPDATED: iOS Info.plist CFBundleVersion to "14" and CFBundleShortVersionString to "8.2.4"
-- UPDATED: Codemagic.yaml build script to set version 14 in both project.pbxproj and Info.plist
-- COMPLIANCE: ATT prompt now appears prominently at app startup per Apple requirements and follows proper iOS behavior
+**Latest Update (2025-08-12)**: Version 8.2.5 - Fixed critical iPad touch controls bug for App Store approval
+- CRITICAL FIX: Touch controls now display during gameplay on iPad devices (iPad Air 5th gen, iPad Pro, etc.)
+- ENHANCED: Mobile detection now properly identifies all touch-capable devices including iPads
+- FIXED: Touch controls were not appearing on iPad devices due to screen resolution detection logic
+- ADDED: Comprehensive touch device detection with fallback mechanisms for all iOS devices
+- ADDED: Settings button in top-left corner with "Reset User" functionality for Apple reviewers
+- ENHANCED: Reset User feature clears high scores, themes, and ATT permissions for easy testing
+- UPDATED: iOS Info.plist CFBundleVersion to "15" and CFBundleShortVersionString to "8.2.5"
+- UPDATED: Codemagic.yaml build script to set version 15 in both project.pbxproj and Info.plist
+- COMPLIANCE: Touch controls now work properly on all iOS devices including iPads per Apple requirements
 - FIXED: iOS app API connectivity - corrected Replit deployment URL format for native mobile apps
 - FIXED: Added comprehensive CORS headers for mobile app cross-origin API requests
 - FIXED: Enhanced Capacitor detection to properly route native iOS app API calls to production server

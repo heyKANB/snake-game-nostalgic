@@ -2,7 +2,7 @@ workflows:
   ios-snake-game:
     name: iOS Snake Game Build & Deploy
     max_build_duration: 60
-    instance_type: mac_mini_m1
+    instance_type: mac_mini_m2
     integrations:
       app_store_connect: Apple Connect App Mgr
     environment:

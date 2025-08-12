@@ -11,8 +11,8 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - ADDED: Comprehensive touch device detection with fallback mechanisms for all iOS devices
 - ADDED: Settings button in top-left corner with "Reset User" functionality for Apple reviewers
 - ENHANCED: Reset User feature clears high scores, themes, and ATT permissions for easy testing
-- UPDATED: iOS Info.plist CFBundleVersion to "16" and CFBundleShortVersionString to "8.2.6"
-- UPDATED: Codemagic.yaml build script to set version 16 in both project.pbxproj and Info.plist
+- UPDATED: iOS Info.plist CFBundleVersion to "17" and CFBundleShortVersionString to "8.2.6"
+- UPDATED: Codemagic.yaml build script to set version 17 in both project.pbxproj and Info.plist
 - COMPLIANCE: Touch controls now work properly on all iOS devices including iPads per Apple requirements
 - FIXED: iOS app API connectivity - corrected Replit deployment URL format for native mobile apps
 - FIXED: Added comprehensive CORS headers for mobile app cross-origin API requests

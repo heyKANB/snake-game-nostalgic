@@ -34,7 +34,7 @@ const SettingsButton: React.FC = () => {
   };
 
   return (
-    <div className="absolute top-4 left-4 z-50">
+    <div className="absolute top-16 left-4 z-50">
       <button
         onClick={() => setShowMenu(!showMenu)}
         className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-colors duration-200 border border-gray-600"

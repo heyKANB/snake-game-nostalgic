@@ -63,37 +63,71 @@ const GameCanvas = () => {
       const padding = theme.effects.rounded ? 2 : 1;
       const size = GRID_SIZE - (padding * 2);
       
-      if (index === 0) {
-        // Snake head - use theme color
-        ctx.fillStyle = theme.colors.snake;
-      } else {
-        // Snake body - slightly darker
-        const rgb = hexToRgb(theme.colors.snake);
+      // Christmas theme - twinkling lights effect
+      if (theme.foodStyle === 'christmas-tree') {
+        const time = Date.now() / 1000;
+        const twinkleOffset = (index * 0.5 + time) % (Math.PI * 2);
+        const brightness = Math.sin(twinkleOffset) * 0.3 + 0.7; // 0.4 to 1.0
+        
+        // Alternate colors for twinkling lights
+        const colors = ['#ff0000', '#00ff00', '#0080ff', '#ffff00', '#ff8000', '#ff0080'];
+        const colorIndex = (index + Math.floor(time * 2)) % colors.length;
+        const baseColor = colors[colorIndex];
+        
+        const rgb = hexToRgb(baseColor);
         if (rgb) {
-          ctx.fillStyle = `rgb(${Math.floor(rgb.r * 0.8)}, ${Math.floor(rgb.g * 0.8)}, ${Math.floor(rgb.b * 0.8)})`;
+          ctx.fillStyle = `rgb(${Math.floor(rgb.r * brightness)}, ${Math.floor(rgb.g * brightness)}, ${Math.floor(rgb.b * brightness)})`;
         } else {
           ctx.fillStyle = theme.colors.snake;
         }
-      }
-      
-      if (theme.effects.rounded) {
-        // Modern rounded style
-        drawRoundedRect(ctx, x + padding, y + padding, size, size, 4);
+        
+        // Draw as circles for Christmas lights
+        ctx.beginPath();
+        ctx.arc(x + GRID_SIZE/2, y + GRID_SIZE/2, (size/2) * brightness, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Add strong glow for twinkling effect
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 15 * brightness;
+        ctx.beginPath();
+        ctx.arc(x + GRID_SIZE/2, y + GRID_SIZE/2, (size/2) * brightness, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
       } else {
-        // Classic square style
-        ctx.fillRect(x + padding, y + padding, size, size);
-      }
-      
-      // Add glow effect for retro theme
-      if (theme.effects.glow && index === 0) {
-        ctx.shadowColor = theme.colors.snake;
-        ctx.shadowBlur = 10;
+        // Regular snake rendering for other themes
+        if (index === 0) {
+          // Snake head - use theme color
+          ctx.fillStyle = theme.colors.snake;
+        } else {
+          // Snake body - slightly darker
+          const rgb = hexToRgb(theme.colors.snake);
+          if (rgb) {
+            ctx.fillStyle = `rgb(${Math.floor(rgb.r * 0.8)}, ${Math.floor(rgb.g * 0.8)}, ${Math.floor(rgb.b * 0.8)})`;
+          } else {
+            ctx.fillStyle = theme.colors.snake;
+          }
+        }
+        
         if (theme.effects.rounded) {
+          // Modern rounded style
           drawRoundedRect(ctx, x + padding, y + padding, size, size, 4);
         } else {
+          // Classic square style
           ctx.fillRect(x + padding, y + padding, size, size);
         }
-        ctx.shadowBlur = 0;
+        
+        // Add glow effect for retro theme
+        if (theme.effects.glow && index === 0) {
+          ctx.shadowColor = theme.colors.snake;
+          ctx.shadowBlur = 10;
+          if (theme.effects.rounded) {
+            drawRoundedRect(ctx, x + padding, y + padding, size, size, 4);
+          } else {
+            ctx.fillRect(x + padding, y + padding, size, size);
+          }
+          ctx.shadowBlur = 0;
+        }
       }
     });
 
@@ -107,7 +141,52 @@ const GameCanvas = () => {
       ctx.fillStyle = theme.colors.food;
       
       // Handle different food styles
-      if (theme.foodStyle === 'pumpkin') {
+      if (theme.foodStyle === 'christmas-tree') {
+        // Christmas tree
+        const centerX = x + GRID_SIZE/2;
+        const centerY = y + GRID_SIZE/2;
+        const treeSize = size * 0.8;
+        
+        // Draw tree layers (3 triangular sections)
+        ctx.fillStyle = theme.colors.food;
+        
+        // Top layer (smallest)
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY - treeSize/2);
+        ctx.lineTo(centerX - treeSize/4, centerY - treeSize/6);
+        ctx.lineTo(centerX + treeSize/4, centerY - treeSize/6);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Middle layer
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY - treeSize/4);
+        ctx.lineTo(centerX - treeSize/3, centerY + treeSize/8);
+        ctx.lineTo(centerX + treeSize/3, centerY + treeSize/8);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Bottom layer (largest)
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(centerX - treeSize/2, centerY + treeSize/2);
+        ctx.lineTo(centerX + treeSize/2, centerY + treeSize/2);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Draw trunk
+        ctx.fillStyle = '#8B4513'; // Brown trunk
+        ctx.fillRect(centerX - 2, centerY + treeSize/3, 4, treeSize/4);
+        
+        // Add twinkling star on top
+        const time = Date.now() / 1000;
+        const starBrightness = Math.sin(time * 3) * 0.3 + 0.7;
+        ctx.fillStyle = `rgba(255, 255, 0, ${starBrightness})`;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY - treeSize/2 - 2, 2, 0, 2 * Math.PI);
+        ctx.fill();
+        
+      } else if (theme.foodStyle === 'pumpkin') {
         // Halloween pumpkin
         const centerX = x + GRID_SIZE/2;
         const centerY = y + GRID_SIZE/2;
@@ -147,7 +226,7 @@ const GameCanvas = () => {
       }
       
       // Add glow effect for themes that support it
-      if (theme.effects.glow) {
+      if (theme.effects.glow && theme.foodStyle !== 'christmas-tree') {
         ctx.shadowColor = theme.colors.food;
         ctx.shadowBlur = 8;
         if (theme.foodStyle === 'pumpkin') {

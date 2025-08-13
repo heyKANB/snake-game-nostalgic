@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type GameTheme = 'retro' | 'modern' | 'halloween';
+export type GameTheme = 'retro' | 'modern' | 'halloween' | 'christmas';
 
 interface ThemeConfig {
   name: string;
@@ -22,7 +22,7 @@ interface ThemeConfig {
     rounded: boolean;
     gradient: boolean;
   };
-  foodStyle?: 'square' | 'circle' | 'pumpkin'; // Custom food shapes
+  foodStyle?: 'square' | 'circle' | 'pumpkin' | 'christmas-tree'; // Custom food shapes
 }
 
 export const themes: Record<GameTheme, ThemeConfig> = {
@@ -87,6 +87,27 @@ export const themes: Record<GameTheme, ThemeConfig> = {
       gradient: true
     },
     foodStyle: 'pumpkin'
+  },
+  christmas: {
+    name: 'Christmas Festive',
+    description: 'Twinkling lights snake eating Christmas trees - unlock at 300 points!',
+    unlockRequirement: 300,
+    colors: {
+      background: '#0d1b2a', // Deep winter night blue
+      snake: '#ffd700', // Golden yellow (will be animated with twinkling colors)
+      food: '#228b22', // Forest green for Christmas trees
+      text: '#ffffff', // White snow text
+      ui: '#1e3a8a', // Winter blue UI
+      border: '#dc2626', // Christmas red border
+      accent: '#fbbf24' // Golden accent
+    },
+    effects: {
+      glow: true,
+      scanlines: false,
+      rounded: true,
+      gradient: true
+    },
+    foodStyle: 'christmas-tree'
   }
 };
 

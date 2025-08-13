@@ -4,16 +4,17 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-08-12)**: Version 8.2.6 - Christmas theme added with build 18 ready for submission
+**Latest Update (2025-08-12)**: Version 8.2.7 - Fixed settings button position with build 19 ready for submission
 - CRITICAL FIX: Touch controls now display during gameplay on iPad devices (iPad Air 5th gen, iPad Pro, etc.)
 - ENHANCED: Mobile detection now properly identifies all touch-capable devices including iPads
 - FIXED: Touch controls were not appearing on iPad devices due to screen resolution detection logic
 - ADDED: Comprehensive touch device detection with fallback mechanisms for all iOS devices
 - ADDED: Settings button in top-left corner with "Reset User" functionality for Apple reviewers
 - ENHANCED: Reset User feature clears high scores, themes, and ATT permissions for easy testing
-- UPDATED: iOS Info.plist CFBundleVersion to "18" and CFBundleShortVersionString to "8.2.6"
-- UPDATED: Codemagic.yaml build script to set version 18 in both project.pbxproj and Info.plist
+- UPDATED: iOS Info.plist CFBundleVersion to "19" and CFBundleShortVersionString to "8.2.7"
+- UPDATED: Codemagic.yaml build script to set version 19 in both project.pbxproj and Info.plist
 - ADDED: Christmas Festive theme with twinkling lights snake and Christmas tree food (unlocks at 300 points)
+- FIXED: Settings button position moved down to avoid iPhone status bar overlap (top-16 instead of top-4)
 - COMPLIANCE: Touch controls now work properly on all iOS devices including iPads per Apple requirements
 - FIXED: iOS app API connectivity - corrected Replit deployment URL format for native mobile apps
 - FIXED: Added comprehensive CORS headers for mobile app cross-origin API requests

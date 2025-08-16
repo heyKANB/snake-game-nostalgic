@@ -83,6 +83,17 @@ app.use((req, res, next) => {
     });
   });
 
+  // Add app-ads.txt route before static file serving to ensure it's not overridden
+  app.get("/app-ads.txt", (req, res) => {
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(`# app-ads.txt for Snake Game - Nostalgic
+# Generated on 2025-08-14
+# This file authorizes advertising systems to serve ads on this app
+# Format: <advertising system domain>, <publisher account ID>, <relationship type>, <certification authority ID>
+
+google.com, pub-8626828126160251, DIRECT, f08c47fec0942fa0`);
+  });
+
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes

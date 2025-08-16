@@ -97,6 +97,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve app-ads.txt file at root for advertising verification
+  app.get("/app-ads.txt", (req, res) => {
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(`# app-ads.txt for Snake Game - Nostalgic
+# Generated on 2025-08-14
+# This file authorizes advertising systems to serve ads on this app
+# Format: <advertising system domain>, <publisher account ID>, <relationship type>, <certification authority ID>
+
+google.com, pub-8626828126160251, DIRECT, f08c47fec0942fa0`);
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

@@ -14,6 +14,7 @@ This is a nostalgic Snake game application built with React/TypeScript on the fr
 - UPDATED: iOS Info.plist CFBundleVersion to "21" and CFBundleShortVersionString to "8.2.9"
 - UPDATED: Codemagic.yaml build script to set version 21 in both project.pbxproj and Info.plist
 - REFINED: ATT tracking description simplified to "This app would like to track your activity in order to show you personalized ads."
+- ADDED: app-ads.txt file served at root endpoint for AdSense advertising verification per IAB Tech Lab specification
 - ADDED: Christmas Festive theme with twinkling lights snake and Christmas tree food (unlocks at 300 points)
 - FIXED: Settings button position moved down to avoid iPhone status bar overlap (top-16 instead of top-4)
 - ADDED: ATT privacy settings management in settings menu - shows current tracking status and directs users to iOS Settings (Apple policy compliant)

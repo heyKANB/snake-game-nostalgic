@@ -38,20 +38,74 @@ const GameCanvas = () => {
     }
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Draw grid (subtle)
-    ctx.strokeStyle = theme.colors.background === '#000000' ? '#111111' : theme.colors.border + '20';
-    ctx.lineWidth = 1;
-    for (let x = 0; x <= CANVAS_WIDTH; x += GRID_SIZE) {
+    // Draw field markings - either football field or regular grid
+    if (theme.foodStyle === 'football') {
+      // Draw football field with yard lines and end zones
+      ctx.strokeStyle = theme.colors.border;
+      ctx.lineWidth = 2;
+      
+      // Draw end zones (first and last 2 grid units)
+      const endZoneWidth = GRID_SIZE * 2;
+      
+      // Left end zone
+      ctx.fillStyle = theme.colors.ui;
+      ctx.fillRect(0, 0, endZoneWidth, CANVAS_HEIGHT);
+      
+      // Right end zone  
+      ctx.fillRect(CANVAS_WIDTH - endZoneWidth, 0, endZoneWidth, CANVAS_HEIGHT);
+      
+      // Draw yard lines (every 5 grid units between end zones)
+      for (let x = endZoneWidth; x <= CANVAS_WIDTH - endZoneWidth; x += GRID_SIZE * 5) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, CANVAS_HEIGHT);
+        ctx.stroke();
+      }
+      
+      // Draw 50-yard line (middle) thicker
+      const midField = CANVAS_WIDTH / 2;
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, CANVAS_HEIGHT);
+      ctx.moveTo(midField, 0);
+      ctx.lineTo(midField, CANVAS_HEIGHT);
       ctx.stroke();
-    }
-    for (let y = 0; y <= CANVAS_HEIGHT; y += GRID_SIZE) {
+      
+      // Draw sidelines (top and bottom)
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(CANVAS_WIDTH, y);
+      ctx.moveTo(0, 0);
+      ctx.lineTo(CANVAS_WIDTH, 0);
+      ctx.moveTo(0, CANVAS_HEIGHT);
+      ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT);
       ctx.stroke();
+      
+      // Add hash marks for yard lines
+      ctx.lineWidth = 1;
+      for (let x = endZoneWidth + GRID_SIZE * 5; x < CANVAS_WIDTH - endZoneWidth; x += GRID_SIZE * 5) {
+        // Top hash marks
+        for (let hashY = CANVAS_HEIGHT * 0.3; hashY <= CANVAS_HEIGHT * 0.7; hashY += GRID_SIZE) {
+          ctx.beginPath();
+          ctx.moveTo(x - 3, hashY);
+          ctx.lineTo(x + 3, hashY);
+          ctx.stroke();
+        }
+      }
+    } else {
+      // Regular grid for other themes
+      ctx.strokeStyle = theme.colors.background === '#000000' ? '#111111' : theme.colors.border + '20';
+      ctx.lineWidth = 1;
+      for (let x = 0; x <= CANVAS_WIDTH; x += GRID_SIZE) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, CANVAS_HEIGHT);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= CANVAS_HEIGHT; y += GRID_SIZE) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(CANVAS_WIDTH, y);
+        ctx.stroke();
+      }
     }
 
     if (gameState === 'menu') return;
@@ -214,6 +268,38 @@ const GameCanvas = () => {
         // Draw stem
         ctx.fillStyle = '#32D74B'; // Green stem
         ctx.fillRect(centerX - 2, centerY - radius - 3, 4, 4);
+        
+      } else if (theme.foodStyle === 'football') {
+        // Football shape
+        const centerX = x + GRID_SIZE/2;
+        const centerY = y + GRID_SIZE/2;
+        const width = size * 0.8;
+        const height = size * 0.6;
+        
+        // Draw football body (ellipse)
+        ctx.fillStyle = theme.colors.food;
+        ctx.beginPath();
+        ctx.ellipse(centerX, centerY, width/2, height/2, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Draw football laces
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        // Center line
+        ctx.moveTo(centerX, centerY - height/3);
+        ctx.lineTo(centerX, centerY + height/3);
+        ctx.stroke();
+        
+        // Laces (small perpendicular lines)
+        const laceSpacing = height/6;
+        for (let i = -1; i <= 1; i++) {
+          const laceY = centerY + (i * laceSpacing);
+          ctx.beginPath();
+          ctx.moveTo(centerX - 3, laceY);
+          ctx.lineTo(centerX + 3, laceY);
+          ctx.stroke();
+        }
         
       } else if (theme.effects.rounded || theme.foodStyle === 'circle') {
         // Modern circular food

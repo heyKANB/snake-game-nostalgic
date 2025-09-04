@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type GameTheme = 'retro' | 'modern' | 'halloween' | 'christmas';
+export type GameTheme = 'retro' | 'modern' | 'halloween' | 'christmas' | 'football';
 
 interface ThemeConfig {
   name: string;
@@ -22,7 +22,7 @@ interface ThemeConfig {
     rounded: boolean;
     gradient: boolean;
   };
-  foodStyle?: 'square' | 'circle' | 'pumpkin' | 'christmas-tree'; // Custom food shapes
+  foodStyle?: 'square' | 'circle' | 'pumpkin' | 'christmas-tree' | 'football'; // Custom food shapes
 }
 
 export const themes: Record<GameTheme, ThemeConfig> = {
@@ -108,6 +108,28 @@ export const themes: Record<GameTheme, ThemeConfig> = {
       gradient: true
     },
     foodStyle: 'christmas-tree'
+  },
+  football: {
+    name: 'Fall Football',
+    description: 'Football field with yard lines and end zones - unlock at 700 points or purchase!',
+    unlockRequirement: 700,
+    isPremium: true,
+    colors: {
+      background: '#228B22', // Football field green
+      snake: '#FFFFFF', // White team color
+      food: '#8B4513', // Football brown
+      text: '#FFFFFF', // White text
+      ui: '#2F4F2F', // Dark green UI
+      border: '#FFFFFF', // White yard lines
+      accent: '#FFD700' // Gold accent
+    },
+    effects: {
+      glow: false,
+      scanlines: false,
+      rounded: true,
+      gradient: false
+    },
+    foodStyle: 'football'
   }
 };
 

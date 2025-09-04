@@ -162,12 +162,12 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
       return true;
     }
     
-    // Check if premium theme is purchased
-    if (themeConfig.isPremium && !isPurchased) {
-      return false;
+    // For premium themes, check if purchased OR if high score requirement is met
+    if (themeConfig.isPremium) {
+      return isPurchased || (themeConfig.unlockRequirement ? highScore >= themeConfig.unlockRequirement : false);
     }
     
-    // Check high score requirement
+    // For non-premium themes, just check high score requirement
     if (themeConfig.unlockRequirement && highScore < themeConfig.unlockRequirement) {
       return false;
     }

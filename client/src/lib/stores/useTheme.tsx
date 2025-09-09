@@ -111,9 +111,8 @@ export const themes: Record<GameTheme, ThemeConfig> = {
   },
   football: {
     name: 'Fall Football',
-    description: 'Football field with yard lines and end zones - unlock at 700 points or purchase!',
+    description: 'Football field with yard lines and end zones - unlock at 700 points!',
     unlockRequirement: 700,
-    isPremium: true,
     colors: {
       background: '#228B22', // Football field green
       snake: '#FFFFFF', // White team color

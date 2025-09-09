@@ -6,10 +6,6 @@ const ThemeSelector: React.FC = () => {
   const { currentTheme, setTheme, getThemeConfig, isThemeUnlocked } = useThemeStore();
   const { highScore } = useSnakeGame();
   const config = getThemeConfig();
-  
-  // Debug logging to help identify the issue
-  console.log('Available themes:', Object.keys(themes));
-  console.log('Current high score:', highScore);
 
   return (
     <div className="w-full max-w-md mx-auto p-4 space-y-4">

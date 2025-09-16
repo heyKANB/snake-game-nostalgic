@@ -35,26 +35,13 @@ export const useAdsStore = create<AdsState>((set, get) => ({
 
   requestTrackingPermission: async () => {
     try {
-      console.log('Checking ATT permission status...');
-      const status = await AppTracking.getStatus();
-      console.log('Current ATT status:', status);
-      
-      if (status === 'notDetermined') {
-        console.log('ATT permission not determined - showing permission dialog...');
-        const newStatus = await AppTracking.requestPermission();
-        console.log('ATT permission result:', newStatus);
-        const granted = newStatus === 'authorized';
-        set({ trackingPermissionGranted: granted });
-        return granted;
-      } else {
-        // Permission was already asked - use the existing status
-        const granted = status === 'authorized';
-        console.log('ATT permission already determined:', granted ? 'granted' : 'denied');
-        set({ trackingPermissionGranted: granted });
-        return granted;
-      }
+      console.log('🚀 Requesting App Tracking Transparency permission...');
+      const granted = await AppTracking.checkAndRequestPermission();
+      console.log('🚀 ATT final result:', granted ? 'GRANTED' : 'DENIED');
+      set({ trackingPermissionGranted: granted });
+      return granted;
     } catch (error) {
-      console.log('Tracking permission error:', error);
+      console.log('❌ Tracking permission error:', error);
       set({ trackingPermissionGranted: false });
       return false;
     }

@@ -4,15 +4,15 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-09-04)**: Version 8.2.11 - Added Fall Football theme (score unlock only) with build 23 ready for submission
+**Latest Update (2025-09-17)**: Version 8.2.12 - Fixed ATT framework deployment issue with build 24 ready for submission
 - CRITICAL FIX: Touch controls now display during gameplay on iPad devices (iPad Air 5th gen, iPad Pro, etc.)
 - ENHANCED: Mobile detection now properly identifies all touch-capable devices including iPads
 - FIXED: Touch controls were not appearing on iPad devices due to screen resolution detection logic
 - ADDED: Comprehensive touch device detection with fallback mechanisms for all iOS devices
 - ADDED: Settings button in top-left corner with "Reset User" functionality for Apple reviewers
 - ENHANCED: Reset User feature clears high scores, themes, and ATT permissions for easy testing
-- UPDATED: iOS Info.plist CFBundleVersion to "21" and CFBundleShortVersionString to "8.2.9"
-- UPDATED: Codemagic.yaml build script to set version 21 in both project.pbxproj and Info.plist
+- UPDATED: iOS Info.plist CFBundleVersion to "24" and CFBundleShortVersionString to "8.2.12"
+- UPDATED: Codemagic.yaml build script to set version 24 in both project.pbxproj and Info.plist
 - REFINED: ATT tracking description simplified to "This app would like to track your activity in order to show you personalized ads."
 - ADDED: app-ads.txt file served at root endpoint for AdSense advertising verification per IAB Tech Lab specification
 - ADDED: Christmas Festive theme with twinkling lights snake and Christmas tree food (unlocks at 300 points)

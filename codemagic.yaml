@@ -190,16 +190,16 @@ workflows:
           # Set development team
           sed -i '' "s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = TYRA6QN5W5;/" App.xcodeproj/project.pbxproj || echo "DEVELOPMENT_TEAM not updated"
           
-          # Update bundle version to be higher than previous version 4
-          echo "Updating bundle version to 21 (higher than previous version 20)..."
-          sed -i '' 's/CURRENT_PROJECT_VERSION = [^;]*/CURRENT_PROJECT_VERSION = 21/' App.xcodeproj/project.pbxproj || echo "CURRENT_PROJECT_VERSION not found, adding..."
-          sed -i '' 's/CFBundleVersion = [^;]*/CFBundleVersion = 23/' App.xcodeproj/project.pbxproj || echo "CFBundleVersion not found in pbxproj"
+          # Update bundle version to be higher than previous version 23
+          echo "Updating bundle version to 24 (higher than previous version 23)..."
+          sed -i '' 's/CURRENT_PROJECT_VERSION = [^;]*/CURRENT_PROJECT_VERSION = 24/' App.xcodeproj/project.pbxproj || echo "CURRENT_PROJECT_VERSION not found, adding..."
+          sed -i '' 's/CFBundleVersion = [^;]*/CFBundleVersion = 24/' App.xcodeproj/project.pbxproj || echo "CFBundleVersion not found in pbxproj"
           
           # Also update Info.plist if it exists
           if [ -f "App/Info.plist" ]; then
             echo "Updating version numbers in Info.plist..."
-            /usr/libexec/PlistBuddy -c "Set :CFBundleVersion 23" App/Info.plist || echo "CFBundleVersion not updated in Info.plist"
-            /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 8.2.11" App/Info.plist || echo "CFBundleShortVersionString not updated in Info.plist"
+            /usr/libexec/PlistBuddy -c "Set :CFBundleVersion 24" App/Info.plist || echo "CFBundleVersion not updated in Info.plist"
+            /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 8.2.12" App/Info.plist || echo "CFBundleShortVersionString not updated in Info.plist"
           fi
           
           cd ../..

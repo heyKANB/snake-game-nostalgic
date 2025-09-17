@@ -53,16 +53,16 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     const { adsEnabled, gameOverCount, trackingPermissionGranted } = get();
     if (!adsEnabled) return;
 
-    // Check if tracking permission has been handled
+    // Check if tracking permission has been handled - wait for permission dialog to complete
     if (trackingPermissionGranted === null) {
-      console.log('ATT permission not yet requested, skipping ads');
+      console.log('ATT permission not yet requested, skipping ads until permission is determined');
       return;
     }
 
-    if (!trackingPermissionGranted) {
-      console.log('Tracking permission denied, not showing personalized ads');
-      return;
-    }
+    // Show ads regardless of tracking permission status
+    // If tracking denied, ads will be non-personalized; if granted, ads may be personalized
+    const adType = trackingPermissionGranted ? 'personalized' : 'non-personalized';
+    console.log(`Showing ${adType} interstitial ad (tracking permission: ${trackingPermissionGranted ? 'granted' : 'denied'})`);
 
     // Only show ads on every other game over (even counts: 2, 4, 6, etc)
     if (gameOverCount % 2 !== 0) return;
@@ -85,16 +85,16 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     const { adsEnabled, trackingPermissionGranted } = get();
     if (!adsEnabled) return;
 
-    // Check if tracking permission has been handled
+    // Check if tracking permission has been handled - wait for permission dialog to complete
     if (trackingPermissionGranted === null) {
-      console.log('ATT permission not yet requested, skipping banner ads');
+      console.log('ATT permission not yet requested, skipping banner ads until permission is determined');
       return;
     }
 
-    if (!trackingPermissionGranted) {
-      console.log('Tracking permission denied, not showing personalized ads');
-      return;
-    }
+    // Load ads regardless of tracking permission status
+    // If tracking denied, ads will be non-personalized; if granted, ads may be personalized  
+    const adType = trackingPermissionGranted ? 'personalized' : 'non-personalized';
+    console.log(`Loading ${adType} banner ad (tracking permission: ${trackingPermissionGranted ? 'granted' : 'denied'})`);
 
     // Initialize banner ads with better error handling
     if (typeof window !== 'undefined') {

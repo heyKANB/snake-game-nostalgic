@@ -6,7 +6,7 @@ export const BannerAd: React.FC = () => {
   const { adsEnabled, isAdLoaded, loadBannerAd, trackingPermissionGranted } = useAdsStore();
 
   useEffect(() => {
-    // Only load ads if tracking permission has been handled and ads are enabled
+    // Load ads when tracking permission has been determined (regardless of granted/denied) and ads are enabled
     if (adsEnabled && !isAdLoaded && trackingPermissionGranted !== null) {
       loadBannerAd();
     }

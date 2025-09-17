@@ -2,13 +2,15 @@ import { create } from 'zustand';
 import { AppTracking } from '../appTracking';
 
 interface AdsState {
-  isAdLoaded: boolean;
+  isBannerLoaded: boolean;
+  isInterstitialLoaded: boolean;
   showInterstitial: boolean;
   adsEnabled: boolean;
   adSenseAppId: string;
   gameOverCount: number;
   trackingPermissionGranted: boolean | null; // null = not asked yet, true/false = permission result
-  setAdLoaded: (loaded: boolean) => void;
+  setBannerLoaded: (loaded: boolean) => void;
+  setInterstitialLoaded: (loaded: boolean) => void;
   setShowInterstitial: (show: boolean) => void;
   setAdsEnabled: (enabled: boolean) => void;
   setAdSenseAppId: (appId: string) => void;
@@ -16,18 +18,21 @@ interface AdsState {
   requestTrackingPermission: () => Promise<boolean>;
   showInterstitialAd: () => void;
   loadBannerAd: () => void;
+  loadInterstitialAd: () => void;
   incrementGameOverCount: () => void;
 }
 
 export const useAdsStore = create<AdsState>((set, get) => ({
-  isAdLoaded: false,
+  isBannerLoaded: false,
+  isInterstitialLoaded: false,
   showInterstitial: false,
   adsEnabled: true,
   adSenseAppId: '',
   gameOverCount: 0,
   trackingPermissionGranted: null, // null = not asked yet
 
-  setAdLoaded: (loaded) => set({ isAdLoaded: loaded }),
+  setBannerLoaded: (loaded) => set({ isBannerLoaded: loaded }),
+  setInterstitialLoaded: (loaded) => set({ isInterstitialLoaded: loaded }),
   setShowInterstitial: (show) => set({ showInterstitial: show }),
   setAdsEnabled: (enabled) => set({ adsEnabled: enabled }),
   setAdSenseAppId: (appId) => set({ adSenseAppId: appId }),
@@ -67,23 +72,24 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     // Only show ads on every other game over (even counts: 2, 4, 6, etc)
     if (gameOverCount % 2 !== 0) return;
 
-    // Show interstitial ad on game over
+    // Set non-personalized ads if tracking denied
     if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
-      try {
-        set({ showInterstitial: true });
-        // Hide after 3 seconds
-        setTimeout(() => {
-          set({ showInterstitial: false });
-        }, 3000);
-      } catch (error) {
-        console.log('Ad display error:', error);
-      }
+      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+      (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
     }
+
+    // Show interstitial ad modal and trigger ad load
+    set({ showInterstitial: true, isInterstitialLoaded: false });
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+      set({ showInterstitial: false });
+    }, 3000);
   },
 
   loadBannerAd: async () => {
-    const { adsEnabled, trackingPermissionGranted } = get();
-    if (!adsEnabled) return;
+    const { adsEnabled, trackingPermissionGranted, isBannerLoaded } = get();
+    if (!adsEnabled || isBannerLoaded) return;
 
     // Check if tracking permission has been handled - wait for permission dialog to complete
     if (trackingPermissionGranted === null) {
@@ -99,24 +105,65 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     // Initialize banner ads with better error handling
     if (typeof window !== 'undefined') {
       try {
+        // Set non-personalized ads if tracking denied
+        (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+        (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
+        
         // Check if AdSense script is available
         if ((window as any).adsbygoogle) {
-          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-          set({ isAdLoaded: true });
+          ((window as any).adsbygoogle).push({});
+          set({ isBannerLoaded: true });
         } else {
           console.log('AdSense not loaded yet, will try again');
           // Retry after a delay if AdSense script isn't ready
           setTimeout(() => {
             if ((window as any).adsbygoogle) {
-              ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-              set({ isAdLoaded: true });
+              (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
+              ((window as any).adsbygoogle).push({});
+              set({ isBannerLoaded: true });
             }
           }, 1000);
         }
       } catch (error) {
         console.log('Banner ad load error:', error);
-        // Disable ads if there are persistent errors
-        set({ adsEnabled: false });
+        // Don't permanently disable ads on TagError (common in development)
+        if (error instanceof Error && error.name !== 'TagError') {
+          set({ adsEnabled: false });
+        }
+      }
+    }
+  },
+
+  loadInterstitialAd: async () => {
+    const { adsEnabled, trackingPermissionGranted, isInterstitialLoaded } = get();
+    if (!adsEnabled || isInterstitialLoaded) return;
+
+    // Check if tracking permission has been handled
+    if (trackingPermissionGranted === null) {
+      console.log('ATT permission not yet requested, skipping interstitial ad load');
+      return;
+    }
+
+    const adType = trackingPermissionGranted ? 'personalized' : 'non-personalized';
+    console.log(`Loading ${adType} interstitial ad content`);
+
+    if (typeof window !== 'undefined') {
+      try {
+        // Set non-personalized ads if tracking denied
+        (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+        (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
+        
+        // Push ad request for interstitial
+        if ((window as any).adsbygoogle) {
+          ((window as any).adsbygoogle).push({});
+          set({ isInterstitialLoaded: true });
+        }
+      } catch (error) {
+        console.log('Interstitial ad load error:', error);
+        // Don't permanently disable ads on TagError
+        if (error instanceof Error && error.name !== 'TagError') {
+          set({ adsEnabled: false });
+        }
       }
     }
   },

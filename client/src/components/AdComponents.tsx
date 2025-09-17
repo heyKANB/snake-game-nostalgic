@@ -3,14 +3,14 @@ import { useAdsStore } from '../lib/stores/useAds';
 
 // Banner Ad Component for bottom of game screen
 export const BannerAd: React.FC = () => {
-  const { adsEnabled, isAdLoaded, loadBannerAd, trackingPermissionGranted } = useAdsStore();
+  const { adsEnabled, isBannerLoaded, loadBannerAd, trackingPermissionGranted } = useAdsStore();
 
   useEffect(() => {
     // Load ads when tracking permission has been determined (regardless of granted/denied) and ads are enabled
-    if (adsEnabled && !isAdLoaded && trackingPermissionGranted !== null) {
+    if (adsEnabled && !isBannerLoaded && trackingPermissionGranted !== null) {
       loadBannerAd();
     }
-  }, [adsEnabled, isAdLoaded, loadBannerAd, trackingPermissionGranted]);
+  }, [adsEnabled, isBannerLoaded, loadBannerAd, trackingPermissionGranted]);
 
   if (!adsEnabled) return null;
 
@@ -30,7 +30,14 @@ export const BannerAd: React.FC = () => {
 
 // Interstitial Ad Component (shows on game over)
 export const InterstitialAd: React.FC = () => {
-  const { showInterstitial, setShowInterstitial, adsEnabled } = useAdsStore();
+  const { showInterstitial, setShowInterstitial, adsEnabled, loadInterstitialAd, isInterstitialLoaded } = useAdsStore();
+
+  // Load ad content when interstitial is shown
+  useEffect(() => {
+    if (showInterstitial && !isInterstitialLoaded) {
+      loadInterstitialAd();
+    }
+  }, [showInterstitial, isInterstitialLoaded, loadInterstitialAd]);
 
   if (!adsEnabled || !showInterstitial) return null;
 

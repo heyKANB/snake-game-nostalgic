@@ -49,28 +49,45 @@ export class AppTracking {
 
   static async checkAndRequestPermission(): Promise<boolean> {
     console.log('🔍 ATT: Starting permission check and request flow');
-    const status = await this.getStatus();
-    console.log('🔍 ATT: Current status is:', status);
     
-    if (status === 'notDetermined') {
-      console.log('🔍 ATT: Permission not determined, requesting permission...');
-      const newStatus = await this.requestPermission();
-      console.log('🔍 ATT: Permission request result:', newStatus);
+    if (Capacitor.isNativePlatform()) {
+      // On native iOS, permission should already be requested by plugin.load()
+      // Just get the current status
+      const status = await this.getStatus();
+      console.log('🔍 ATT: Current native status:', status);
       
-      // Store that we've asked and what the result was (for web platform)
-      if (!Capacitor.isNativePlatform()) {
+      // If still notDetermined on native, something went wrong - request again
+      if (status === 'notDetermined') {
+        console.log('🔍 ATT: Native permission still not determined, requesting now...');
+        const newStatus = await this.requestPermission();
+        console.log('🔍 ATT: Native permission request result:', newStatus);
+        return newStatus === 'authorized';
+      }
+      
+      return status === 'authorized';
+    } else {
+      // Web platform logic
+      const status = await this.getStatus();
+      console.log('🔍 ATT: Current web status:', status);
+      
+      if (status === 'notDetermined') {
+        console.log('🔍 ATT: Web permission not determined, requesting permission...');
+        const newStatus = await this.requestPermission();
+        console.log('🔍 ATT: Web permission request result:', newStatus);
+        
+        // Store result for web platform
         try {
           localStorage.setItem('att_permission_asked', 'true');
           localStorage.setItem('att_permission_granted', (newStatus === 'authorized').toString());
         } catch (error) {
           console.log('ATT: localStorage write failed:', error);
         }
+        
+        return newStatus === 'authorized';
       }
       
-      return newStatus === 'authorized';
+      console.log('🔍 ATT: Web permission already determined:', status);
+      return status === 'authorized';
     }
-    
-    console.log('🔍 ATT: Permission already determined:', status);
-    return status === 'authorized';
   }
 }

@@ -91,43 +91,38 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart, onUseExtraLif
             )}
           </div>
 
-          {/* Extra Life Options */}
+          {/* Continue Game Option */}
           <div className={`font-mono space-y-3 ${isMobile ? 'text-base' : 'text-lg'}`}>
-            {extraLives > 0 && onUseExtraLife && (
-              <Button 
-                onClick={onUseExtraLife}
-                className="font-mono px-6 py-2 transition-all duration-200 mr-2"
-                style={{
-                  backgroundColor: theme.colors.accent,
-                  color: theme.colors.background,
-                  border: `2px solid ${theme.colors.border}`,
-                  borderRadius: theme.effects.rounded ? '8px' : '0px'
-                }}
-              >
-                ❤️ USE EXTRA LIFE ({extraLives})
-              </Button>
-            )}
-            
-            {canMakePayments && (
+            {(extraLives > 0 || canMakePayments) && (
               <Button 
                 onClick={async () => {
-                  const success = await purchaseExtraLives();
-                  if (success) {
-                    // Show success message or animation
-                    console.log("Purchase successful!");
+                  if (extraLives > 0 && onUseExtraLife) {
+                    // Use existing extra life to continue
+                    onUseExtraLife();
+                  } else if (canMakePayments) {
+                    // Purchase extra lives and continue
+                    const success = await purchaseExtraLives();
+                    if (success && onUseExtraLife) {
+                      // Wait a moment for the purchase to be processed, then continue
+                      setTimeout(() => {
+                        onUseExtraLife();
+                      }, 500);
+                    }
                   }
                 }}
                 disabled={isPurchasing}
-                className="font-mono px-6 py-2 transition-all duration-200"
+                className="font-mono px-8 py-3 transition-all duration-200"
                 style={{
-                  backgroundColor: isPurchasing ? theme.colors.border : theme.colors.food,
+                  backgroundColor: isPurchasing ? theme.colors.border : theme.colors.accent,
                   color: theme.colors.background,
                   border: `2px solid ${theme.colors.border}`,
                   borderRadius: theme.effects.rounded ? '8px' : '0px',
                   opacity: isPurchasing ? 0.5 : 1
                 }}
               >
-                {isPurchasing ? 'PURCHASING...' : `💰 BUY 3 EXTRA LIVES ${productPrice}`}
+                {isPurchasing ? 'PURCHASING...' : 
+                 extraLives > 0 ? `❤️ CONTINUE GAME (${extraLives} lives)` : 
+                 `❤️ CONTINUE GAME ${productPrice}`}
               </Button>
             )}
           </div>

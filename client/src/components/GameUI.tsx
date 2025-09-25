@@ -122,7 +122,7 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart, onUseExtraLif
               >
                 {isPurchasing ? 'PURCHASING...' : 
                  extraLives > 0 ? `❤️ CONTINUE GAME (${extraLives} lives)` : 
-                 `❤️ CONTINUE GAME ${productPrice}`}
+                 `❤️ CONTINUE GAME`}
               </Button>
             )}
           </div>

@@ -27,7 +27,7 @@ interface ThemeConfig {
 
 export const themes: Record<GameTheme, ThemeConfig> = {
   retro: {
-    name: 'Retro Classic',
+    name: 'Retro',
     description: 'Original green-on-black nostalgic experience',
     colors: {
       background: '#000000',
@@ -47,7 +47,7 @@ export const themes: Record<GameTheme, ThemeConfig> = {
     foodStyle: 'square'
   },
   modern: {
-    name: 'Modern UI',
+    name: 'Modern',
     description: 'Clean contemporary design with vibrant colors - unlock at 100 points!',
     unlockRequirement: 100,
     colors: {
@@ -68,7 +68,7 @@ export const themes: Record<GameTheme, ThemeConfig> = {
     foodStyle: 'circle'
   },
   halloween: {
-    name: 'Halloween Spooky',
+    name: 'Halloween',
     description: 'Spooky purple snake eating pumpkins - unlock at 200 points!',
     unlockRequirement: 200,
     colors: {
@@ -89,7 +89,7 @@ export const themes: Record<GameTheme, ThemeConfig> = {
     foodStyle: 'pumpkin'
   },
   christmas: {
-    name: 'Christmas Festive',
+    name: 'Christmas',
     description: 'Twinkling lights snake eating Christmas trees - unlock at 300 points!',
     unlockRequirement: 300,
     colors: {
@@ -110,7 +110,7 @@ export const themes: Record<GameTheme, ThemeConfig> = {
     foodStyle: 'christmas-tree'
   },
   football: {
-    name: 'Fall Football',
+    name: 'Football',
     description: 'Football field with yard lines and end zones - unlock at 700 points!',
     unlockRequirement: 700,
     colors: {

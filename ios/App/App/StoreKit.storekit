@@ -1,0 +1,43 @@
+{
+  "identifier" : "ExtraLives",
+  "nonRenewingSubscriptions" : [ ],
+  "products" : [ {
+    "displayPrice" : "0.99",
+    "familyShareable" : false,
+    "identifier" : "ExtraLives",
+    "localizations" : [ {
+      "description" : "Get 3 extra lives to continue playing when you lose!",
+      "displayName" : "Extra Lives Pack",
+      "locale" : "en_US"
+    } ],
+    "productID" : "ExtraLives",
+    "referenceName" : "Extra Lives Pack",
+    "type" : "Consumable"
+  } ],
+  "settings" : {
+    "_applicationInternalID" : "6753017741",
+    "_developerTeamID" : "TYRA6QN5W5",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 747070607.98765004,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [ {
+      "current" : null,
+      "enabled" : false,
+      "name" : "Load Products"
+    }, {
+      "current" : null,
+      "enabled" : false,
+      "name" : "Purchase"
+    }, {
+      "current" : null,
+      "enabled" : false,
+      "name" : "Verification"
+    } ]
+  },
+  "subscriptionGroups" : [ ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

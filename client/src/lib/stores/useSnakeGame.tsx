@@ -24,6 +24,7 @@ interface SnakeGameState {
   resetUserData: () => void;
   changeDirection: (newDirection: Direction) => void;
   gameLoop: () => 'continue' | 'ate_food' | 'game_over';
+  continueWithExtraLife: () => void;
 }
 
 export const useSnakeGame = create<SnakeGameState>((set, get) => ({
@@ -120,5 +121,21 @@ export const useSnakeGame = create<SnakeGameState>((set, get) => ({
       // Normal movement
       set({ snake: newSnake });
       return 'continue';
+    },
+
+    continueWithExtraLife: () => {
+      // Reset snake to initial position but keep score
+      const initialSnake = [{ x: Math.floor(GRID_WIDTH / 2), y: Math.floor(GRID_HEIGHT / 2) }];
+      const initialFood = generateFood(initialSnake);
+      
+      set({
+        snake: initialSnake,
+        food: initialFood,
+        direction: 'right',
+        gameState: 'playing'
+        // Keep current score and highScore
+      });
+      
+      console.log('Continuing game with extra life!');
     }
   }));

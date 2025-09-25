@@ -1,6 +1,7 @@
 import { Button } from "./ui/button";
 import { useIsMobile } from "../hooks/use-is-mobile";
 import { useThemeStore } from "../lib/stores/useTheme";
+import { useExtraLives } from "../lib/stores/useExtraLives";
 
 interface GameUIProps {
   gameState: 'menu' | 'playing' | 'gameOver';
@@ -8,12 +9,14 @@ interface GameUIProps {
   highScore: number;
   onStart: () => void;
   onRestart: () => void;
+  onUseExtraLife?: () => void;
 }
 
-const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps) => {
+const GameUI = ({ gameState, score, highScore, onStart, onRestart, onUseExtraLife }: GameUIProps) => {
   const isMobile = useIsMobile();
   const { getThemeConfig } = useThemeStore();
   const theme = getThemeConfig();
+  const { extraLives, isPurchasing, productPrice, purchaseExtraLives, canMakePayments } = useExtraLives();
   
   if (gameState === 'menu') {
     return (
@@ -83,21 +86,81 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart }: GameUIProps
           <div className={`font-mono space-y-2 ${isMobile ? 'text-xl' : 'text-2xl'}`}>
             <p>Final Score: <span style={{ color: theme.colors.accent }}>{score}</span></p>
             <p>High Score: <span style={{ color: theme.colors.accent }}>{highScore}</span></p>
+            {extraLives > 0 && (
+              <p>Extra Lives: <span style={{ color: theme.colors.accent }}>{extraLives}</span></p>
+            )}
           </div>
-          {!isMobile && (
-            <Button 
-              onClick={onRestart}
-              className="font-mono text-xl px-8 py-3 transition-all duration-200"
-              style={{
-                backgroundColor: theme.colors.snake,
-                color: theme.colors.background,
-                border: `2px solid ${theme.colors.border}`,
-                borderRadius: theme.effects.rounded ? '8px' : '0px'
-              }}
-            >
-              PRESS SPACE TO RESTART
-            </Button>
-          )}
+
+          {/* Extra Life Options */}
+          <div className={`font-mono space-y-3 ${isMobile ? 'text-base' : 'text-lg'}`}>
+            {extraLives > 0 && onUseExtraLife && (
+              <Button 
+                onClick={onUseExtraLife}
+                className="font-mono px-6 py-2 transition-all duration-200 mr-2"
+                style={{
+                  backgroundColor: theme.colors.accent,
+                  color: theme.colors.background,
+                  border: `2px solid ${theme.colors.border}`,
+                  borderRadius: theme.effects.rounded ? '8px' : '0px'
+                }}
+              >
+                ❤️ USE EXTRA LIFE ({extraLives})
+              </Button>
+            )}
+            
+            {canMakePayments && (
+              <Button 
+                onClick={async () => {
+                  const success = await purchaseExtraLives();
+                  if (success) {
+                    // Show success message or animation
+                    console.log("Purchase successful!");
+                  }
+                }}
+                disabled={isPurchasing}
+                className="font-mono px-6 py-2 transition-all duration-200"
+                style={{
+                  backgroundColor: isPurchasing ? theme.colors.border : theme.colors.food,
+                  color: theme.colors.background,
+                  border: `2px solid ${theme.colors.border}`,
+                  borderRadius: theme.effects.rounded ? '8px' : '0px',
+                  opacity: isPurchasing ? 0.5 : 1
+                }}
+              >
+                {isPurchasing ? 'PURCHASING...' : `💰 BUY 3 EXTRA LIVES ${productPrice}`}
+              </Button>
+            )}
+          </div>
+
+          <div className="pt-4">
+            {!isMobile ? (
+              <Button 
+                onClick={onRestart}
+                className="font-mono text-xl px-8 py-3 transition-all duration-200"
+                style={{
+                  backgroundColor: theme.colors.snake,
+                  color: theme.colors.background,
+                  border: `2px solid ${theme.colors.border}`,
+                  borderRadius: theme.effects.rounded ? '8px' : '0px'
+                }}
+              >
+                PRESS SPACE TO RESTART
+              </Button>
+            ) : (
+              <Button 
+                onClick={onRestart}
+                className="font-mono text-lg px-6 py-2 transition-all duration-200"
+                style={{
+                  backgroundColor: theme.colors.snake,
+                  color: theme.colors.background,
+                  border: `2px solid ${theme.colors.border}`,
+                  borderRadius: theme.effects.rounded ? '8px' : '0px'
+                }}
+              >
+                RESTART GAME
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     );

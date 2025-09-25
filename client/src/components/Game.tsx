@@ -12,6 +12,7 @@ import { useSnakeGame } from "../lib/stores/useSnakeGame";
 import { useAudio } from "../lib/stores/useAudio";
 import { useAdsStore } from "../lib/stores/useAds";
 import { useThemeStore } from "../lib/stores/useTheme";
+import { useExtraLives } from "../lib/stores/useExtraLives";
 import { useIsMobile } from "../hooks/use-is-mobile";
 
 const Game = () => {
@@ -23,12 +24,14 @@ const Game = () => {
     startGame, 
     resetGame, 
     changeDirection,
-    gameLoop 
+    gameLoop,
+    continueWithExtraLife 
   } = useSnakeGame();
   
   const { playHit, playSuccess } = useAudio();
   const { showInterstitialAd, incrementGameOverCount } = useAdsStore();
   const { getThemeConfig, currentTheme } = useThemeStore();
+  const { useExtraLife } = useExtraLives();
   const isMobile = useIsMobile();
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
@@ -248,6 +251,14 @@ const Game = () => {
               highScore={highScore}
               onStart={startGame}
               onRestart={resetGame}
+              onUseExtraLife={() => {
+                if (useExtraLife()) {
+                  console.log('Extra life used, continuing game...');
+                  continueWithExtraLife();
+                } else {
+                  console.log('No extra lives available');
+                }
+              }}
             />
           </div>
         </div>

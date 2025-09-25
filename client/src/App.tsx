@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Game from "./components/Game";
 import { useAudio } from "./lib/stores/useAudio";
 import { useAdsStore } from "./lib/stores/useAds";
+import { useExtraLives } from "./lib/stores/useExtraLives";
 import { InterstitialAd } from "./components/AdComponents";
 import { AppTracking } from "./lib/appTracking";
 import "@fontsource/inter";
@@ -9,6 +10,7 @@ import "@fontsource/inter";
 function App() {
   const { setHitSound, setSuccessSound } = useAudio();
   const { setAdSenseAppId, requestTrackingPermission } = useAdsStore();
+  const { initializeStore } = useExtraLives();
 
   // Initialize app - ATT permission will be requested automatically by native iOS
   useEffect(() => {
@@ -30,13 +32,17 @@ function App() {
         // Only initialize AdSense AFTER ATT permission is determined
         console.log("ATT permission determined, initializing AdSense...");
         setAdSenseAppId('ca-app-pub-8626828126160251~4239118513');
+        
+        // Initialize extra lives store
+        console.log("Initializing extra lives store...");
+        await initializeStore();
       } catch (error) {
         console.log("App initialization failed:", error);
       }
     };
 
     initApp();
-  }, [setHitSound, setSuccessSound, setAdSenseAppId, requestTrackingPermission]);
+  }, [setHitSound, setSuccessSound, setAdSenseAppId, requestTrackingPermission, initializeStore]);
 
   return (
     <div className="w-full min-h-screen bg-black">

@@ -4,5 +4,6 @@ import Foundation
 @objc public class Plugins: NSObject {
     @objc public static func load(_ bridge: CAPBridge) {
         bridge.registerPluginInstance(AppTrackingPlugin())
+        bridge.registerPluginInstance(StoreKitPlugin())
     }
 }

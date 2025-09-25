@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "../hooks/use-is-mobile";
 import { useThemeStore } from "../lib/stores/useTheme";
@@ -17,6 +18,7 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart, onUseExtraLif
   const { getThemeConfig } = useThemeStore();
   const theme = getThemeConfig();
   const { extraLives, isPurchasing, productPrice, purchaseExtraLives, canMakePayments } = useExtraLives();
+  const [showPurchaseConfirm, setShowPurchaseConfirm] = useState(false);
   
   if (gameState === 'menu') {
     return (
@@ -95,19 +97,13 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart, onUseExtraLif
           <div className={`font-mono space-y-3 ${isMobile ? 'text-base' : 'text-lg'}`}>
             {(extraLives > 0 || canMakePayments) && (
               <Button 
-                onClick={async () => {
+                onClick={() => {
                   if (extraLives > 0 && onUseExtraLife) {
                     // Use existing extra life to continue
                     onUseExtraLife();
                   } else if (canMakePayments) {
-                    // Purchase extra lives and continue
-                    const success = await purchaseExtraLives();
-                    if (success && onUseExtraLife) {
-                      // Wait a moment for the purchase to be processed, then continue
-                      setTimeout(() => {
-                        onUseExtraLife();
-                      }, 500);
-                    }
+                    // Show purchase confirmation popup
+                    setShowPurchaseConfirm(true);
                   }
                 }}
                 disabled={isPurchasing}
@@ -157,6 +153,71 @@ const GameUI = ({ gameState, score, highScore, onStart, onRestart, onUseExtraLif
             )}
           </div>
         </div>
+
+        {/* Purchase Confirmation Modal */}
+        {showPurchaseConfirm && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+            onClick={() => setShowPurchaseConfirm(false)}
+          >
+            <div 
+              className="p-6 rounded-lg border-2 max-w-sm mx-4"
+              style={{
+                backgroundColor: theme.colors.background,
+                borderColor: theme.colors.border,
+                color: theme.colors.text
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 
+                className="text-xl font-mono font-bold mb-4 text-center"
+                style={{ color: theme.colors.accent }}
+              >
+                Continue Playing?
+              </h2>
+              <p className="font-mono text-center mb-6">
+                Purchase 3 extra lives for <span style={{ color: theme.colors.food }}>{productPrice}</span> to continue your game and chase a higher score!
+              </p>
+              <div className="flex space-x-3">
+                <Button
+                  onClick={() => setShowPurchaseConfirm(false)}
+                  className="flex-1 font-mono py-2 transition-all duration-200"
+                  style={{
+                    backgroundColor: theme.colors.ui,
+                    color: theme.colors.text,
+                    border: `2px solid ${theme.colors.border}`,
+                    borderRadius: theme.effects.rounded ? '8px' : '0px'
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={async () => {
+                    setShowPurchaseConfirm(false);
+                    const success = await purchaseExtraLives();
+                    if (success && onUseExtraLife) {
+                      // Wait a moment for the purchase to be processed, then continue
+                      setTimeout(() => {
+                        onUseExtraLife();
+                      }, 500);
+                    }
+                  }}
+                  disabled={isPurchasing}
+                  className="flex-1 font-mono py-2 transition-all duration-200"
+                  style={{
+                    backgroundColor: theme.colors.accent,
+                    color: theme.colors.background,
+                    border: `2px solid ${theme.colors.border}`,
+                    borderRadius: theme.effects.rounded ? '8px' : '0px',
+                    opacity: isPurchasing ? 0.5 : 1
+                  }}
+                >
+                  {isPurchasing ? 'Purchasing...' : 'Buy & Continue'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

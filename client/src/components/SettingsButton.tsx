@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, ExternalLink } from 'lucide-react';
+import { Settings, ExternalLink, Heart, ShoppingCart } from 'lucide-react';
 import { useSnakeGame } from '../lib/stores/useSnakeGame';
 import { useThemeStore } from '../lib/stores/useTheme';
 import { useAdsStore } from '../lib/stores/useAds';
+import { useExtraLives } from '../lib/stores/useExtraLives';
 
 const SettingsButton: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -10,6 +11,7 @@ const SettingsButton: React.FC = () => {
   const { resetUserData } = useSnakeGame();
   const { setTheme } = useThemeStore();
   const { setTrackingPermission, requestTrackingPermission } = useAdsStore();
+  const { extraLives, isPurchasing, productPrice, purchaseExtraLives, canMakePayments } = useExtraLives();
 
   // Check ATT status when component mounts or menu opens
   useEffect(() => {
@@ -78,7 +80,10 @@ const SettingsButton: React.FC = () => {
     setTrackingPermission(null);
     localStorage.removeItem('trackingPermissionGranted');
     
-    console.log('User data reset - high score, themes, and tracking preferences cleared');
+    // Reset extra lives
+    localStorage.removeItem('snakeExtraLives');
+    
+    console.log('User data reset - high score, themes, tracking preferences, and extra lives cleared');
     
     // Close menu
     setShowMenu(false);
@@ -102,6 +107,32 @@ const SettingsButton: React.FC = () => {
       {showMenu && (
         <div className="absolute top-12 left-0 bg-gray-900 border border-gray-600 rounded-lg shadow-lg min-w-56 z-50">
           <div className="p-2 space-y-1">
+            {/* Extra Lives Section */}
+            <div className="px-3 py-2 text-gray-300 text-sm border-b border-gray-700">
+              <div className="font-medium mb-2 flex items-center gap-2">
+                <Heart className="w-4 h-4 text-red-400" />
+                Extra Lives
+              </div>
+              <div className="text-xs text-gray-400 mb-2">
+                Current Lives: <span className="text-white font-medium">{extraLives}</span>
+              </div>
+              {canMakePayments && (
+                <button
+                  onClick={async () => {
+                    const success = await purchaseExtraLives();
+                    if (success) {
+                      console.log("Lives purchased from settings!");
+                    }
+                  }}
+                  disabled={isPurchasing}
+                  className="flex items-center gap-2 text-xs text-green-400 hover:text-green-300 transition-colors disabled:opacity-50"
+                >
+                  <ShoppingCart className="w-3 h-3" />
+                  {isPurchasing ? 'Purchasing...' : `Buy 3 Lives ${productPrice}`}
+                </button>
+              )}
+            </div>
+
             {/* ATT Status and Settings */}
             <div className="px-3 py-2 text-gray-300 text-sm border-b border-gray-700">
               <div className="font-medium mb-2">Privacy Settings</div>

@@ -13,6 +13,18 @@ const SettingsButton: React.FC = () => {
   const { setTrackingPermission, requestTrackingPermission } = useAdsStore();
   const { extraLives, isPurchasing, productPrice, purchaseExtraLives, canMakePayments } = useExtraLives();
 
+  // Debug extra lives state when menu opens
+  useEffect(() => {
+    if (showMenu) {
+      console.log('Settings menu opened - Extra Lives state:', {
+        extraLives,
+        canMakePayments,
+        isPurchasing,
+        productPrice
+      });
+    }
+  }, [showMenu, extraLives, canMakePayments, isPurchasing, productPrice]);
+
   // Check ATT status when component mounts or menu opens
   useEffect(() => {
     if (showMenu) {
@@ -116,21 +128,27 @@ const SettingsButton: React.FC = () => {
               <div className="text-xs text-gray-400 mb-2">
                 Current Lives: <span className="text-white font-medium">{extraLives}</span>
               </div>
-              {canMakePayments && (
-                <button
-                  onClick={async () => {
+              <button
+                onClick={async () => {
+                  if (canMakePayments) {
                     const success = await purchaseExtraLives();
                     if (success) {
                       console.log("Lives purchased from settings!");
                     }
-                  }}
-                  disabled={isPurchasing}
-                  className="flex items-center gap-2 text-xs text-green-400 hover:text-green-300 transition-colors disabled:opacity-50"
-                >
-                  <ShoppingCart className="w-3 h-3" />
-                  {isPurchasing ? 'Purchasing...' : `Buy 3 Lives ${productPrice}`}
-                </button>
-              )}
+                  } else {
+                    console.log('Payments not available:', { canMakePayments });
+                  }
+                }}
+                disabled={isPurchasing || !canMakePayments}
+                className={`flex items-center gap-2 text-xs transition-colors disabled:opacity-50 ${
+                  canMakePayments ? 'text-green-400 hover:text-green-300' : 'text-gray-500'
+                }`}
+              >
+                <ShoppingCart className="w-3 h-3" />
+                {isPurchasing ? 'Purchasing...' : 
+                 !canMakePayments ? 'Purchase Unavailable' :
+                 `Buy 3 Lives ${productPrice}`}
+              </button>
             </div>
 
             {/* ATT Status and Settings */}

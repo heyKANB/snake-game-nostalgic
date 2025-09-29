@@ -121,19 +121,8 @@ const Game = () => {
     }
   }, [gameState]);
 
-  // Show name input for any game over with score > 0 (for leaderboard submission)
-  useEffect(() => {
-    if (gameState === 'gameOver' && submittedScore !== score) {
-      console.log('Score submission check:', { score, previousHighScore, highScore, submittedScore, gameState });
-      
-      if (score > 0) {
-        console.log('Score > 0, showing name input for leaderboard submission');
-        setShowNameInput(true);
-      } else {
-        console.log('Score is 0, skipping name input');
-      }
-    }
-  }, [gameState, score, previousHighScore, submittedScore]);
+  // Show name input only when user chooses to not continue or starts new game
+  // This is now manually triggered by the restart function instead of automatically
 
   const handleNameSubmit = (name: string) => {
     setSubmittedScore(score);
@@ -141,18 +130,20 @@ const Game = () => {
     // Trigger leaderboard refresh for when user opens it next
     setLeaderboardRefreshTrigger(prev => prev + 1);
     console.log('Score submitted successfully, leaderboard refresh triggered');
-    // Show ad after leaderboard interaction is complete
+    // Show ad and reset game after leaderboard interaction is complete
     setTimeout(() => {
       showInterstitialAd();
+      resetGame();
     }, 500);
   };
 
   const handleNameSkip = () => {
     setSubmittedScore(score);
     setShowNameInput(false);
-    // Show ad after leaderboard interaction is complete
+    // Show ad and reset game after leaderboard interaction is complete
     setTimeout(() => {
       showInterstitialAd();
+      resetGame();
     }, 500);
   };
 
@@ -250,7 +241,15 @@ const Game = () => {
               score={score}
               highScore={highScore}
               onStart={startGame}
-              onRestart={resetGame}
+              onRestart={() => {
+                // Show name input before restarting if score > 0 and not yet submitted
+                if (score > 0 && submittedScore !== score) {
+                  console.log('Score > 0, showing name input before restart');
+                  setShowNameInput(true);
+                } else {
+                  resetGame();
+                }
+              }}
               onUseExtraLife={() => {
                 if (useExtraLife()) {
                   console.log('Extra life used, continuing game...');
@@ -269,7 +268,15 @@ const Game = () => {
         direction={direction}
         onDirectionChange={changeDirection}
         onStart={startGame}
-        onRestart={resetGame}
+        onRestart={() => {
+          // Show name input before restarting if score > 0 and not yet submitted
+          if (score > 0 && submittedScore !== score) {
+            console.log('Score > 0, showing name input before restart');
+            setShowNameInput(true);
+          } else {
+            resetGame();
+          }
+        }}
         onShowLeaderboard={() => setShowLeaderboard(true)}
       />
       

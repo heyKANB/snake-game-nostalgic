@@ -30,14 +30,29 @@ export const BannerAd: React.FC = () => {
 
 // Interstitial Ad Component (shows on game over)
 export const InterstitialAd: React.FC = () => {
-  const { showInterstitial, setShowInterstitial, adsEnabled, loadInterstitialAd, isInterstitialLoaded } = useAdsStore();
+  const { showInterstitial, setShowInterstitial, adsEnabled, trackingPermissionGranted } = useAdsStore();
 
-  // Load ad content when interstitial is shown
+  // Load ad content when interstitial is shown - after DOM is ready
   useEffect(() => {
-    if (showInterstitial && !isInterstitialLoaded) {
-      loadInterstitialAd();
+    if (showInterstitial && adsEnabled && trackingPermissionGranted !== null) {
+      // Small delay to ensure DOM element is ready
+      const timer = setTimeout(() => {
+        try {
+          // Set non-personalized ads if tracking denied
+          (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+          (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
+          
+          // Push ad request
+          ((window as any).adsbygoogle).push({});
+          console.log('Interstitial ad requested');
+        } catch (error) {
+          console.log('Interstitial ad error:', error);
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
-  }, [showInterstitial, isInterstitialLoaded, loadInterstitialAd]);
+  }, [showInterstitial, adsEnabled, trackingPermissionGranted]);
 
   if (!adsEnabled || !showInterstitial) return null;
 

@@ -3,14 +3,29 @@ import { useAdsStore } from '../lib/stores/useAds';
 
 // Banner Ad Component for bottom of game screen
 export const BannerAd: React.FC = () => {
-  const { adsEnabled, isBannerLoaded, loadBannerAd, trackingPermissionGranted } = useAdsStore();
+  const { adsEnabled, trackingPermissionGranted } = useAdsStore();
 
   useEffect(() => {
-    // Load ads when tracking permission has been determined (regardless of granted/denied) and ads are enabled
-    if (adsEnabled && !isBannerLoaded && trackingPermissionGranted !== null) {
-      loadBannerAd();
+    // Load ads when tracking permission has been determined and ads are enabled
+    if (adsEnabled && trackingPermissionGranted !== null) {
+      // Small delay to ensure DOM element is ready
+      const timer = setTimeout(() => {
+        try {
+          // Set non-personalized ads if tracking denied
+          (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+          (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
+          
+          // Push ad request
+          ((window as any).adsbygoogle).push({});
+          console.log('Banner ad requested');
+        } catch (error) {
+          console.log('Banner ad error:', error);
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
-  }, [adsEnabled, isBannerLoaded, loadBannerAd, trackingPermissionGranted]);
+  }, [adsEnabled, trackingPermissionGranted]);
 
   if (!adsEnabled) return null;
 

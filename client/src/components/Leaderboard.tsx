@@ -89,6 +89,8 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onClose, refreshTrigger }) =>
       case 'retro': return '🟢';
       case 'modern': return '🔵';
       case 'halloween': return '🎃';
+      case 'christmas': return '🎄';
+      case 'football': return '🏈';
       default: return '⭐';
     }
   };

@@ -1,23 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useAdsStore } from '../lib/stores/useAds';
 
 // Banner Ad Component for bottom of game screen
 export const BannerAd: React.FC = () => {
   const { adsEnabled, trackingPermissionGranted } = useAdsStore();
+  const adLoadedRef = useRef(false);
 
   useEffect(() => {
     // Load ads when tracking permission has been determined and ads are enabled
-    if (adsEnabled && trackingPermissionGranted !== null) {
+    // Only load once per component lifecycle
+    if (adsEnabled && trackingPermissionGranted !== null && !adLoadedRef.current) {
       // Small delay to ensure DOM element is ready
       const timer = setTimeout(() => {
         try {
-          // Set non-personalized ads if tracking denied
-          (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-          (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
-          
-          // Push ad request
-          ((window as any).adsbygoogle).push({});
-          console.log('Banner ad requested');
+          const adElement = document.querySelector('.adsbygoogle.banner-ad');
+          // Check if ad hasn't already been loaded (AdSense adds data-adsbygoogle-status when processed)
+          if (adElement && !adElement.getAttribute('data-adsbygoogle-status')) {
+            // Set non-personalized ads if tracking denied
+            (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+            (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
+            
+            // Push ad request
+            ((window as any).adsbygoogle).push({});
+            adLoadedRef.current = true;
+            console.log('Banner ad requested');
+          } else {
+            console.log('Banner ad already loaded or element not found');
+          }
         } catch (error) {
           console.log('Banner ad error:', error);
         }
@@ -32,7 +41,7 @@ export const BannerAd: React.FC = () => {
   return (
     <div className="w-full flex justify-center py-2 bg-black/50">
       <ins
-        className="adsbygoogle"
+        className="adsbygoogle banner-ad"
         style={{ display: 'block', width: '320px', height: '50px' }}
         data-ad-client="ca-app-pub-8626828126160251"
         data-ad-slot="5048803159"
@@ -46,20 +55,35 @@ export const BannerAd: React.FC = () => {
 // Interstitial Ad Component (shows on game over)
 export const InterstitialAd: React.FC = () => {
   const { showInterstitial, setShowInterstitial, adsEnabled, trackingPermissionGranted } = useAdsStore();
+  const adLoadedRef = useRef(false);
+
+  // Reset loaded flag when interstitial is hidden
+  useEffect(() => {
+    if (!showInterstitial) {
+      adLoadedRef.current = false;
+    }
+  }, [showInterstitial]);
 
   // Load ad content when interstitial is shown - after DOM is ready
   useEffect(() => {
-    if (showInterstitial && adsEnabled && trackingPermissionGranted !== null) {
+    if (showInterstitial && adsEnabled && trackingPermissionGranted !== null && !adLoadedRef.current) {
       // Small delay to ensure DOM element is ready
       const timer = setTimeout(() => {
         try {
-          // Set non-personalized ads if tracking denied
-          (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-          (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
-          
-          // Push ad request
-          ((window as any).adsbygoogle).push({});
-          console.log('Interstitial ad requested');
+          const adElement = document.querySelector('.adsbygoogle.interstitial-ad');
+          // Check if ad hasn't already been loaded
+          if (adElement && !adElement.getAttribute('data-adsbygoogle-status')) {
+            // Set non-personalized ads if tracking denied
+            (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+            (window as any).adsbygoogle.requestNonPersonalizedAds = trackingPermissionGranted ? 0 : 1;
+            
+            // Push ad request
+            ((window as any).adsbygoogle).push({});
+            adLoadedRef.current = true;
+            console.log('Interstitial ad requested');
+          } else {
+            console.log('Interstitial ad already loaded or element not found');
+          }
         } catch (error) {
           console.log('Interstitial ad error:', error);
         }
@@ -77,7 +101,7 @@ export const InterstitialAd: React.FC = () => {
         <div className="text-green-400 mb-4">Advertisement</div>
         <div className="mb-4">
           <ins
-            className="adsbygoogle"
+            className="adsbygoogle interstitial-ad"
             style={{ display: 'block', width: '300px', height: '250px' }}
             data-ad-client="ca-app-pub-8626828126160251"
             data-ad-slot="6485506895"

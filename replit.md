@@ -4,7 +4,7 @@
 
 This is a nostalgic Snake game application built with React/TypeScript on the frontend and Express.js on the backend. The application features a classic Snake game implementation with retro green-on-black graphics, modern UI components, audio support, and state management using Zustand. The game is fully optimized for mobile devices with touch controls and Progressive Web App (PWA) capabilities, making it ready for App Store deployment. The project is configured as a full-stack application with a PostgreSQL database using Drizzle ORM, though the current implementation uses in-memory storage.
 
-**Latest Update (2025-10-08)**: Version 8.3.3 - Fixed AdSense ad loading timing issues for both banner and interstitial ads with build 29 ready for submission
+**Latest Update (2025-10-25)**: Version 8.3.4 - Fixed AdSense duplicate ad loading issue with proper DOM checking and refs with build 30 ready for submission
 - CRITICAL FIX: Touch controls now display during gameplay on iPad devices (iPad Air 5th gen, iPad Pro, etc.)
 - ENHANCED: Mobile detection now properly identifies all touch-capable devices including iPads
 - FIXED: Touch controls were not appearing on iPad devices due to screen resolution detection logic
